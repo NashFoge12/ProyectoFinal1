@@ -5,30 +5,72 @@ using UnityEngine.UI;
 
 public class JuegoOrdenarAlgoritmo : MonoBehaviour
 {
+    // =====================================================
+    // DATOS DE UNA TARJETA
+    // =====================================================
+
     [System.Serializable]
     public class Tarjeta
     {
         public string id;
-        public string texto;
         public Sprite imagen;
     }
 
-    [Header("Interfaz")]
+
+    // =====================================================
+    // TEXTOS DE LA INTERFAZ
+    // =====================================================
+
+    [Header("Textos de interfaz")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
     public TMP_Text txtResultado;
 
+
+    // =====================================================
+    // FONDOS
+    // =====================================================
+
+    [Header("Fondos")]
+    public Image imagenFondo;
+
+    public Sprite fondoDientes;
+    public Sprite fondoMochila;
+    public Sprite fondoPlanta;
+
+
+    // =====================================================
+    // TITULOS EN IMAGEN
+    // =====================================================
+
+    [Header("Titulos en imagen")]
+    public Image imagenTitulo;
+
+    public Sprite tituloDientes;
+    public Sprite tituloMochila;
+    public Sprite tituloPlanta;
+
+
+    // =====================================================
+    // TARJETAS
+    // =====================================================
+
     [Header("Tarjetas")]
     public Button[] botonesPasos;
-    public Image[] imagenesPasos;
+
+
+    // =====================================================
+    // BOTONES DE CONTROL
+    // =====================================================
 
     [Header("Botones")]
     public Button btnComprobar;
     public Button btnSiguiente;
 
-    // ================================
+
+    // =====================================================
     // SPRITES - LAVARSE LOS DIENTES
-    // ================================
+    // =====================================================
 
     [Header("Sprites - Lavarse los dientes")]
     public Sprite sprTomarCepillo;
@@ -37,9 +79,10 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     public Sprite sprEnjuagarBoca;
     public Sprite sprGuardarCepillo;
 
-    // ================================
+
+    // =====================================================
     // SPRITES - PREPARAR MOCHILA
-    // ================================
+    // =====================================================
 
     [Header("Sprites - Preparar mochila")]
     public Sprite sprRevisarHorario;
@@ -48,9 +91,10 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     public Sprite sprColocarLapices;
     public Sprite sprCerrarMochila;
 
-    // ================================
+
+    // =====================================================
     // SPRITES - REGAR PLANTA
-    // ================================
+    // =====================================================
 
     [Header("Sprites - Regar planta")]
     public Sprite sprBuscarRegadera;
@@ -60,7 +104,12 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     public Sprite sprGuardarRegadera;
 
 
+    // =====================================================
+    // VARIABLES INTERNAS
+    // =====================================================
+
     private int ejercicioActual = 0;
+
     private int tarjetaSeleccionada = -1;
 
     private List<Tarjeta[]> ejercicios =
@@ -70,10 +119,15 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         new List<string[]>();
 
 
+    // =====================================================
+    // START
+    // =====================================================
+
     void Start()
     {
         CrearEjercicios();
 
+        // Conectar automáticamente las tarjetas
         for (int i = 0; i < botonesPasos.Length; i++)
         {
             int indice = i;
@@ -84,58 +138,57 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         }
 
         btnComprobar.onClick.AddListener(Comprobar);
+
         btnSiguiente.onClick.AddListener(SiguienteEjercicio);
 
         CargarEjercicio();
     }
 
 
-    // =====================================
+    // =====================================================
     // CREAR LOS 3 EJERCICIOS
-    // =====================================
+    // =====================================================
 
     void CrearEjercicios()
     {
+        // =================================================
         // EJERCICIO 1
         // LAVARSE LOS DIENTES
+        // =================================================
 
         ejercicios.Add(new Tarjeta[]
         {
             new Tarjeta
             {
                 id = "enjuagar",
-                texto = "Enjuagar la boca",
                 imagen = sprEnjuagarBoca
             },
 
             new Tarjeta
             {
                 id = "tomar",
-                texto = "Tomar el cepillo",
                 imagen = sprTomarCepillo
             },
 
             new Tarjeta
             {
                 id = "guardar",
-                texto = "Guardar el cepillo",
                 imagen = sprGuardarCepillo
             },
 
             new Tarjeta
             {
                 id = "pasta",
-                texto = "Poner pasta dental",
                 imagen = sprPonerPasta
             },
 
             new Tarjeta
             {
                 id = "cepillar",
-                texto = "Cepillar los dientes",
                 imagen = sprCepillarDientes
             }
         });
+
 
         respuestasCorrectas.Add(new string[]
         {
@@ -147,46 +200,44 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         });
 
 
+        // =================================================
         // EJERCICIO 2
         // PREPARAR LA MOCHILA
+        // =================================================
 
         ejercicios.Add(new Tarjeta[]
         {
             new Tarjeta
             {
                 id = "lapices",
-                texto = "Colocar los lápices",
                 imagen = sprColocarLapices
             },
 
             new Tarjeta
             {
                 id = "cerrar",
-                texto = "Cerrar la mochila",
                 imagen = sprCerrarMochila
             },
 
             new Tarjeta
             {
                 id = "horario",
-                texto = "Revisar el horario",
                 imagen = sprRevisarHorario
             },
 
             new Tarjeta
             {
                 id = "abrir",
-                texto = "Abrir la mochila",
                 imagen = sprAbrirMochila
             },
 
             new Tarjeta
             {
                 id = "cuadernos",
-                texto = "Colocar los cuadernos",
                 imagen = sprColocarCuadernos
             }
         });
+
 
         respuestasCorrectas.Add(new string[]
         {
@@ -198,46 +249,44 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         });
 
 
+        // =================================================
         // EJERCICIO 3
         // REGAR UNA PLANTA
+        // =================================================
 
         ejercicios.Add(new Tarjeta[]
         {
             new Tarjeta
             {
                 id = "regar",
-                texto = "Regar la planta",
                 imagen = sprRegarPlanta
             },
 
             new Tarjeta
             {
                 id = "guardarRegadera",
-                texto = "Guardar la regadera",
                 imagen = sprGuardarRegadera
             },
 
             new Tarjeta
             {
                 id = "llenar",
-                texto = "Llenar la regadera",
                 imagen = sprLlenarRegadera
             },
 
             new Tarjeta
             {
                 id = "buscar",
-                texto = "Buscar la regadera",
                 imagen = sprBuscarRegadera
             },
 
             new Tarjeta
             {
                 id = "acercarse",
-                texto = "Acercarse a la planta",
                 imagen = sprAcercarsePlanta
             }
         });
+
 
         respuestasCorrectas.Add(new string[]
         {
@@ -250,187 +299,365 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     }
 
 
-    // =====================================
+    // =====================================================
     // CARGAR EJERCICIO
-    // =====================================
+    // =====================================================
 
     void CargarEjercicio()
     {
+        // Reiniciar selección
         tarjetaSeleccionada = -1;
 
-        txtResultado.text = "";
 
-        btnSiguiente.gameObject.SetActive(false);
+        // =================================================
+        // MENSAJE INICIAL
+        // =====================================================
+
+        txtResultado.text =
+            "Toca dos tarjetas para intercambiarlas.";
+
+
+        // =================================================
+        // BOTONES
+        // =====================================================
+
         btnComprobar.gameObject.SetActive(true);
 
-        txtProgreso.text =
-            "Ejercicio " + (ejercicioActual + 1) + " de 3";
+        btnSiguiente.gameObject.SetActive(false);
 
+
+        // =================================================
+        // PROGRESO
+        // =====================================================
+
+        txtProgreso.text =
+            "Ejercicio\n" +
+            (ejercicioActual + 1) +
+            " de " +
+            ejercicios.Count;
+
+
+        // =================================================
+        // EJERCICIO 1
+        // DIENTES
+        // =====================================================
 
         if (ejercicioActual == 0)
         {
             txtPregunta.text =
-                "Ordena los pasos para lavarse los dientes";
+                "Ordena los pasos para\nlavarse los dientes.";
+
+
+            // Fondo
+            if (imagenFondo != null &&
+                fondoDientes != null)
+            {
+                imagenFondo.sprite =
+                    fondoDientes;
+            }
+
+
+            // Título
+            if (imagenTitulo != null &&
+                tituloDientes != null)
+            {
+                imagenTitulo.sprite =
+                    tituloDientes;
+            }
         }
+
+
+        // =================================================
+        // EJERCICIO 2
+        // MOCHILA
+        // =====================================================
+
         else if (ejercicioActual == 1)
         {
             txtPregunta.text =
-                "Ordena los pasos para preparar la mochila";
+                "Ordena los pasos para\npreparar la mochila.";
+
+
+            // Fondo
+            if (imagenFondo != null &&
+                fondoMochila != null)
+            {
+                imagenFondo.sprite =
+                    fondoMochila;
+            }
+
+
+            // Título
+            if (imagenTitulo != null &&
+                tituloMochila != null)
+            {
+                imagenTitulo.sprite =
+                    tituloMochila;
+            }
         }
+
+
+        // =================================================
+        // EJERCICIO 3
+        // PLANTA
+        // =====================================================
+
         else
         {
             txtPregunta.text =
-                "Ordena los pasos para regar una planta";
+                "Ordena los pasos para\nregar una planta.";
+
+
+            // Fondo
+            if (imagenFondo != null &&
+                fondoPlanta != null)
+            {
+                imagenFondo.sprite =
+                    fondoPlanta;
+            }
+
+
+            // Título
+            if (imagenTitulo != null &&
+                tituloPlanta != null)
+            {
+                imagenTitulo.sprite =
+                    tituloPlanta;
+            }
         }
 
+
+        // =================================================
+        // CARGAR LAS 5 TARJETAS
+        // =====================================================
 
         for (int i = 0; i < botonesPasos.Length; i++)
         {
             Tarjeta tarjeta =
                 ejercicios[ejercicioActual][i];
 
-            // TEXTO
-            botonesPasos[i]
-                .GetComponentInChildren<TMP_Text>()
-                .text = tarjeta.texto;
 
-            // IMAGEN
-            imagenesPasos[i].sprite =
+            // Sprite completo de la tarjeta
+            botonesPasos[i].image.sprite =
                 tarjeta.imagen;
 
-            // Guardamos el ID dentro del botón
+
+            // IMPORTANTE:
+            // Lo dejamos en FALSE porque tus tarjetas
+            // se ven correctamente así.
+            botonesPasos[i].image.preserveAspect =
+                false;
+
+
+            // Guardar ID de la tarjeta
             botonesPasos[i].name =
                 tarjeta.id;
+
+
+            // Activar tarjeta
+            botonesPasos[i].gameObject.SetActive(true);
+
+            botonesPasos[i].interactable =
+                true;
         }
     }
 
 
-    // =====================================
-    // SELECCIONAR E INTERCAMBIAR
-    // =====================================
+    // =====================================================
+    // SELECCIONAR TARJETA
+    // =====================================================
 
     void SeleccionarTarjeta(int indice)
     {
+        // =================================================
+        // PRIMERA TARJETA
+        // =====================================================
+
         if (tarjetaSeleccionada == -1)
         {
             tarjetaSeleccionada = indice;
 
+
             txtResultado.text =
                 "Ahora selecciona otra tarjeta para intercambiarlas.";
-        }
-        else
-        {
-            IntercambiarTarjetas(
-                tarjetaSeleccionada,
-                indice
-            );
 
+
+            return;
+        }
+
+
+        // =================================================
+        // TOCÓ LA MISMA TARJETA
+        // =====================================================
+
+        if (tarjetaSeleccionada == indice)
+        {
             tarjetaSeleccionada = -1;
 
-            txtResultado.text = "";
+
+            txtResultado.text =
+                "Toca dos tarjetas para intercambiarlas.";
+
+
+            return;
         }
+
+
+        // =================================================
+        // INTERCAMBIAR
+        // =====================================================
+
+        IntercambiarTarjetas(
+            tarjetaSeleccionada,
+            indice
+        );
+
+
+        tarjetaSeleccionada = -1;
+
+
+        txtResultado.text =
+            "Puedes seguir ordenando o comprobar tu respuesta.";
     }
 
 
-    void IntercambiarTarjetas(int indice1, int indice2)
+    // =====================================================
+    // INTERCAMBIAR TARJETAS
+    // =====================================================
+
+    void IntercambiarTarjetas(
+        int indice1,
+        int indice2
+    )
     {
-        // ========================
-        // INTERCAMBIAR TEXTO
-        // ========================
+        // =================================================
+        // COMPROBACIÓN DE SEGURIDAD
+        // =====================================================
 
-        TMP_Text texto1 =
-            botonesPasos[indice1]
-            .GetComponentInChildren<TMP_Text>();
+        if (indice1 < 0 ||
+            indice2 < 0 ||
+            indice1 >= botonesPasos.Length ||
+            indice2 >= botonesPasos.Length)
+        {
+            Debug.LogError(
+                "Error: índice de tarjeta fuera de rango."
+            );
 
-        TMP_Text texto2 =
-            botonesPasos[indice2]
-            .GetComponentInChildren<TMP_Text>();
-
-        string textoTemporal = texto1.text;
-
-        texto1.text = texto2.text;
-        texto2.text = textoTemporal;
+            return;
+        }
 
 
-        // ========================
-        // INTERCAMBIAR SPRITE
-        // ========================
+        // =================================================
+        // INTERCAMBIAR SPRITES
+        // =====================================================
 
         Sprite spriteTemporal =
-            imagenesPasos[indice1].sprite;
+            botonesPasos[indice1].image.sprite;
 
-        imagenesPasos[indice1].sprite =
-            imagenesPasos[indice2].sprite;
 
-        imagenesPasos[indice2].sprite =
+        botonesPasos[indice1].image.sprite =
+            botonesPasos[indice2].image.sprite;
+
+
+        botonesPasos[indice2].image.sprite =
             spriteTemporal;
 
 
-        // ========================
-        // INTERCAMBIAR ID
-        // ========================
+        // =================================================
+        // INTERCAMBIAR IDs
+        // =====================================================
 
         string idTemporal =
             botonesPasos[indice1].name;
 
+
         botonesPasos[indice1].name =
             botonesPasos[indice2].name;
+
 
         botonesPasos[indice2].name =
             idTemporal;
     }
 
 
-    // =====================================
-    // COMPROBAR
-    // =====================================
+    // =====================================================
+    // COMPROBAR RESPUESTA
+    // =====================================================
 
     void Comprobar()
     {
         bool correcto = true;
+
 
         for (int i = 0; i < botonesPasos.Length; i++)
         {
             string idActual =
                 botonesPasos[i].name;
 
+
             if (idActual !=
                 respuestasCorrectas[ejercicioActual][i])
             {
                 correcto = false;
+
                 break;
             }
         }
 
 
+        // =================================================
+        // RESPUESTA CORRECTA
+        // =====================================================
+
         if (correcto)
         {
             txtResultado.text =
-                "⭐ ¡Excelente! Ordenaste correctamente el algoritmo.";
+                "¡Excelente! Ordenaste correctamente el algoritmo.";
 
+
+            // Ocultar comprobar
             btnComprobar.gameObject.SetActive(false);
+
+
+            // Mostrar siguiente
             btnSiguiente.gameObject.SetActive(true);
+
+
+            // Bloquear tarjetas
+            foreach (Button boton in botonesPasos)
+            {
+                boton.interactable =
+                    false;
+            }
         }
+
+
+        // =================================================
+        // RESPUESTA INCORRECTA
+        // =====================================================
+
         else
         {
             txtResultado.text =
-                "❌ Aún no está correcto. ¡Inténtalo otra vez!";
+                "Aún no está correcto. ¡Inténtalo otra vez!";
         }
     }
 
 
-    // =====================================
-    // SIGUIENTE
-    // =====================================
+    // =====================================================
+    // SIGUIENTE EJERCICIO
+    // =====================================================
 
     void SiguienteEjercicio()
     {
         ejercicioActual++;
 
+
         if (ejercicioActual < ejercicios.Count)
         {
             CargarEjercicio();
         }
+
         else
         {
             FinalizarMision();
@@ -438,26 +665,40 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     }
 
 
-    // =====================================
-    // FINAL
-    // =====================================
+    // =====================================================
+    // FINALIZAR MISIÓN
+    // =====================================================
 
     void FinalizarMision()
     {
         txtPregunta.text =
-            "🏆 ¡MISIÓN COMPLETADA!";
+            "¡MISIÓN COMPLETADA!";
 
-        txtProgreso.text = "";
+
+        txtProgreso.text =
+            "";
+
 
         txtResultado.text =
-            "Has ordenado correctamente los 3 algoritmos.";
+            "¡Excelente! Completaste los 3 algoritmos.";
+
+
+        // =================================================
+        // OCULTAR TARJETAS
+        // =====================================================
 
         foreach (Button boton in botonesPasos)
         {
             boton.gameObject.SetActive(false);
         }
 
+
+        // =================================================
+        // OCULTAR BOTONES
+        // =====================================================
+
         btnComprobar.gameObject.SetActive(false);
+
         btnSiguiente.gameObject.SetActive(false);
     }
 }
