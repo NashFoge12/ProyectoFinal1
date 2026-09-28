@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MenuPrincipal.unity
+    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/PensamientoComputacional.unity
+    guid: 098d016db58b6a14493faa46c86dbd45
+  - enabled: 1
+    path: Assets/Scenes/Algoritmos.unity
+    guid: d85ba219cdea0c343a0c8d203ffecb52
+  - enabled: 1
+    path: Assets/Scenes/Mision1_Algoritmos.unity
+    guid: c474fb0d6be87ac44879235bccfb6fbd
+  - enabled: 1
+    path: Assets/Scenes/Mision2_Algoritmos.unity
+    guid: 1a21106b93130754ebb4502d20807e02
+  - enabled: 1
+    path: Assets/Scenes/Mision3_Algoritmos.unity
+    guid: 52cd0eef8a318ea4f99472900e32c113
+  - enabled: 1
+    path: Assets/Scenes/Secuencias.unity
+    guid: 5fad3d896e53b4b45bea0ca1186441f6
+  - enabled: 1
+    path: Assets/Scenes/Mision1_Secuencias.unity
+    guid: 4cf6bb2aeb1c3a54dad9269de9c1d09d
+  - enabled: 1
+    path: Assets/Scenes/Mision2_Secuencias.unity
+    guid: 3fecb1df214baf0468f61aed932be117
+  - enabled: 1
+    path: Assets/Scenes/Mision3_Secuencias.unity
+    guid: c494b581d955fae43a2b9eb17f22b7a2
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_UseUCBPForAssetBundles: 0
