@@ -1,0 +1,874 @@
+fileFormatVersion: 2
+guid: eea3cfe78f183174490118e5a25f96eb
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_0
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 588
+        width: 121
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dac9cbda87d6cde408fc2453a064a69e
+      internalID: 1895956179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_1
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 588
+        width: 123
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fba63c8f23c1e8247a7dc65f64f006d2
+      internalID: 2061887076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_2
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 588
+        width: 121
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fec89acc9f53e7e40a43348064766ad3
+      internalID: -2011917108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_3
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 589
+        width: 122
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 290601f34585eb74abcc94c11ab5c7a5
+      internalID: -212235187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_4
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 398
+        width: 121
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9633a17c9c19254438c897e5c7bf484e
+      internalID: 1310809823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_5
+      rect:
+        serializedVersion: 2
+        x: 140
+        y: 399
+        width: 121
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75599fc22e5adec448238fec15393359
+      internalID: 1256784748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_6
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 399
+        width: 121
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4bb6319dbff1224dbcbce912346ae0d
+      internalID: -571275719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_7
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 399
+        width: 128
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a247834b14ce86447bb4f8b8b0d54d85
+      internalID: 893081211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_8
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 398
+        width: 114
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54315ed0c2785b54fa468218a2c0e38b
+      internalID: 424621060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_9
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 398
+        width: 121
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee32fd50397e7264da3f1feb1eee3a2f
+      internalID: -1415513827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_10
+      rect:
+        serializedVersion: 2
+        x: 771
+        y: 398
+        width: 120
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9210552d84bf18a43b61ee8a5a12d33a
+      internalID: 1176501031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_11
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 398
+        width: 116
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ede23e95582336e4e9b768f618354561
+      internalID: 1945681060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_12
+      rect:
+        serializedVersion: 2
+        x: 1029
+        y: 399
+        width: 120
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d65ce595f27a6a44ac0c1a5aba3b63b
+      internalID: 2064892800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_13
+      rect:
+        serializedVersion: 2
+        x: 1150
+        y: 399
+        width: 120
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 62db8aa7f56e5c24ab0d36f2c8ce51e8
+      internalID: -2127739113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_14
+      rect:
+        serializedVersion: 2
+        x: 1274
+        y: 399
+        width: 120
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b126e386395a9540bc60e5c160d0dcb
+      internalID: -2026710470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_15
+      rect:
+        serializedVersion: 2
+        x: 1394
+        y: 399
+        width: 123
+        height: 166
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca21f3e940900cf49979a328d6b87b02
+      internalID: -1737780448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_16
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 729
+        width: 513
+        height: 295
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 597267f2530d7c2429b26f235c6f0877
+      internalID: -62769077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_17
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 729
+        width: 479
+        height: 295
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f69b3fd01e58a84ea2b9625e4807418
+      internalID: -1383251720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_18
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 734
+        width: 494
+        height: 290
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 404ee0bf10b0e2441948d3fd387c2851
+      internalID: -1102323549
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_19
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 398
+        width: 114
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 827b97c3e399f0e4eb2570306ef6c19f
+      internalID: 1350816486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_21
+      rect:
+        serializedVersion: 2
+        x: 650
+        y: 217
+        width: 126
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78e0efe3211141f4c8ca560479e962fe
+      internalID: -555254926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_22
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 217
+        width: 119
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: edca3466c4d6ec146987419bc610cbba
+      internalID: 281049704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_23
+      rect:
+        serializedVersion: 2
+        x: 894
+        y: 218
+        width: 117
+        height: 165
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fccbf9ae573eb414192396736c9a8a12
+      internalID: 194083813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_31
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 216
+        width: 113
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a5e52c0d1e8cfd479db18ca6d7992a2
+      internalID: 487643946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_32
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 216
+        width: 119
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87327b75b50302f48b92d4195effd0af
+      internalID: -1429535818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_33
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 216
+        width: 123
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f44573461ab85ed44b5e73a973c2e65d
+      internalID: 1151449473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_34
+      rect:
+        serializedVersion: 2
+        x: 1277
+        y: 217
+        width: 121
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 959ce695f74919a4e84539711aa4a8b6
+      internalID: -1263849171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_35
+      rect:
+        serializedVersion: 2
+        x: 1398
+        y: 216
+        width: 121
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 751349aa5d996ae4a960c6d0d2c99f4f
+      internalID: 337894305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_36
+      rect:
+        serializedVersion: 2
+        x: 1030
+        y: 41
+        width: 119
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b1cda79d5055af4dbf6c2b859d0ff01
+      internalID: -652110638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_37
+      rect:
+        serializedVersion: 2
+        x: 1151
+        y: 39
+        width: 124
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c529f9d707934945b1afc5d9bf99194
+      internalID: -984978439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_38
+      rect:
+        serializedVersion: 2
+        x: 1276
+        y: 39
+        width: 120
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7c5c234dade66d4eaf37f3bb4ca741d
+      internalID: -2034421185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hoja de misiones educativas_ secuencias ilustradas (1)_39
+      rect:
+        serializedVersion: 2
+        x: 1397
+        y: 39
+        width: 122
+        height: 164
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56461c8104116a34abf1379cbba60c61
+      internalID: 1333579344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: a5899c6ac92730e47a48fb25e08346f9
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Hoja de misiones educativas_ secuencias ilustradas (1)_0: 1895956179
+      Hoja de misiones educativas_ secuencias ilustradas (1)_1: 2061887076
+      Hoja de misiones educativas_ secuencias ilustradas (1)_10: 1176501031
+      Hoja de misiones educativas_ secuencias ilustradas (1)_11: 1945681060
+      Hoja de misiones educativas_ secuencias ilustradas (1)_12: 2064892800
+      Hoja de misiones educativas_ secuencias ilustradas (1)_13: -2127739113
+      Hoja de misiones educativas_ secuencias ilustradas (1)_14: -2026710470
+      Hoja de misiones educativas_ secuencias ilustradas (1)_15: -1737780448
+      Hoja de misiones educativas_ secuencias ilustradas (1)_16: -62769077
+      Hoja de misiones educativas_ secuencias ilustradas (1)_17: -1383251720
+      Hoja de misiones educativas_ secuencias ilustradas (1)_18: -1102323549
+      Hoja de misiones educativas_ secuencias ilustradas (1)_19: 1350816486
+      Hoja de misiones educativas_ secuencias ilustradas (1)_2: -2011917108
+      Hoja de misiones educativas_ secuencias ilustradas (1)_20: 1329643458
+      Hoja de misiones educativas_ secuencias ilustradas (1)_21: -555254926
+      Hoja de misiones educativas_ secuencias ilustradas (1)_22: 281049704
+      Hoja de misiones educativas_ secuencias ilustradas (1)_23: 194083813
+      Hoja de misiones educativas_ secuencias ilustradas (1)_24: -1874719321
+      Hoja de misiones educativas_ secuencias ilustradas (1)_25: -683791322
+      Hoja de misiones educativas_ secuencias ilustradas (1)_26: -964487585
+      Hoja de misiones educativas_ secuencias ilustradas (1)_27: 1297234277
+      Hoja de misiones educativas_ secuencias ilustradas (1)_28: 2038515353
+      Hoja de misiones educativas_ secuencias ilustradas (1)_29: 343957119
+      Hoja de misiones educativas_ secuencias ilustradas (1)_3: -212235187
+      Hoja de misiones educativas_ secuencias ilustradas (1)_30: -1949275250
+      Hoja de misiones educativas_ secuencias ilustradas (1)_31: 487643946
+      Hoja de misiones educativas_ secuencias ilustradas (1)_32: -1429535818
+      Hoja de misiones educativas_ secuencias ilustradas (1)_33: 1151449473
+      Hoja de misiones educativas_ secuencias ilustradas (1)_34: -1263849171
+      Hoja de misiones educativas_ secuencias ilustradas (1)_35: 337894305
+      Hoja de misiones educativas_ secuencias ilustradas (1)_36: -652110638
+      Hoja de misiones educativas_ secuencias ilustradas (1)_37: -984978439
+      Hoja de misiones educativas_ secuencias ilustradas (1)_38: -2034421185
+      Hoja de misiones educativas_ secuencias ilustradas (1)_39: 1333579344
+      Hoja de misiones educativas_ secuencias ilustradas (1)_4: 1310809823
+      Hoja de misiones educativas_ secuencias ilustradas (1)_5: 1256784748
+      Hoja de misiones educativas_ secuencias ilustradas (1)_6: -571275719
+      Hoja de misiones educativas_ secuencias ilustradas (1)_7: 893081211
+      Hoja de misiones educativas_ secuencias ilustradas (1)_8: 424621060
+      Hoja de misiones educativas_ secuencias ilustradas (1)_9: -1415513827
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

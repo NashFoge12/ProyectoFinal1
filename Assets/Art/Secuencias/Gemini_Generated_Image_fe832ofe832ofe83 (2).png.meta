@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: afdad7cc7843147489ab2846ad22feb8
+guid: 4f60060c13cf0124aaf55f9c199eae0a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: secuencia2_0
+      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_0
       rect:
         serializedVersion: 2
-        x: 120
-        y: 423
-        width: 829
-        height: 186
+        x: 41
+        y: 449
+        width: 911
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f822b83cabc70f14bb8679ba90edeca5
-      internalID: -1124444529
+      spriteID: a6bded60d5f2a3f44a306a4aef36403c
+      internalID: 1757481557
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: secuencia2_1
+      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_1
       rect:
         serializedVersion: 2
-        x: 198
-        y: 117
-        width: 662
-        height: 122
+        x: 154
+        y: 262
+        width: 262
+        height: 171
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec8f0895da918ee4da0c98c134779b1a
-      internalID: 1975727561
+      spriteID: 15e4cc7b2e04456428f8970484fed65d
+      internalID: 1603148917
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: secuencia2_2
+      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_2
       rect:
         serializedVersion: 2
-        x: 383
-        y: 21
-        width: 342
-        height: 90
+        x: 426
+        y: 261
+        width: 261
+        height: 173
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5bb424f6e709ee241ae92be6920546fe
-      internalID: -717359853
+      spriteID: 05080f33522cbfa47ac4fb47da50b647
+      internalID: -1855682253
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: secuencia2_3
+      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_3
       rect:
         serializedVersion: 2
-        x: 143
-        y: 245
-        width: 253
-        height: 166
+        x: 699
+        y: 261
+        width: 262
+        height: 173
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,74 +191,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 85321dcc5b66bdc42a2a395d33af2da5
-      internalID: 1225940604
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: secuencia2_4
-      rect:
-        serializedVersion: 2
-        x: 402
-        y: 244
-        width: 250
-        height: 168
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 715a745b9e59ea6419c76e59a00add4f
-      internalID: -1432662587
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: secuencia2_5
-      rect:
-        serializedVersion: 2
-        x: 658
-        y: 245
-        width: 258
-        height: 168
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b80ba2212a815914cb277f1ec9e9aacc
-      internalID: -1997370899
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: secuencia2_6
-      rect:
-        serializedVersion: 2
-        x: 233
-        y: 746
-        width: 581
-        height: 201
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 300fea9ef387eaa45afb5a9412eddb83
-      internalID: -174023976
+      spriteID: b20d1b2d3d9762a4a95d5f5e6167b502
+      internalID: -1375646776
       vertices: []
       indices: 
       edges: []
@@ -267,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b9751935283393140a23b54cc27b2e1d
+    spriteID: d03912ab85387f54f84b679ed2cafdbe
     internalID: 0
     vertices: []
     indices: 
@@ -277,13 +211,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      secuencia2_0: -1124444529
-      secuencia2_1: 1975727561
-      secuencia2_2: -717359853
-      secuencia2_3: 1225940604
-      secuencia2_4: -1432662587
-      secuencia2_5: -1997370899
-      secuencia2_6: -174023976
+      Gemini_Generated_Image_fe832ofe832ofe83 (2)_0: 1757481557
+      Gemini_Generated_Image_fe832ofe832ofe83 (2)_1: 1603148917
+      Gemini_Generated_Image_fe832ofe832ofe83 (2)_2: -1855682253
+      Gemini_Generated_Image_fe832ofe832ofe83 (2)_3: -1375646776
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,11 +10,10 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     // TEXTOS
     // =====================================================
 
-    [Header("Textos")]
+    [Header("Textos de interfaz")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
     public TMP_Text txtResultado;
-
 
     // =====================================================
     // FONDOS
@@ -26,18 +26,16 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     public Sprite fondoFlechas;
     public Sprite fondoNumeros;
 
-
     // =====================================================
-    // TITULOS EN IMAGEN
+    // TITULOS
     // =====================================================
 
-    [Header("Titulos")]
+    [Header("Titulos en imagen")]
     public Image imagenTitulo;
 
     public Sprite tituloColores;
     public Sprite tituloFlechas;
     public Sprite tituloNumeros;
-
 
     // =====================================================
     // SECUENCIAS EN IMAGEN
@@ -50,17 +48,15 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     public Sprite secuenciaFlechas;
     public Sprite secuenciaNumeros;
 
-
     // =====================================================
     // BOTONES DE OPCIONES
     // =====================================================
 
     [Header("Botones de opciones")]
-    public Button[] botonesOpciones;
-
+    public Button[] botonesOpciones = new Button[3];
 
     // =====================================================
-    // OPCIONES EJERCICIO 1 - COLORES
+    // EJERCICIO 1 - COLORES
     // =====================================================
 
     [Header("Opciones - Colores")]
@@ -74,9 +70,8 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     // ROJO - ROJO
     public Sprite coloresIncorrecta2;
 
-
     // =====================================================
-    // OPCIONES EJERCICIO 2 - FLECHAS
+    // EJERCICIO 2 - FLECHAS
     // =====================================================
 
     [Header("Opciones - Flechas")]
@@ -90,9 +85,8 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     // ARRIBA - ARRIBA
     public Sprite flechasIncorrecta2;
 
-
     // =====================================================
-    // OPCIONES EJERCICIO 3 - NUMEROS
+    // EJERCICIO 3 - NUMEROS
     // =====================================================
 
     [Header("Opciones - Numeros")]
@@ -106,7 +100,6 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     // 1 - 2
     public Sprite numerosIncorrecta2;
 
-
     // =====================================================
     // BOTONES DE CONTROL
     // =====================================================
@@ -115,36 +108,67 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     public Button btnComprobar;
     public Button btnSiguiente;
 
+    // =====================================================
+    // INDICADOR DE PROGRESO
+    // =====================================================
+
+    [Header("Indicador de progreso")]
+
+    [Tooltip("Panel que contiene Txt_Progreso")]
+    public RectTransform panelProgreso;
+
+    [Tooltip("Tamano de cada circulo")]
+    public float tamanoCirculo = 28f;
+
+    [Tooltip("Separacion entre circulos")]
+    public float separacionCirculos = 38f;
+
+    [Tooltip("Posicion vertical dentro del panel")]
+    public float posicionVerticalCirculos = -20f;
+
+    [Tooltip("Color del ejercicio alcanzado")]
+    public Color colorActivo =
+        new Color(1f, 0.78f, 0.24f, 1f);
+
+    [Tooltip("Color de los ejercicios pendientes")]
+    public Color colorPendiente =
+        new Color(0.78f, 0.76f, 0.72f, 1f);
+
+    [Tooltip("Color del borde de los circulos")]
+    public Color colorBorde =
+        new Color(0.43f, 0.29f, 0.17f, 1f);
+
+    // =====================================================
+    // COLORES DE OPCIONES
+    // =====================================================
+
+    [Header("Colores de seleccion")]
+
+    public Color colorNormal = Color.white;
+
+    public Color colorSeleccionado =
+        new Color(0.65f, 0.90f, 1f, 1f);
 
     // =====================================================
     // VARIABLES INTERNAS
     // =====================================================
 
+    private const int totalEjercicios = 3;
+
     private int ejercicioActual = 0;
 
     private int opcionSeleccionada = -1;
 
-    // Guarda la posición donde está la respuesta correcta
     private int indiceCorrectoActual = -1;
 
-
-    // =====================================================
-    // POSICIONES DE LAS RESPUESTAS CORRECTAS
-    //
-    // Ejemplo:
-    //
-    // 2, 0, 1
-    //
-    // Ejercicio 1 -> botón 3
-    // Ejercicio 2 -> botón 1
-    // Ejercicio 3 -> botón 2
-    //
-    // Cada partida cambia.
-    // =====================================================
+    private bool ejercicioCompletado = false;
 
     private List<int> posicionesCorrectas =
         new List<int>();
 
+    private Image[] circulosProgreso;
+
+    private Sprite spriteCirculoGenerado;
 
     // =====================================================
     // PREGUNTAS
@@ -157,34 +181,52 @@ public class JuegoCompletarSecuencia : MonoBehaviour
         "Encuentra los números que faltan."
     };
 
-
     // =====================================================
     // START
     // =====================================================
 
     void Start()
     {
-        // =================================================
-        // COMPROBAR QUE EXISTAN 3 BOTONES
-        // =================================================
+        // Verificar referencias.
 
-        if (botonesOpciones == null ||
-            botonesOpciones.Length < 3)
+        if (txtPregunta == null ||
+            txtProgreso == null ||
+            txtResultado == null ||
+            btnComprobar == null ||
+            btnSiguiente == null ||
+            imagenSecuencia == null)
         {
             Debug.LogError(
-                "Debes asignar 3 botones en Botones Opciones."
+                "Faltan referencias en JuegoCompletarSecuencia."
             );
 
+            enabled = false;
             return;
         }
 
+        if (botonesOpciones == null ||
+            botonesOpciones.Length != 3)
+        {
+            Debug.LogError(
+                "Debes asignar exactamente 3 botones."
+            );
 
-        // =================================================
-        // CONECTAR LOS BOTONES DE RESPUESTA
-        // =================================================
+            enabled = false;
+            return;
+        }
 
         for (int i = 0; i < botonesOpciones.Length; i++)
         {
+            if (botonesOpciones[i] == null)
+            {
+                Debug.LogError(
+                    "Falta asignar el boton de opcion " + (i + 1)
+                );
+
+                enabled = false;
+                return;
+            }
+
             int indice = i;
 
             botonesOpciones[i].onClick.AddListener(
@@ -192,86 +234,52 @@ public class JuegoCompletarSecuencia : MonoBehaviour
             );
         }
 
-
-        // =================================================
-        // BOTÓN COMPROBAR
-        // =================================================
-
         btnComprobar.onClick.AddListener(
             ComprobarRespuesta
         );
-
-
-        // =================================================
-        // BOTÓN SIGUIENTE
-        // =================================================
 
         btnSiguiente.onClick.AddListener(
             SiguienteEjercicio
         );
 
-
-        // =================================================
-        // PREPARAR POSICIONES DE RESPUESTAS CORRECTAS
-        // =================================================
-
         PrepararPosicionesCorrectas();
 
-
-        // =================================================
-        // CARGAR PRIMER EJERCICIO
-        // =================================================
+        CrearIndicadorProgreso();
 
         CargarEjercicio();
     }
 
-
     // =====================================================
-    // PREPARAR POSICIONES CORRECTAS
+    // PREPARAR POSICIONES DE RESPUESTAS
     // =====================================================
 
     void PrepararPosicionesCorrectas()
     {
         posicionesCorrectas.Clear();
 
-
-        // Tenemos 3 posiciones posibles:
-        //
-        // 0 = Btn_Opcion1
-        // 1 = Btn_Opcion2
-        // 2 = Btn_Opcion3
-
         posicionesCorrectas.Add(0);
         posicionesCorrectas.Add(1);
         posicionesCorrectas.Add(2);
 
+        // Mezclar posiciones.
+        // Cada ejercicio tendra su respuesta correcta
+        // en una posicion diferente.
 
-        // =================================================
-        // MEZCLAR LAS 3 POSICIONES
-        // =================================================
-
-        for (int i = 0; i < posicionesCorrectas.Count; i++)
+        for (int i = posicionesCorrectas.Count - 1; i > 0; i--)
         {
             int posicionAleatoria =
-                Random.Range(
-                    i,
-                    posicionesCorrectas.Count
-                );
-
+                Random.Range(0, i + 1);
 
             int temporal =
                 posicionesCorrectas[i];
 
-
             posicionesCorrectas[i] =
                 posicionesCorrectas[posicionAleatoria];
-
 
             posicionesCorrectas[posicionAleatoria] =
                 temporal;
         }
     }
-
 
     // =====================================================
     // CARGAR EJERCICIO
@@ -279,66 +287,50 @@ public class JuegoCompletarSecuencia : MonoBehaviour
 
     void CargarEjercicio()
     {
-        // =================================================
-        // REINICIAR SELECCIÓN
-        // =================================================
-
         opcionSeleccionada = -1;
-
         indiceCorrectoActual = -1;
+        ejercicioCompletado = false;
 
-
-        // =================================================
-        // VOLVER A MOSTRAR SECUENCIA
-        // =================================================
-
-        if (imagenSecuencia != null)
-        {
-            imagenSecuencia
-                .gameObject
-                .SetActive(true);
-        }
-
-
-        // =================================================
+        // ---------------------------------------------
         // MENSAJE
-        // =================================================
+        // ---------------------------------------------
 
-        if (txtResultado != null)
-        {
-            txtResultado.text =
-                "Selecciona la opción que completa la secuencia.";
-        }
+        txtResultado.text =
+            "Selecciona la opción que completa la secuencia.";
 
-
-        // =================================================
+        // ---------------------------------------------
         // PREGUNTA
-        // =================================================
+        // ---------------------------------------------
 
-        if (txtPregunta != null)
-        {
-            txtPregunta.text =
-                preguntas[ejercicioActual];
-        }
+        txtPregunta.text =
+            preguntas[ejercicioActual];
 
+        // ---------------------------------------------
+        // PROGRESO EN UNA SOLA LINEA
+        // ---------------------------------------------
 
-        // =================================================
-        // PROGRESO
-        // =================================================
+        txtProgreso.text =
+            "Ejercicio " +
+            (ejercicioActual + 1) +
+            " de " +
+            totalEjercicios;
 
-        if (txtProgreso != null)
-        {
-            txtProgreso.text =
-                "Ejercicio\n" +
-                (ejercicioActual + 1) +
-                " de 3";
-        }
+        txtProgreso.enableWordWrapping = false;
 
+        txtProgreso.overflowMode =
+            TextOverflowModes.Overflow;
 
-        // =================================================
-        // EJERCICIO 1
-        // COLORES
-        // =================================================
+        ActualizarIndicadorProgreso();
+
+        // ---------------------------------------------
+        // MOSTRAR SECUENCIA
+        // ---------------------------------------------
+
+        imagenSecuencia.gameObject.SetActive(true);
+
+        // ---------------------------------------------
+        // EJERCICIO 1 - COLORES
+        // ---------------------------------------------
 
         if (ejercicioActual == 0)
         {
@@ -348,13 +340,11 @@ public class JuegoCompletarSecuencia : MonoBehaviour
                 false
             );
 
-
             CambiarImagen(
                 imagenTitulo,
                 tituloColores,
                 false
             );
-
 
             CambiarImagen(
                 imagenSecuencia,
@@ -363,11 +353,9 @@ public class JuegoCompletarSecuencia : MonoBehaviour
             );
         }
 
-
-        // =================================================
-        // EJERCICIO 2
-        // FLECHAS
-        // =================================================
+        // ---------------------------------------------
+        // EJERCICIO 2 - FLECHAS
+        // ---------------------------------------------
 
         else if (ejercicioActual == 1)
         {
@@ -377,13 +365,11 @@ public class JuegoCompletarSecuencia : MonoBehaviour
                 false
             );
 
-
             CambiarImagen(
                 imagenTitulo,
                 tituloFlechas,
                 false
             );
-
 
             CambiarImagen(
                 imagenSecuencia,
@@ -392,11 +378,9 @@ public class JuegoCompletarSecuencia : MonoBehaviour
             );
         }
 
-
-        // =================================================
-        // EJERCICIO 3
-        // NUMEROS
-        // =================================================
+        // ---------------------------------------------
+        // EJERCICIO 3 - NUMEROS
+        // ---------------------------------------------
 
         else if (ejercicioActual == 2)
         {
@@ -406,13 +390,11 @@ public class JuegoCompletarSecuencia : MonoBehaviour
                 false
             );
 
-
             CambiarImagen(
                 imagenTitulo,
                 tituloNumeros,
                 false
             );
-
 
             CambiarImagen(
                 imagenSecuencia,
@@ -421,34 +403,21 @@ public class JuegoCompletarSecuencia : MonoBehaviour
             );
         }
 
-
-        // =================================================
-        // CARGAR OPCIONES
-        // =================================================
+        // ---------------------------------------------
+        // CARGAR ALTERNATIVAS
+        // ---------------------------------------------
 
         CargarOpciones();
 
-
-        // =================================================
+        // ---------------------------------------------
         // BOTONES
-        // =================================================
+        // ---------------------------------------------
 
-        if (btnComprobar != null)
-        {
-            btnComprobar
-                .gameObject
-                .SetActive(true);
-        }
+        btnComprobar.gameObject.SetActive(true);
+        btnComprobar.interactable = true;
 
-
-        if (btnSiguiente != null)
-        {
-            btnSiguiente
-                .gameObject
-                .SetActive(false);
-        }
+        btnSiguiente.gameObject.SetActive(false);
     }
-
 
     // =====================================================
     // CAMBIAR IMAGEN
@@ -457,24 +426,15 @@ public class JuegoCompletarSecuencia : MonoBehaviour
     void CambiarImagen(
         Image imagen,
         Sprite spriteNuevo,
-        bool mantenerProporcion
-    )
+        bool mantenerProporcion)
     {
-        if (imagen == null ||
-            spriteNuevo == null)
-        {
+        if (imagen == null || spriteNuevo == null)
             return;
-        }
 
+        imagen.sprite = spriteNuevo;
 
-        imagen.sprite =
-            spriteNuevo;
-
-
-        imagen.preserveAspect =
-            mantenerProporcion;
+        imagen.preserveAspect = mantenerProporcion;
     }
-
 
     // =====================================================
     // CARGAR OPCIONES
@@ -482,94 +442,44 @@ public class JuegoCompletarSecuencia : MonoBehaviour
 
     void CargarOpciones()
     {
-        // =================================================
-        // OBTENER SPRITES DEL EJERCICIO ACTUAL
-        // =================================================
-
         Sprite correcta = null;
-
         Sprite incorrecta1 = null;
-
         Sprite incorrecta2 = null;
 
-
-        // =================================================
-        // EJERCICIO 1 - COLORES
-        // =================================================
+        // EJERCICIO 1
 
         if (ejercicioActual == 0)
         {
-            correcta =
-                coloresCorrecta;
-
-
-            incorrecta1 =
-                coloresIncorrecta1;
-
-
-            incorrecta2 =
-                coloresIncorrecta2;
+            correcta = coloresCorrecta;
+            incorrecta1 = coloresIncorrecta1;
+            incorrecta2 = coloresIncorrecta2;
         }
 
-
-        // =================================================
-        // EJERCICIO 2 - FLECHAS
-        // =================================================
+        // EJERCICIO 2
 
         else if (ejercicioActual == 1)
         {
-            correcta =
-                flechasCorrecta;
-
-
-            incorrecta1 =
-                flechasIncorrecta1;
-
-
-            incorrecta2 =
-                flechasIncorrecta2;
+            correcta = flechasCorrecta;
+            incorrecta1 = flechasIncorrecta1;
+            incorrecta2 = flechasIncorrecta2;
         }
 
-
-        // =================================================
-        // EJERCICIO 3 - NUMEROS
-        // =================================================
+        // EJERCICIO 3
 
         else if (ejercicioActual == 2)
         {
-            correcta =
-                numerosCorrecta;
-
-
-            incorrecta1 =
-                numerosIncorrecta1;
-
-
-            incorrecta2 =
-                numerosIncorrecta2;
+            correcta = numerosCorrecta;
+            incorrecta1 = numerosIncorrecta1;
+            incorrecta2 = numerosIncorrecta2;
         }
-
-
-        // =================================================
-        // OBTENER POSICIÓN CORRECTA
-        // =================================================
 
         int posicionCorrecta =
             posicionesCorrectas[ejercicioActual];
 
-
-        // Guardamos dónde está
-        indiceCorrectoActual =
-            posicionCorrecta;
-
-
-        // =================================================
-        // BUSCAR LAS OTRAS DOS POSICIONES
-        // =================================================
+        indiceCorrectoActual = posicionCorrecta;
 
         List<int> posicionesIncorrectas =
             new List<int>();
-
 
         for (int i = 0; i < 3; i++)
         {
@@ -579,105 +489,81 @@ public class JuegoCompletarSecuencia : MonoBehaviour
             }
         }
 
-
-        // =================================================
-        // MEZCLAR TAMBIÉN LAS INCORRECTAS
-        // =================================================
+        // Variar posiciones de las incorrectas.
 
         if (Random.value > 0.5f)
         {
-            int temporal =
-                posicionesIncorrectas[0];
-
+            int temporal = posicionesIncorrectas[0];
 
             posicionesIncorrectas[0] =
                 posicionesIncorrectas[1];
 
-
-            posicionesIncorrectas[1] =
-                temporal;
+            posicionesIncorrectas[1] = temporal;
         }
 
-
-        // =================================================
-        // ACTIVAR LOS 3 BOTONES
-        // =================================================
+        // Reiniciar botones.
 
         for (int i = 0; i < 3; i++)
         {
-            botonesOpciones[i]
-                .gameObject
-                .SetActive(true);
+            botonesOpciones[i].gameObject.SetActive(true);
 
+            botonesOpciones[i].interactable = true;
 
-            botonesOpciones[i]
-                .interactable = true;
+            botonesOpciones[i].image.color = colorNormal;
         }
 
+        // RESPUESTA CORRECTA
 
-        // =================================================
-        // COLOCAR SPRITE CORRECTO
-        // =================================================
+        botonesOpciones[posicionCorrecta].image.sprite =
+            correcta;
 
-        botonesOpciones[posicionCorrecta]
-            .image
-            .sprite = correcta;
+        botonesOpciones[posicionCorrecta].image.preserveAspect =
+            false;
 
+        // RESPUESTA INCORRECTA 1
 
-        // IMPORTANTE:
-        // Lo dejamos FALSE para que mantenga
-        // el tamaño del botón que configuraste.
-        botonesOpciones[posicionCorrecta]
-            .image
-            .preserveAspect = false;
+        botonesOpciones[posicionesIncorrectas[0]].image.sprite =
+            incorrecta1;
 
+        botonesOpciones[posicionesIncorrectas[0]].image.preserveAspect =
+            false;
 
-        // =================================================
-        // COLOCAR INCORRECTA 1
-        // =================================================
+        // RESPUESTA INCORRECTA 2
 
-        botonesOpciones[posicionesIncorrectas[0]]
-            .image
-            .sprite = incorrecta1;
+        botonesOpciones[posicionesIncorrectas[1]].image.sprite =
+            incorrecta2;
 
-
-        botonesOpciones[posicionesIncorrectas[0]]
-            .image
-            .preserveAspect = false;
-
-
-        // =================================================
-        // COLOCAR INCORRECTA 2
-        // =================================================
-
-        botonesOpciones[posicionesIncorrectas[1]]
-            .image
-            .sprite = incorrecta2;
-
-
-        botonesOpciones[posicionesIncorrectas[1]]
-            .image
-            .preserveAspect = false;
+        botonesOpciones[posicionesIncorrectas[1]].image.preserveAspect =
+            false;
     }
 
-
     // =====================================================
-    // SELECCIONAR OPCIÓN
+    // SELECCIONAR OPCION
     // =====================================================
 
     void SeleccionarOpcion(int indice)
     {
-        opcionSeleccionada =
-            indice;
+        if (ejercicioCompletado)
+            return;
 
+        opcionSeleccionada = indice;
 
-        if (txtResultado != null)
+        // Restaurar colores.
+
+        for (int i = 0; i < 3; i++)
         {
-            txtResultado.text =
-                "Opción seleccionada. Pulsa COMPROBAR.";
+            botonesOpciones[i].image.color =
+                colorNormal;
         }
-    }
 
+        // Resaltar opcion seleccionada.
+
+        botonesOpciones[indice].image.color =
+            colorSeleccionado;
+
+        txtResultado.text =
+            "Opción seleccionada. Pulsa COMPROBAR.";
+    }
 
     // =====================================================
     // COMPROBAR RESPUESTA
@@ -685,81 +571,59 @@ public class JuegoCompletarSecuencia : MonoBehaviour
 
     void ComprobarRespuesta()
     {
-        // =================================================
-        // NO HA SELECCIONADO NINGUNA
-        // =================================================
+        if (ejercicioCompletado)
+            return;
+
+        // ---------------------------------------------
+        // NINGUNA OPCION SELECCIONADA
+        // ---------------------------------------------
 
         if (opcionSeleccionada == -1)
         {
-            if (txtResultado != null)
-            {
-                txtResultado.text =
-                    "Selecciona una opción primero.";
-            }
+            txtResultado.text =
+                "¡Selecciona una opción primero!";
 
             return;
         }
 
-
-        // =================================================
+        // ---------------------------------------------
         // RESPUESTA CORRECTA
-        // =================================================
+        // ---------------------------------------------
 
-        if (opcionSeleccionada ==
-            indiceCorrectoActual)
+        if (opcionSeleccionada == indiceCorrectoActual)
         {
-            if (txtResultado != null)
+            ejercicioCompletado = true;
+
+            txtResultado.text =
+                "¡Correcto! Completaste la secuencia.";
+
+            btnComprobar.gameObject.SetActive(false);
+
+            btnSiguiente.gameObject.SetActive(true);
+
+            // Bloquear las tres opciones.
+
+            foreach (Button boton in botonesOpciones)
             {
-                txtResultado.text =
-                    "⭐ ¡Correcto! Completaste la secuencia.";
-            }
-
-
-            // Ocultar comprobar
-            if (btnComprobar != null)
-            {
-                btnComprobar
-                    .gameObject
-                    .SetActive(false);
-            }
-
-
-            // Mostrar siguiente
-            if (btnSiguiente != null)
-            {
-                btnSiguiente
-                    .gameObject
-                    .SetActive(true);
-            }
-
-
-            // Bloquear las respuestas
-            for (int i = 0; i < 3; i++)
-            {
-                botonesOpciones[i]
-                    .interactable = false;
+                boton.interactable = false;
             }
         }
 
-
-        // =================================================
+        // ---------------------------------------------
         // RESPUESTA INCORRECTA
-        // =================================================
+        // ---------------------------------------------
 
         else
         {
-            if (txtResultado != null)
-            {
-                txtResultado.text =
-                    "❌ Esa no es la respuesta. ¡Inténtalo otra vez!";
-            }
+            txtResultado.text =
+                "¡Casi! Observa la secuencia e inténtalo otra vez.";
 
+            botonesOpciones[opcionSeleccionada]
+                .image.color = colorNormal;
 
-            // Permitir seleccionar otra
             opcionSeleccionada = -1;
         }
     }
-
 
     // =====================================================
     // SIGUIENTE EJERCICIO
@@ -767,105 +631,302 @@ public class JuegoCompletarSecuencia : MonoBehaviour
 
     void SiguienteEjercicio()
     {
+        if (!ejercicioCompletado)
+            return;
+
         ejercicioActual++;
 
-
-        // =================================================
-        // TODAVÍA QUEDAN EJERCICIOS
-        // =================================================
-
-        if (ejercicioActual < 3)
+        if (ejercicioActual < totalEjercicios)
         {
             CargarEjercicio();
         }
-
-
-        // =================================================
-        // TERMINÓ LOS 3
-        // =================================================
-
         else
         {
             FinalizarMision();
         }
     }
 
-
     // =====================================================
-    // FINALIZAR MISIÓN
+    // FINALIZAR MISION
     // =====================================================
 
     void FinalizarMision()
     {
-        // =================================================
-        // MENSAJE FINAL
-        // =================================================
+        txtPregunta.text =
+            "¡MISIÓN COMPLETADA!";
 
-        if (txtPregunta != null)
+        txtProgreso.text = "";
+
+        txtResultado.text =
+            "¡Excelente! Completaste correctamente las 3 secuencias.";
+
+        // Ocultar secuencia principal.
+
+        imagenSecuencia.gameObject.SetActive(false);
+
+        // Ocultar opciones.
+
+        foreach (Button boton in botonesOpciones)
         {
-            txtPregunta.text =
-                "🏆 ¡MISIÓN COMPLETADA!";
+            boton.gameObject.SetActive(false);
         }
 
+        // Ocultar botones.
 
-        if (txtProgreso != null)
+        btnComprobar.gameObject.SetActive(false);
+        btnSiguiente.gameObject.SetActive(false);
+
+        // Ocultar los circulos de progreso.
+
+        OcultarIndicadorProgreso();
+    }
+
+    // =====================================================
+    // CREAR SPRITE CIRCULAR
+    // =====================================================
+
+    Sprite CrearSpriteCircular()
+    {
+        int resolucion = 128;
+
+        Texture2D textura = new Texture2D(
+            resolucion,
+            resolucion,
+            TextureFormat.RGBA32,
+            false
+        );
+
+        textura.filterMode = FilterMode.Bilinear;
+        textura.wrapMode = TextureWrapMode.Clamp;
+
+        float centro = (resolucion - 1) / 2f;
+        float radio = centro - 1f;
+
+        for (int y = 0; y < resolucion; y++)
         {
-            txtProgreso.text = "";
+            for (int x = 0; x < resolucion; x++)
+            {
+                float distancia = Vector2.Distance(
+                    new Vector2(x, y),
+                    new Vector2(centro, centro)
+                );
+
+                float alpha = Mathf.Clamp01(
+                    radio - distancia + 0.5f
+                );
+
+                textura.SetPixel(
+                    x,
+                    y,
+                    new Color(1f, 1f, 1f, alpha)
+                );
+            }
         }
 
+        textura.Apply();
 
-        if (txtResultado != null)
+        return Sprite.Create(
+            textura,
+            new Rect(0, 0, resolucion, resolucion),
+            new Vector2(0.5f, 0.5f),
+            100f
+        );
+    }
+
+    // =====================================================
+    // CREAR LOS TRES CIRCULOS DE PROGRESO
+    // =====================================================
+
+    void CrearIndicadorProgreso()
+    {
+        // Buscar automaticamente Panel_Progreso
+        // si no fue asignado desde el Inspector.
+
+        if (panelProgreso == null && txtProgreso != null)
         {
-            txtResultado.text =
-                "⭐ Completaste correctamente las 3 secuencias.";
+            panelProgreso =
+                txtProgreso.transform.parent as RectTransform;
         }
 
-
-        // =================================================
-        // OCULTAR SECUENCIA
-        // =================================================
-
-        if (imagenSecuencia != null)
+        if (panelProgreso == null)
         {
-            imagenSecuencia
-                .gameObject
-                .SetActive(false);
+            Debug.LogError(
+                "No se encontro Panel_Progreso."
+            );
+
+            return;
         }
 
+        // Evitar duplicar circulos si se vuelve
+        // a ejecutar la inicializacion.
 
-        // =================================================
-        // OCULTAR LAS 3 OPCIONES
-        // =================================================
+        circulosProgreso = new Image[totalEjercicios];
 
-        for (int i = 0; i < 3; i++)
+        spriteCirculoGenerado = CrearSpriteCircular();
+
+        for (int i = 0; i < totalEjercicios; i++)
         {
-            botonesOpciones[i]
-                .gameObject
-                .SetActive(false);
+            // ---------------------------------------------
+            // CIRCULO EXTERIOR - BORDE
+            // ---------------------------------------------
+
+            GameObject objetoCirculo = new GameObject(
+                "Circulo_Progreso_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            objetoCirculo.transform.SetParent(
+                panelProgreso,
+                false
+            );
+
+            RectTransform rect =
+                objetoCirculo.GetComponent<RectTransform>();
+
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+
+            rect.sizeDelta = new Vector2(
+                tamanoCirculo,
+                tamanoCirculo
+            );
+
+            rect.anchoredPosition = new Vector2(
+                (i - 1) * separacionCirculos,
+                posicionVerticalCirculos
+            );
+
+            Image imagenBorde =
+                objetoCirculo.GetComponent<Image>();
+
+            imagenBorde.sprite = spriteCirculoGenerado;
+            imagenBorde.color = colorBorde;
+            imagenBorde.raycastTarget = false;
+
+            // ---------------------------------------------
+            // CIRCULO INTERIOR - COLOR DE PROGRESO
+            // ---------------------------------------------
+
+            GameObject objetoInterior = new GameObject(
+                "Interior",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            objetoInterior.transform.SetParent(
+                objetoCirculo.transform,
+                false
+            );
+
+            RectTransform rectInterior =
+                objetoInterior.GetComponent<RectTransform>();
+
+            rectInterior.anchorMin = Vector2.zero;
+            rectInterior.anchorMax = Vector2.one;
+
+            rectInterior.offsetMin = new Vector2(2f, 2f);
+            rectInterior.offsetMax = new Vector2(-2f, -2f);
+
+            Image imagenInterior =
+                objetoInterior.GetComponent<Image>();
+
+            imagenInterior.sprite = spriteCirculoGenerado;
+            imagenInterior.color = colorPendiente;
+            imagenInterior.raycastTarget = false;
+
+            circulosProgreso[i] = imagenInterior;
+
+            // ---------------------------------------------
+            // NUMERO DEL CIRCULO
+            // ---------------------------------------------
+
+            GameObject objetoNumero = new GameObject(
+                "Numero_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(TextMeshProUGUI)
+            );
+
+            objetoNumero.transform.SetParent(
+                objetoCirculo.transform,
+                false
+            );
+
+            RectTransform rectNumero =
+                objetoNumero.GetComponent<RectTransform>();
+
+            rectNumero.anchorMin = Vector2.zero;
+            rectNumero.anchorMax = Vector2.one;
+
+            rectNumero.offsetMin = Vector2.zero;
+            rectNumero.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI numero =
+                objetoNumero.GetComponent<TextMeshProUGUI>();
+
+            numero.text = (i + 1).ToString();
+
+            numero.fontSize = tamanoCirculo * 0.5f;
+
+            numero.fontStyle = FontStyles.Bold;
+
+            numero.alignment =
+                TextAlignmentOptions.Center;
+
+            numero.color = Color.white;
+
+            numero.enableAutoSizing = false;
+
+            numero.raycastTarget = false;
         }
 
+        ActualizarIndicadorProgreso();
+    }
 
-        // =================================================
-        // OCULTAR COMPROBAR
-        // =================================================
+    // =====================================================
+    // ACTUALIZAR LOS COLORES DEL PROGRESO
+    // =====================================================
 
-        if (btnComprobar != null)
+    void ActualizarIndicadorProgreso()
+    {
+        if (circulosProgreso == null)
+            return;
+
+        for (int i = 0; i < circulosProgreso.Length; i++)
         {
-            btnComprobar
-                .gameObject
-                .SetActive(false);
+            if (circulosProgreso[i] == null)
+                continue;
+
+            circulosProgreso[i].color =
+                i <= ejercicioActual
+                ? colorActivo
+                : colorPendiente;
         }
+    }
 
+    // =====================================================
+    // OCULTAR PROGRESO AL FINALIZAR
+    // =====================================================
 
-        // =================================================
-        // OCULTAR SIGUIENTE
-        // =================================================
+    void OcultarIndicadorProgreso()
+    {
+        if (circulosProgreso == null)
+            return;
 
-        if (btnSiguiente != null)
+        foreach (Image circulo in circulosProgreso)
         {
-            btnSiguiente
-                .gameObject
-                .SetActive(false);
+            if (circulo != null)
+            {
+                // Desactivar todo el circulo,
+                // incluyendo borde y numero.
+
+                circulo.transform.parent
+                    .gameObject.SetActive(false);
+            }
         }
     }
 }

@@ -1,825 +1,635 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class JuegoDivideProblema : MonoBehaviour
 {
-    // =====================================================
-    // CLASE PARA CADA TARJETA
-    // =====================================================
-
-    [System.Serializable]
-    public class Tarjeta
-    {
-        public Sprite imagen;
-        public bool esCorrecta;
-
-        public Tarjeta(Sprite imagenNueva, bool correcta)
-        {
-            imagen = imagenNueva;
-            esCorrecta = correcta;
-        }
-    }
-
-
-    // =====================================================
+    // =========================================================
     // TEXTOS
-    // =====================================================
+    // =========================================================
 
-    [Header("Textos")]
+    [Header("TEXTOS DE INTERFAZ")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
     public TMP_Text txtResultado;
 
+    // =========================================================
+    // FONDO Y TITULO (OPCIONALES)
+    // =========================================================
 
-    // =====================================================
-    // FONDOS
-    // =====================================================
-
-    [Header("Fondos")]
+    [Header("FONDO Y TITULO")]
     public Image imagenFondo;
-
-    public Sprite fondoColegio;
-    public Sprite fondoPlanta;
-    public Sprite fondoRobot;
-
-
-    // =====================================================
-    // TITULOS
-    // =====================================================
-
-    [Header("Titulos en imagen")]
     public Image imagenTitulo;
 
-    public Sprite tituloColegio;
-    public Sprite tituloPlanta;
-    public Sprite tituloRobot;
+    [Header("FONDOS DE LOS EJERCICIOS")]
+    public Sprite fondoFiesta;
+    public Sprite fondoExposicion;
+    public Sprite fondoJardin;
 
+    [Header("TITULOS DE LOS EJERCICIOS")]
+    public Sprite tituloFiesta;
+    public Sprite tituloExposicion;
+    public Sprite tituloJardin;
 
-    // =====================================================
-    // IMAGEN DEL PROBLEMA
-    // =====================================================
+    // =========================================================
+    // TARJETAS
+    // =========================================================
 
-    [Header("Imagen del problema")]
-    public Image imagenProblema;
+    [Header("CINCO BOTONES DE TARJETAS")]
+    public Button[] botonesTarjetas = new Button[5];
 
-    public Sprite problemaColegio;
-    public Sprite problemaPlanta;
-    public Sprite problemaRobot;
+    [Header("TEXTOS DE LAS CINCO TARJETAS")]
+    public TMP_Text[] textosTarjetas = new TMP_Text[5];
 
+    // =========================================================
+    // BOTONES
+    // =========================================================
 
-    // =====================================================
-    // BOTONES / TARJETAS
-    // =====================================================
-
-    [Header("Tarjetas")]
-    public Button[] botonesPartes;
-
-
-    // =====================================================
-    // CHECKS DE SELECCION
-    //
-    // Deben estar en el mismo orden que botonesPartes.
-    // =====================================================
-
-    [Header("Checks de seleccion")]
-    public GameObject[] checksSeleccion;
-
-
-    // =====================================================
-    // EJERCICIO 1 - COLEGIO
-    // =====================================================
-
-    [Header("Ejercicio 1 - Colegio")]
-
-    public Sprite colegioVestirse;
-    public Sprite colegioMochila;
-    public Sprite colegioDesayunar;
-
-    public Sprite colegioVideojuegos;
-    public Sprite colegioPlaya;
-
-
-    // =====================================================
-    // EJERCICIO 2 - PLANTA
-    // =====================================================
-
-    [Header("Ejercicio 2 - Planta")]
-
-    public Sprite plantaRegar;
-    public Sprite plantaLuz;
-    public Sprite plantaRevisarHojas;
-
-    public Sprite plantaTelevision;
-    public Sprite plantaFutbol;
-
-
-    // =====================================================
-    // EJERCICIO 3 - ROBOT
-    // =====================================================
-
-    [Header("Ejercicio 3 - Robot")]
-
-    public Sprite robotObservarCamino;
-    public Sprite robotIdentificarObstaculos;
-    public Sprite robotPlanearMovimientos;
-
-    public Sprite robotPintar;
-    public Sprite robotMusica;
-
-
-    // =====================================================
-    // BOTONES DE CONTROL
-    // =====================================================
-
-    [Header("Botones")]
+    [Header("BOTONES DE CONTROL")]
     public Button btnComprobar;
     public Button btnSiguiente;
 
+    // Btn_Volver continúa usando NavegacionEscenas.
 
-    // =====================================================
+    // =========================================================
+    // COLORES
+    // =========================================================
+
+    [Header("COLORES DE TARJETAS")]
+
+    public Color colorNormal =
+        new Color(1f, 1f, 1f, 1f);
+
+    public Color colorSeleccionado =
+        new Color(0.56f, 0.83f, 1f, 1f);
+
+    public Color colorCorrecto =
+        new Color(0.56f, 0.90f, 0.66f, 1f);
+
+    [Header("COLORES DEL TEXTO")]
+
+    public Color colorTexto =
+        new Color(0.17f, 0.22f, 0.34f, 1f);
+
+    // =========================================================
+    // PROGRESO
+    // =========================================================
+
+    [Header("INDICADOR DE PROGRESO")]
+    public RectTransform panelProgreso;
+
+    public float tamanoCirculo = 28f;
+    public float separacionCirculos = 38f;
+    public float posicionVerticalCirculos = -20f;
+
+    public Color colorActivo =
+        new Color(1f, 0.78f, 0.24f, 1f);
+
+    public Color colorPendiente =
+        new Color(0.78f, 0.76f, 0.72f, 1f);
+
+    public Color colorBorde =
+        new Color(0.43f, 0.29f, 0.17f, 1f);
+
+    // =========================================================
+    // CONFIGURACION DE LOS EJERCICIOS
+    // =========================================================
+
+    private class Tarea
+    {
+        public string texto;
+        public bool esCorrecta;
+
+        public Tarea(string texto, bool esCorrecta)
+        {
+            this.texto = texto;
+            this.esCorrecta = esCorrecta;
+        }
+    }
+
+    private class Ejercicio
+    {
+        public string pregunta;
+        public string explicacion;
+        public List<Tarea> tareas;
+        public Sprite fondo;
+        public Sprite titulo;
+    }
+
+    private List<Ejercicio> ejercicios =
+        new List<Ejercicio>();
+
+    // =========================================================
     // VARIABLES INTERNAS
-    // =====================================================
+    // =========================================================
 
     private int ejercicioActual = 0;
 
-    // Guarda si cada botón está seleccionado.
-    private bool[] seleccionadas;
+    private int cantidadSeleccionada = 0;
 
-    // Guarda qué tarjeta está actualmente en cada botón.
-    private Tarjeta[] tarjetasActuales;
+    private bool ejercicioCompletado = false;
 
-    // Cantidad máxima que debe seleccionar.
-    private const int CANTIDAD_CORRECTAS = 3;
+    // Las tareas del ejercicio actual, ya mezcladas.
+    private List<Tarea> tareasActuales =
+        new List<Tarea>();
 
+    // Estado de selección de los cinco botones.
+    private bool[] seleccionadas = new bool[5];
 
-    // =====================================================
-    // START
-    // =====================================================
+    private Image[] circulosProgreso;
+
+    private Sprite spriteCirculo;
+
+    private const int tareasNecesarias = 3;
+
+    // =========================================================
+    // INICIO
+    // =========================================================
 
     void Start()
     {
-        // -------------------------------------------------
-        // COMPROBAR BOTONES
-        // -------------------------------------------------
-
-        if (botonesPartes == null ||
-            botonesPartes.Length != 5)
+        if (!ValidarReferencias())
         {
-            Debug.LogError(
-                "JuegoDivideProblema necesita exactamente 5 botones."
-            );
-
+            enabled = false;
             return;
         }
 
+        CrearEjercicios();
 
-        // -------------------------------------------------
-        // CREAR ARRAYS
-        // -------------------------------------------------
-
-        seleccionadas =
-            new bool[botonesPartes.Length];
-
-        tarjetasActuales =
-            new Tarjeta[botonesPartes.Length];
-
-
-        // -------------------------------------------------
-        // CONECTAR LOS 5 BOTONES
-        // -------------------------------------------------
-
-        for (int i = 0; i < botonesPartes.Length; i++)
+        // Conectar los cinco botones.
+        for (int i = 0; i < botonesTarjetas.Length; i++)
         {
             int indice = i;
 
-            botonesPartes[i].onClick.AddListener(
+            botonesTarjetas[i].onClick.AddListener(
                 () => SeleccionarTarjeta(indice)
             );
+
+            // El código controla los colores.
+            botonesTarjetas[i].transition =
+                Selectable.Transition.None;
         }
 
+        btnComprobar.onClick.AddListener(Comprobar);
 
-        // -------------------------------------------------
-        // BOTÓN COMPROBAR
-        // -------------------------------------------------
+        btnSiguiente.onClick.AddListener(SiguienteEjercicio);
 
-        if (btnComprobar != null)
-        {
-            btnComprobar.onClick.AddListener(
-                ComprobarRespuesta
-            );
-        }
-
-
-        // -------------------------------------------------
-        // BOTÓN SIGUIENTE
-        // -------------------------------------------------
-
-        if (btnSiguiente != null)
-        {
-            btnSiguiente.onClick.AddListener(
-                SiguienteEjercicio
-            );
-        }
-
-
-        // -------------------------------------------------
-        // CARGAR PRIMER EJERCICIO
-        // -------------------------------------------------
+        CrearIndicadorProgreso();
 
         CargarEjercicio();
     }
 
+    // =========================================================
+    // VALIDAR OBJETOS DEL INSPECTOR
+    // =========================================================
 
-    // =====================================================
+    bool ValidarReferencias()
+    {
+        if (txtPregunta == null ||
+            txtProgreso == null ||
+            txtResultado == null ||
+            btnComprobar == null ||
+            btnSiguiente == null)
+        {
+            Debug.LogError(
+                "JuegoDivideProblema: faltan textos o botones."
+            );
+
+            return false;
+        }
+
+        if (botonesTarjetas == null ||
+            botonesTarjetas.Length != 5)
+        {
+            Debug.LogError(
+                "JuegoDivideProblema: asigna cinco botones."
+            );
+
+            return false;
+        }
+
+        if (textosTarjetas == null ||
+            textosTarjetas.Length != 5)
+        {
+            Debug.LogError(
+                "JuegoDivideProblema: asigna cinco textos TMP."
+            );
+
+            return false;
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            if (botonesTarjetas[i] == null)
+            {
+                Debug.LogError(
+                    "Falta Boton_Tarjeta_" + (i + 1)
+                );
+
+                return false;
+            }
+
+            if (textosTarjetas[i] == null)
+            {
+                // Intentar buscarlo automáticamente.
+                textosTarjetas[i] =
+                    botonesTarjetas[i]
+                    .GetComponentInChildren<TMP_Text>(true);
+
+                if (textosTarjetas[i] == null)
+                {
+                    Debug.LogError(
+                        "Boton_Tarjeta_" + (i + 1) +
+                        " necesita un texto TextMeshPro."
+                    );
+
+                    return false;
+                }
+            }
+
+            if (botonesTarjetas[i].image == null)
+            {
+                Debug.LogError(
+                    "Boton_Tarjeta_" + (i + 1) +
+                    " necesita un componente Image."
+                );
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // =========================================================
+    // CREAR LOS TRES EJERCICIOS
+    // =========================================================
+
+    void CrearEjercicios()
+    {
+        ejercicios.Clear();
+
+        // -----------------------------------------------------
+        // EJERCICIO 1: FIESTA DE CUMPLEAÑOS
+        // -----------------------------------------------------
+
+        ejercicios.Add(new Ejercicio
+        {
+            pregunta =
+                "¡Tenemos un gran reto! Organizar una fiesta de cumpleaños. " +
+                "¿Qué tres tareas pequeñas nos ayudarán?",
+
+            explicacion =
+                "¡Muy bien! Una fiesta se puede organizar " +
+                "invitando amigos, preparando decoraciones " +
+                "y consiguiendo la torta.",
+
+            fondo = fondoFiesta,
+            titulo = tituloFiesta,
+
+            tareas = new List<Tarea>
+            {
+                new Tarea("Invitar a los amigos", true),
+                new Tarea("Preparar las decoraciones", true),
+                new Tarea("Conseguir la torta", true),
+
+                new Tarea("Lavar un automóvil", false),
+                new Tarea("Barrer otro salón", false)
+            }
+        });
+
+        // -----------------------------------------------------
+        // EJERCICIO 2: EXPOSICION ESCOLAR
+        // -----------------------------------------------------
+
+        ejercicios.Add(new Ejercicio
+        {
+            pregunta =
+                "¡Otro gran reto! Preparar una exposición escolar. " +
+                "¿Qué tres tareas pequeñas necesitamos?",
+
+            explicacion =
+                "¡Excelente! Para preparar una exposición " +
+                "podemos investigar, preparar materiales " +
+                "y practicar lo que diremos.",
+
+            fondo = fondoExposicion,
+            titulo = tituloExposicion,
+
+            tareas = new List<Tarea>
+            {
+                new Tarea("Investigar el tema", true),
+                new Tarea("Preparar los materiales", true),
+                new Tarea("Practicar la exposición", true),
+
+                new Tarea("Jugar videojuegos", false),
+                new Tarea("Esconder los cuadernos", false)
+            }
+        });
+
+        // -----------------------------------------------------
+        // EJERCICIO 3: CREAR UN JARDIN
+        // -----------------------------------------------------
+
+        ejercicios.Add(new Ejercicio
+        {
+            pregunta =
+                "¡Nuestro último reto! Crear un pequeño jardín. " +
+                "¿Qué tres tareas pequeñas debemos realizar?",
+
+            explicacion =
+                "¡Genial! Para crear un jardín podemos " +
+                "preparar la tierra, sembrar semillas " +
+                "y regar las plantas.",
+
+            fondo = fondoJardin,
+            titulo = tituloJardin,
+
+            tareas = new List<Tarea>
+            {
+                new Tarea("Preparar la tierra", true),
+                new Tarea("Sembrar las semillas", true),
+                new Tarea("Regar las plantas", true),
+
+                new Tarea("Pintar las hojas", false),
+                new Tarea(
+                    "Guardar las semillas en el congelador",
+                    false
+                )
+            }
+        });
+    }
+
+    // =========================================================
     // CARGAR EJERCICIO
-    // =====================================================
+    // =========================================================
 
     void CargarEjercicio()
     {
-        // -------------------------------------------------
-        // REINICIAR SELECCIONES
-        // -------------------------------------------------
+        ejercicioCompletado = false;
+        cantidadSeleccionada = 0;
 
-        for (int i = 0; i < seleccionadas.Length; i++)
+        Ejercicio ejercicio = ejercicios[ejercicioActual];
+
+        // -------------------------------------------
+        // TEXTOS
+        // -------------------------------------------
+
+        txtPregunta.text = ejercicio.pregunta;
+
+        txtResultado.text =
+            "Selecciona las 3 tareas que ayudan a resolver el reto.";
+
+        txtProgreso.text =
+            "Ejercicio " + (ejercicioActual + 1) +
+            " de " + ejercicios.Count;
+
+        txtProgreso.enableWordWrapping = false;
+        txtProgreso.overflowMode =
+            TextOverflowModes.Overflow;
+
+        // -------------------------------------------
+        // FONDO Y TITULO
+        // -------------------------------------------
+
+        CambiarSprite(
+            imagenFondo,
+            ejercicio.fondo
+        );
+
+        CambiarSprite(
+            imagenTitulo,
+            ejercicio.titulo
+        );
+
+        // -------------------------------------------
+        // PREPARAR LAS TAREAS MEZCLADAS
+        // -------------------------------------------
+
+        tareasActuales =
+            new List<Tarea>(ejercicio.tareas);
+
+        MezclarTareas();
+
+        // -------------------------------------------
+        // MOSTRAR LAS CINCO TARJETAS
+        // -------------------------------------------
+
+        for (int i = 0; i < 5; i++)
         {
             seleccionadas[i] = false;
+
+            Button boton = botonesTarjetas[i];
+            TMP_Text texto = textosTarjetas[i];
+
+            boton.gameObject.SetActive(true);
+            boton.interactable = true;
+
+            boton.image.color = colorNormal;
+
+            texto.text = tareasActuales[i].texto;
+            texto.color = colorTexto;
+
+            texto.alignment =
+                TextAlignmentOptions.Center;
+
+            texto.enableWordWrapping = true;
+
+            texto.overflowMode =
+                TextOverflowModes.Ellipsis;
         }
 
+        btnComprobar.gameObject.SetActive(true);
 
-        ActualizarChecks();
+        // Se puede comprobar incluso sin tres elecciones,
+        // pero aparecerá un mensaje indicando qué falta.
+        btnComprobar.interactable = true;
 
+        btnSiguiente.gameObject.SetActive(false);
 
-        // -------------------------------------------------
-        // MENSAJE
-        // -------------------------------------------------
-
-        if (txtResultado != null)
-        {
-            txtResultado.text =
-                "Selecciona las 3 partes que ayudan a resolver el problema.";
-        }
-
-
-        // -------------------------------------------------
-        // PROGRESO
-        // -------------------------------------------------
-
-        if (txtProgreso != null)
-        {
-            txtProgreso.text =
-                "Ejercicio\n" +
-                (ejercicioActual + 1) +
-                " de 3";
-        }
-
-
-        // =================================================
-        // EJERCICIO 1 - COLEGIO
-        // =================================================
-
-        if (ejercicioActual == 0)
-        {
-            if (txtPregunta != null)
-            {
-                txtPregunta.text =
-                    "¿En qué partes podemos dividir prepararnos para ir al colegio?";
-            }
-
-
-            CambiarImagen(
-                imagenFondo,
-                fondoColegio,
-                false
-            );
-
-
-            CambiarImagen(
-                imagenTitulo,
-                tituloColegio,
-                false
-            );
-
-
-            CambiarImagen(
-                imagenProblema,
-                problemaColegio,
-                false
-            );
-        }
-
-
-        // =================================================
-        // EJERCICIO 2 - PLANTA
-        // =================================================
-
-        else if (ejercicioActual == 1)
-        {
-            if (txtPregunta != null)
-            {
-                txtPregunta.text =
-                    "¿En qué partes podemos dividir el cuidado de una planta?";
-            }
-
-
-            CambiarImagen(
-                imagenFondo,
-                fondoPlanta,
-                false
-            );
-
-
-            CambiarImagen(
-                imagenTitulo,
-                tituloPlanta,
-                false
-            );
-
-
-            CambiarImagen(
-                imagenProblema,
-                problemaPlanta,
-                false
-            );
-        }
-
-
-        // =================================================
-        // EJERCICIO 3 - ROBOT
-        // =================================================
-
-        else
-        {
-            if (txtPregunta != null)
-            {
-                txtPregunta.text =
-                    "¿Qué partes necesitamos para que el robot llegue a la meta?";
-            }
-
-
-            CambiarImagen(
-                imagenFondo,
-                fondoRobot,
-                false
-            );
-
-
-            CambiarImagen(
-                imagenTitulo,
-                tituloRobot,
-                false
-            );
-
-
-            CambiarImagen(
-                imagenProblema,
-                problemaRobot,
-                false
-            );
-        }
-
-
-        // -------------------------------------------------
-        // CREAR Y MEZCLAR TARJETAS
-        // -------------------------------------------------
-
-        PrepararTarjetas();
-
-
-        // -------------------------------------------------
-        // ACTIVAR BOTONES
-        // -------------------------------------------------
-
-        for (int i = 0; i < botonesPartes.Length; i++)
-        {
-            botonesPartes[i]
-                .gameObject
-                .SetActive(true);
-
-            botonesPartes[i]
-                .interactable = true;
-        }
-
-
-        // -------------------------------------------------
-        // COMPROBAR / SIGUIENTE
-        // -------------------------------------------------
-
-        if (btnComprobar != null)
-        {
-            btnComprobar
-                .gameObject
-                .SetActive(true);
-        }
-
-
-        if (btnSiguiente != null)
-        {
-            btnSiguiente
-                .gameObject
-                .SetActive(false);
-        }
+        ActualizarIndicadorProgreso();
     }
 
+    // =========================================================
+    // CAMBIAR SPRITE (SI FUE ASIGNADO)
+    // =========================================================
 
-    // =====================================================
-    // PREPARAR TARJETAS
-    // =====================================================
-
-    void PrepararTarjetas()
+    void CambiarSprite(Image imagen, Sprite sprite)
     {
-        List<Tarjeta> tarjetas =
-            new List<Tarjeta>();
-
-
-        // =================================================
-        // EJERCICIO 1
-        // =================================================
-
-        if (ejercicioActual == 0)
+        if (imagen != null && sprite != null)
         {
-            tarjetas.Add(
-                new Tarjeta(colegioVestirse, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(colegioMochila, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(colegioDesayunar, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(colegioVideojuegos, false)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(colegioPlaya, false)
-            );
-        }
-
-
-        // =================================================
-        // EJERCICIO 2
-        // =================================================
-
-        else if (ejercicioActual == 1)
-        {
-            tarjetas.Add(
-                new Tarjeta(plantaRegar, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(plantaLuz, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(plantaRevisarHojas, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(plantaTelevision, false)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(plantaFutbol, false)
-            );
-        }
-
-
-        // =================================================
-        // EJERCICIO 3
-        // =================================================
-
-        else
-        {
-            tarjetas.Add(
-                new Tarjeta(robotObservarCamino, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(robotIdentificarObstaculos, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(robotPlanearMovimientos, true)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(robotPintar, false)
-            );
-
-            tarjetas.Add(
-                new Tarjeta(robotMusica, false)
-            );
-        }
-
-
-        // =================================================
-        // MEZCLAR LAS 5 TARJETAS
-        // =================================================
-
-        for (int i = 0; i < tarjetas.Count; i++)
-        {
-            int aleatorio =
-                Random.Range(i, tarjetas.Count);
-
-
-            Tarjeta temporal =
-                tarjetas[i];
-
-
-            tarjetas[i] =
-                tarjetas[aleatorio];
-
-
-            tarjetas[aleatorio] =
-                temporal;
-        }
-
-
-        // =================================================
-        // COLOCAR EN LOS BOTONES
-        // =================================================
-
-        for (int i = 0; i < botonesPartes.Length; i++)
-        {
-            tarjetasActuales[i] =
-                tarjetas[i];
-
-
-            botonesPartes[i]
-                .image
-                .sprite =
-                tarjetas[i].imagen;
-
-
-            // Igual que en tus otros juegos:
-            // evita que un botón quede más pequeño.
-            botonesPartes[i]
-                .image
-                .preserveAspect = false;
+            imagen.sprite = sprite;
         }
     }
 
+    // =========================================================
+    // MEZCLAR TARJETAS
+    // =========================================================
 
-    // =====================================================
-    // SELECCIONAR / DESELECCIONAR TARJETA
-    // =====================================================
+    void MezclarTareas()
+    {
+        // Fisher-Yates: mezcla uniforme.
+        for (int i = tareasActuales.Count - 1; i > 0; i--)
+        {
+            int aleatorio = Random.Range(0, i + 1);
+
+            Tarea temporal = tareasActuales[i];
+
+            tareasActuales[i] = tareasActuales[aleatorio];
+            tareasActuales[aleatorio] = temporal;
+        }
+    }
+
+    // =========================================================
+    // SELECCIONAR O DESELECCIONAR TARJETA
+    // =========================================================
 
     void SeleccionarTarjeta(int indice)
     {
-        // -------------------------------------------------
-        // SI YA ESTABA SELECCIONADA
-        // LA QUITAMOS
-        // -------------------------------------------------
+        if (ejercicioCompletado)
+            return;
 
+        if (indice < 0 || indice >= 5)
+            return;
+
+        // Si ya estaba seleccionada, quitar selección.
         if (seleccionadas[indice])
         {
             seleccionadas[indice] = false;
-
-            ActualizarChecks();
-
-
-            if (txtResultado != null)
+            cantidadSeleccionada--;
+        }
+        else
+        {
+            // No permitir más de tres.
+            if (cantidadSeleccionada >= tareasNecesarias)
             {
                 txtResultado.text =
-                    "Selecciona las 3 partes correctas.";
+                    "Ya elegiste 3 tareas. " +
+                    "Toca una para quitarla y elegir otra.";
+
+                return;
             }
 
-            return;
+            seleccionadas[indice] = true;
+            cantidadSeleccionada++;
         }
 
+        ActualizarColoresTarjetas();
 
-        // -------------------------------------------------
-        // CONTAR CUÁNTAS YA ESTÁN SELECCIONADAS
-        // -------------------------------------------------
+        txtResultado.text =
+            "Tareas seleccionadas: " +
+            cantidadSeleccionada +
+            " de " + tareasNecesarias + ".";
+    }
 
-        int cantidadSeleccionada =
-            ContarSeleccionadas();
+    // =========================================================
+    // ACTUALIZAR COLORES
+    // =========================================================
 
-
-        // -------------------------------------------------
-        // NO PERMITIR MÁS DE 3
-        // -------------------------------------------------
-
-        if (cantidadSeleccionada >= CANTIDAD_CORRECTAS)
+    void ActualizarColoresTarjetas()
+    {
+        for (int i = 0; i < 5; i++)
         {
-            if (txtResultado != null)
-            {
-                txtResultado.text =
-                    "Ya seleccionaste 3 tarjetas. Puedes quitar una si deseas cambiarla.";
-            }
-
-            return;
-        }
-
-
-        // -------------------------------------------------
-        // SELECCIONAR
-        // -------------------------------------------------
-
-        seleccionadas[indice] = true;
-
-
-        ActualizarChecks();
-
-
-        cantidadSeleccionada =
-            ContarSeleccionadas();
-
-
-        if (txtResultado != null)
-        {
-            if (cantidadSeleccionada < 3)
-            {
-                txtResultado.text =
-                    "Seleccionaste " +
-                    cantidadSeleccionada +
-                    " de 3.";
-            }
-            else
-            {
-                txtResultado.text =
-                    "¡Ya elegiste 3! Pulsa COMPROBAR.";
-            }
+            botonesTarjetas[i].image.color =
+                seleccionadas[i]
+                ? colorSeleccionado
+                : colorNormal;
         }
     }
 
+    // =========================================================
+    // COMPROBAR RESPUESTAS
+    // =========================================================
 
-    // =====================================================
-    // CONTAR SELECCIONADAS
-    // =====================================================
-
-    int ContarSeleccionadas()
+    void Comprobar()
     {
-        int cantidad = 0;
-
-
-        for (int i = 0; i < seleccionadas.Length; i++)
-        {
-            if (seleccionadas[i])
-            {
-                cantidad++;
-            }
-        }
-
-
-        return cantidad;
-    }
-
-
-    // =====================================================
-    // ACTUALIZAR CHECKS
-    // =====================================================
-
-    void ActualizarChecks()
-    {
-        if (checksSeleccion == null)
-        {
+        if (ejercicioCompletado)
             return;
-        }
 
+        // -------------------------------------------
+        // TODAVIA NO HA SELECCIONADO TRES
+        // -------------------------------------------
 
-        for (int i = 0; i < checksSeleccion.Length; i++)
+        if (cantidadSeleccionada != tareasNecesarias)
         {
-            if (checksSeleccion[i] == null)
-            {
-                continue;
-            }
-
-
-            bool mostrar =
-                i < seleccionadas.Length &&
-                seleccionadas[i];
-
-
-            checksSeleccion[i]
-                .SetActive(mostrar);
-        }
-    }
-
-
-    // =====================================================
-    // COMPROBAR
-    // =====================================================
-
-    void ComprobarRespuesta()
-    {
-        // -------------------------------------------------
-        // PRIMERO DEBE ELEGIR EXACTAMENTE 3
-        // -------------------------------------------------
-
-        if (ContarSeleccionadas() != CANTIDAD_CORRECTAS)
-        {
-            if (txtResultado != null)
-            {
-                txtResultado.text =
-                    "Debes seleccionar exactamente 3 tarjetas.";
-            }
+            txtResultado.text =
+                "¡Selecciona exactamente 3 tareas antes de comprobar!";
 
             return;
         }
 
+        // -------------------------------------------
+        // REVISAR LAS TRES RESPUESTAS
+        // -------------------------------------------
 
-        // -------------------------------------------------
-        // REVISAR LAS 3 SELECCIONADAS
-        // -------------------------------------------------
+        bool todasCorrectas = true;
 
-        bool todoCorrecto = true;
-
-
-        for (int i = 0; i < botonesPartes.Length; i++)
+        for (int i = 0; i < 5; i++)
         {
-            // Solo revisamos las seleccionadas
-            if (seleccionadas[i])
+            if (seleccionadas[i] &&
+                !tareasActuales[i].esCorrecta)
             {
-                if (!tarjetasActuales[i].esCorrecta)
+                todasCorrectas = false;
+                break;
+            }
+        }
+
+        // -------------------------------------------
+        // ACIERTO
+        // -------------------------------------------
+
+        if (todasCorrectas)
+        {
+            ejercicioCompletado = true;
+
+            txtResultado.text =
+                ejercicios[ejercicioActual].explicacion;
+
+            // Pintar las tres tarjetas de verde.
+            for (int i = 0; i < 5; i++)
+            {
+                if (seleccionadas[i])
                 {
-                    todoCorrecto = false;
-
-                    break;
+                    botonesTarjetas[i].image.color =
+                        colorCorrecto;
                 }
+
+                botonesTarjetas[i].interactable = false;
             }
+
+            btnComprobar.gameObject.SetActive(false);
+            btnSiguiente.gameObject.SetActive(true);
         }
 
-
-        // =================================================
-        // CORRECTO
-        // =================================================
-
-        if (todoCorrecto)
-        {
-            if (txtResultado != null)
-            {
-                txtResultado.text =
-                    "⭐ ¡Excelente! Dividiste el problema en partes más pequeñas.";
-            }
-
-
-            // Bloquear tarjetas
-            foreach (Button boton in botonesPartes)
-            {
-                boton.interactable = false;
-            }
-
-
-            // Ocultar comprobar
-            if (btnComprobar != null)
-            {
-                btnComprobar
-                    .gameObject
-                    .SetActive(false);
-            }
-
-
-            // Mostrar siguiente
-            if (btnSiguiente != null)
-            {
-                btnSiguiente
-                    .gameObject
-                    .SetActive(true);
-            }
-        }
-
-
-        // =================================================
-        // INCORRECTO
-        // =================================================
+        // -------------------------------------------
+        // ERROR
+        // -------------------------------------------
 
         else
         {
-            if (txtResultado != null)
-            {
-                txtResultado.text =
-                    "❌ Una de esas partes no ayuda a resolver el problema. ¡Inténtalo otra vez!";
-            }
+            txtResultado.text =
+                "¡Casi! Algunas tareas no ayudan a resolver " +
+                "el problema. Revisa tus elecciones.";
 
-
-            // Desmarcar todo para volver a intentar
-            for (int i = 0; i < seleccionadas.Length; i++)
-            {
-                seleccionadas[i] = false;
-            }
-
-
-            ActualizarChecks();
+            // No borra las respuestas.
+            // Puede tocar las tarjetas y corregir.
         }
     }
 
-
-    // =====================================================
+    // =========================================================
     // SIGUIENTE EJERCICIO
-    // =====================================================
+    // =========================================================
 
     void SiguienteEjercicio()
     {
+        if (!ejercicioCompletado)
+            return;
+
         ejercicioActual++;
 
-
-        if (ejercicioActual < 3)
+        if (ejercicioActual < ejercicios.Count)
         {
             CargarEjercicio();
         }
@@ -829,116 +639,278 @@ public class JuegoDivideProblema : MonoBehaviour
         }
     }
 
-
-    // =====================================================
-    // FINALIZAR MISIÓN
-    // =====================================================
+    // =========================================================
+    // FINALIZAR LA MISION
+    // =========================================================
 
     void FinalizarMision()
     {
-        if (txtPregunta != null)
+        txtPregunta.text =
+            "¡MISIÓN COMPLETADA!";
+
+        txtResultado.text =
+            "¡Felicidades! Aprendiste a dividir " +
+            "tres grandes retos en tareas pequeñas.";
+
+        txtProgreso.text = "";
+
+        // Ocultar las cinco tarjetas.
+        for (int i = 0; i < 5; i++)
         {
-            txtPregunta.text =
-                "🏆 ¡MISIÓN COMPLETADA!";
+            botonesTarjetas[i].gameObject.SetActive(false);
         }
 
+        btnComprobar.gameObject.SetActive(false);
+        btnSiguiente.gameObject.SetActive(false);
 
-        if (txtProgreso != null)
+        OcultarIndicadorProgreso();
+    }
+
+    // =========================================================
+    // CREAR SPRITE CIRCULAR
+    // =========================================================
+
+    Sprite CrearSpriteCircular()
+    {
+        int resolucion = 128;
+
+        Texture2D textura = new Texture2D(
+            resolucion,
+            resolucion,
+            TextureFormat.RGBA32,
+            false
+        );
+
+        textura.filterMode = FilterMode.Bilinear;
+        textura.wrapMode = TextureWrapMode.Clamp;
+
+        float centro = (resolucion - 1) / 2f;
+        float radio = centro - 1f;
+
+        for (int y = 0; y < resolucion; y++)
         {
-            txtProgreso.text = "";
-        }
-
-
-        if (txtResultado != null)
-        {
-            txtResultado.text =
-                "⭐ Aprendiste a dividir problemas grandes en partes más pequeñas.";
-        }
-
-
-        // -------------------------------------------------
-        // OCULTAR IMAGEN DEL PROBLEMA
-        // -------------------------------------------------
-
-        if (imagenProblema != null)
-        {
-            imagenProblema
-                .gameObject
-                .SetActive(false);
-        }
-
-
-        // -------------------------------------------------
-        // OCULTAR TARJETAS
-        // -------------------------------------------------
-
-        foreach (Button boton in botonesPartes)
-        {
-            boton
-                .gameObject
-                .SetActive(false);
-        }
-
-
-        // -------------------------------------------------
-        // OCULTAR CHECKS
-        // -------------------------------------------------
-
-        if (checksSeleccion != null)
-        {
-            foreach (GameObject check in checksSeleccion)
+            for (int x = 0; x < resolucion; x++)
             {
-                if (check != null)
-                {
-                    check.SetActive(false);
-                }
+                float distancia = Vector2.Distance(
+                    new Vector2(x, y),
+                    new Vector2(centro, centro)
+                );
+
+                float alpha = Mathf.Clamp01(
+                    radio - distancia + 0.5f
+                );
+
+                textura.SetPixel(
+                    x,
+                    y,
+                    new Color(1f, 1f, 1f, alpha)
+                );
             }
         }
 
+        textura.Apply();
 
-        // -------------------------------------------------
-        // OCULTAR BOTONES
-        // -------------------------------------------------
-
-        if (btnComprobar != null)
-        {
-            btnComprobar
-                .gameObject
-                .SetActive(false);
-        }
-
-
-        if (btnSiguiente != null)
-        {
-            btnSiguiente
-                .gameObject
-                .SetActive(false);
-        }
+        return Sprite.Create(
+            textura,
+            new Rect(0, 0, resolucion, resolucion),
+            new Vector2(0.5f, 0.5f),
+            100f
+        );
     }
 
+    // =========================================================
+    // CREAR TRES CIRCULOS DE PROGRESO
+    // =========================================================
 
-    // =====================================================
-    // CAMBIAR IMAGEN
-    // =====================================================
-
-    void CambiarImagen(
-        Image imagen,
-        Sprite spriteNuevo,
-        bool mantenerProporcion
-    )
+    void CrearIndicadorProgreso()
     {
-        if (imagen == null ||
-            spriteNuevo == null)
+        if (panelProgreso == null && txtProgreso != null)
         {
+            panelProgreso =
+                txtProgreso.transform.parent as RectTransform;
+        }
+
+        if (panelProgreso == null)
+        {
+            Debug.LogWarning(
+                "JuegoDivideProblema: falta Panel_Progreso."
+            );
             return;
         }
 
+        spriteCirculo = CrearSpriteCircular();
 
-        imagen.sprite =
-            spriteNuevo;
+        circulosProgreso = new Image[ejercicios.Count];
 
+        for (int i = 0; i < ejercicios.Count; i++)
+        {
+            // -----------------------------------------
+            // BORDE EXTERIOR
+            // -----------------------------------------
 
-        imagen.preserveAspect =
-            mantenerProporcion;
+            GameObject objetoCirculo = new GameObject(
+                "Circulo_Progreso_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            objetoCirculo.transform.SetParent(
+                panelProgreso,
+                false
+            );
+
+            RectTransform rect =
+                objetoCirculo.GetComponent<RectTransform>();
+
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+
+            rect.sizeDelta = new Vector2(
+                tamanoCirculo,
+                tamanoCirculo
+            );
+
+            rect.anchoredPosition = new Vector2(
+                (i - 1) * separacionCirculos,
+                posicionVerticalCirculos
+            );
+
+            Image imagenBorde =
+                objetoCirculo.GetComponent<Image>();
+
+            imagenBorde.sprite = spriteCirculo;
+            imagenBorde.color = colorBorde;
+            imagenBorde.raycastTarget = false;
+
+            // -----------------------------------------
+            // INTERIOR DEL CIRCULO
+            // -----------------------------------------
+
+            GameObject objetoInterior = new GameObject(
+                "Interior",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            objetoInterior.transform.SetParent(
+                objetoCirculo.transform,
+                false
+            );
+
+            RectTransform rectInterior =
+                objetoInterior.GetComponent<RectTransform>();
+
+            rectInterior.anchorMin = Vector2.zero;
+            rectInterior.anchorMax = Vector2.one;
+
+            rectInterior.offsetMin = new Vector2(2f, 2f);
+            rectInterior.offsetMax = new Vector2(-2f, -2f);
+
+            Image imagenInterior =
+                objetoInterior.GetComponent<Image>();
+
+            imagenInterior.sprite = spriteCirculo;
+            imagenInterior.color = colorPendiente;
+            imagenInterior.raycastTarget = false;
+
+            circulosProgreso[i] = imagenInterior;
+
+            // -----------------------------------------
+            // NUMERO DEL CIRCULO
+            // -----------------------------------------
+
+            GameObject objetoNumero = new GameObject(
+                "Numero_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(TextMeshProUGUI)
+            );
+
+            objetoNumero.transform.SetParent(
+                objetoCirculo.transform,
+                false
+            );
+
+            RectTransform rectNumero =
+                objetoNumero.GetComponent<RectTransform>();
+
+            rectNumero.anchorMin = Vector2.zero;
+            rectNumero.anchorMax = Vector2.one;
+
+            rectNumero.offsetMin = Vector2.zero;
+            rectNumero.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI numero =
+                objetoNumero.GetComponent<TextMeshProUGUI>();
+
+            numero.text = (i + 1).ToString();
+            numero.fontSize = tamanoCirculo * 0.5f;
+            numero.fontStyle = FontStyles.Bold;
+            numero.alignment = TextAlignmentOptions.Center;
+            numero.color = Color.white;
+            numero.raycastTarget = false;
+        }
+
+        ActualizarIndicadorProgreso();
+    }
+
+    // =========================================================
+    // ACTUALIZAR CIRCULOS
+    // =========================================================
+
+    void ActualizarIndicadorProgreso()
+    {
+        if (circulosProgreso == null)
+            return;
+
+        for (int i = 0; i < circulosProgreso.Length; i++)
+        {
+            if (circulosProgreso[i] == null)
+                continue;
+
+            circulosProgreso[i].color =
+                i <= ejercicioActual
+                ? colorActivo
+                : colorPendiente;
+        }
+    }
+
+    // =========================================================
+    // OCULTAR CIRCULOS AL FINALIZAR
+    // =========================================================
+
+    void OcultarIndicadorProgreso()
+    {
+        if (circulosProgreso == null)
+            return;
+
+        foreach (Image circulo in circulosProgreso)
+        {
+            if (circulo != null)
+            {
+                circulo.transform.parent.gameObject
+                    .SetActive(false);
+            }
+        }
+    }
+
+    // =========================================================
+    // LIMPIAR TEXTURA GENERADA
+    // =========================================================
+
+    void OnDestroy()
+    {
+        if (spriteCirculo != null)
+        {
+            Texture2D textura = spriteCirculo.texture;
+
+            Destroy(spriteCirculo);
+
+            if (textura != null)
+                Destroy(textura);
+        }
     }
 }

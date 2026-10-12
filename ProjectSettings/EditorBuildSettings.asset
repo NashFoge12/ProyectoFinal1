@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Mision2_Secuencias.unity
     guid: 1a21106b93130754ebb4502d20807e02
   - enabled: 1
-    path: Assets/Scenes/Mision3_Algoritmos.unity
+    path: Assets/Scenes/Mision3_Algoritmkos.unity
     guid: 52cd0eef8a318ea4f99472900e32c113
   - enabled: 1
     path: Assets/Scenes/Secuencias.unity

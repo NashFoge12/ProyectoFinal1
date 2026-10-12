@@ -1,223 +1,990 @@
-﻿using TMPro;
+﻿
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class JuegoOrdenarSecuencia : MonoBehaviour
 {
-    [Header("Textos")]
+    // =====================================================
+    // TEXTOS
+    // =====================================================
+
+    [Header("TEXTOS DE INTERFAZ")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
     public TMP_Text txtResultado;
 
-    [Header("Tarjetas")]
-    public Button[] botonesPasos;
+    // =====================================================
+    // FONDOS Y TITULOS
+    // =====================================================
 
-    [Header("Botones")]
+    [Header("IMAGENES DE INTERFAZ")]
+    public Image imagenFondo;
+    public Image imagenTitulo;
+
+    [Header("FONDOS DE LOS 3 EJERCICIOS")]
+    public Sprite fondoMariposa;
+    public Sprite fondoPlanta;
+    public Sprite fondoAgua;
+
+    [Header("TITULOS DE LOS 3 EJERCICIOS")]
+    public Sprite tituloMariposa;
+    public Sprite tituloPlanta;
+    public Sprite tituloAgua;
+
+    // =====================================================
+    // CUATRO ESPACIOS NUMERADOS
+    // =====================================================
+
+    [Header("ESPACIOS - TUS 4 IMAGENES NUMERADAS")]
+    public Image[] espacios = new Image[4];
+
+    // =====================================================
+    // CUATRO FICHAS
+    // =====================================================
+
+    [Header("FICHAS PARA ARRASTRAR")]
+    public Button[] fichas = new Button[4];
+
+    // =====================================================
+    // EJERCICIO 1 - MARIPOSA
+    // =====================================================
+
+    [Header("EJERCICIO 1 - CICLO DE LA MARIPOSA")]
+
+    public Sprite sprHuevo;
+    public Sprite sprOruga;
+    public Sprite sprCrisalida;
+    public Sprite sprMariposaAdulta;
+
+    // =====================================================
+    // EJERCICIO 2 - PLANTA
+    // =====================================================
+
+    [Header("EJERCICIO 2 - CRECIMIENTO DE PLANTA")]
+
+    public Sprite sprSemilla;
+    public Sprite sprBrote;
+    public Sprite sprPlantaGrande;
+    public Sprite sprFlor;
+
+    // =====================================================
+    // EJERCICIO 3 - CICLO DEL AGUA
+    // =====================================================
+
+    [Header("EJERCICIO 3 - CICLO DEL AGUA")]
+
+    public Sprite sprEvaporacion;
+    public Sprite sprCondensacion;
+    public Sprite sprPrecipitacion;
+    public Sprite sprAcumulacion;
+
+    // =====================================================
+    // BOTONES
+    // =====================================================
+
+    [Header("BOTONES")]
     public Button btnComprobar;
     public Button btnSiguiente;
 
+    // =====================================================
+    // PROGRESO
+    // =====================================================
+
+    [Header("INDICADOR DE PROGRESO")]
+    public RectTransform panelProgreso;
+
+    public float tamanoCirculo = 28f;
+    public float separacionCirculos = 38f;
+    public float posicionVerticalCirculos = -20f;
+
+    public Color colorActivo =
+        new Color(1f, 0.78f, 0.24f, 1f);
+
+    public Color colorPendiente =
+        new Color(0.78f, 0.76f, 0.72f, 1f);
+
+    public Color colorBorde =
+        new Color(0.43f, 0.29f, 0.17f, 1f);
+
+    // =====================================================
+    // VARIABLES INTERNAS
+    // =====================================================
+
     private int ejercicioActual = 0;
-    private int tarjetaSeleccionada = -1;
+    private bool ejercicioCompletado = false;
 
-    private string[] preguntas =
-    {
-        "Ordena el ciclo de vida de la mariposa",
-        "Ordena el crecimiento de una planta",
-        "Ordena las partes del día"
-    };
+    // Cada ficha guarda el paso que representa.
+    private int[] ordenFichas = new int[4];
 
-    private string[,] secuenciasCorrectas =
-    {
-        {
-            "Huevo",
-            "Oruga",
-            "Capullo",
-            "Mariposa",
-            "Mariposa pone huevos"
-        },
+    // Cada espacio guarda el indice de su ficha.
+    // -1 significa espacio vacio.
+    private int[] contenidoEspacios =
+        { -1, -1, -1, -1 };
 
-        {
-            "Semilla",
-            "Brote",
-            "Planta pequeña",
-            "Planta grande",
-            "Flor"
-        },
+    private Image[] imagenesColocadas = new Image[4];
 
-        {
-            "Amanecer",
-            "Mañana",
-            "Mediodía",
-            "Tarde",
-            "Noche"
-        }
-    };
+    private Image[] circulosProgreso;
+    private Sprite spriteCirculo;
+
+    private Canvas canvasPrincipal;
+    private Image imagenArrastrada;
+
+    private const int totalEjercicios = 3;
+
+    // =====================================================
+    // START
+    // =====================================================
 
     void Start()
     {
-        for (int i = 0; i < botonesPasos.Length; i++)
+        if (!ValidarReferencias())
+        {
+            enabled = false;
+            return;
+        }
+
+        canvasPrincipal = GetComponentInParent<Canvas>();
+
+        if (canvasPrincipal == null)
+            canvasPrincipal = FindFirstObjectByType<Canvas>();
+
+        if (canvasPrincipal == null)
+        {
+            Debug.LogError("No se encontro Canvas.");
+            enabled = false;
+            return;
+        }
+
+        // Crear una imagen dentro de cada espacio.
+        // La imagen numerada original se conserva.
+
+        for (int i = 0; i < 4; i++)
+        {
+            CrearImagenParaEspacio(i);
+        }
+
+        // Preparar las cuatro fichas arrastrables.
+
+        for (int i = 0; i < 4; i++)
+        {
+            ArrastrarFichaSecuencia arrastre =
+                fichas[i].GetComponent<ArrastrarFichaSecuencia>();
+
+            if (arrastre == null)
+            {
+                arrastre =
+                    fichas[i].gameObject.AddComponent<
+                        ArrastrarFichaSecuencia>();
+            }
+
+            arrastre.Configurar(this, i);
+        }
+
+        // Permitir quitar una ficha tocando su espacio.
+
+        for (int i = 0; i < 4; i++)
         {
             int indice = i;
 
-            botonesPasos[i].onClick.AddListener(
-                () => SeleccionarTarjeta(indice)
+            Button boton =
+                espacios[i].GetComponent<Button>();
+
+            if (boton == null)
+                boton = espacios[i].gameObject.AddComponent<Button>();
+
+            boton.transition = Selectable.Transition.None;
+
+            boton.onClick.AddListener(
+                () => QuitarFicha(indice)
             );
         }
 
-        btnComprobar.onClick.AddListener(ComprobarSecuencia);
+        btnComprobar.onClick.AddListener(Comprobar);
         btnSiguiente.onClick.AddListener(SiguienteEjercicio);
 
+        CrearIndicadorProgreso();
         CargarEjercicio();
     }
 
+    // =====================================================
+    // VALIDAR REFERENCIAS
+    // =====================================================
+
+    bool ValidarReferencias()
+    {
+        if (txtPregunta == null ||
+            txtProgreso == null ||
+            txtResultado == null ||
+            btnComprobar == null ||
+            btnSiguiente == null)
+        {
+            Debug.LogError("Faltan textos o botones.");
+            return false;
+        }
+
+        if (espacios == null || espacios.Length != 4 ||
+            fichas == null || fichas.Length != 4)
+        {
+            Debug.LogError("Asigna 4 espacios y 4 fichas.");
+            return false;
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (espacios[i] == null || fichas[i] == null)
+            {
+                Debug.LogError(
+                    "Falta el espacio o ficha " + (i + 1)
+                );
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // =====================================================
+    // OBTENER LAS IMAGENES CORRECTAS
+    // =====================================================
+
+    Sprite[] ObtenerPasos()
+    {
+        // EJERCICIO 1 - MARIPOSA
+
+        if (ejercicioActual == 0)
+        {
+            return new Sprite[]
+            {
+                sprHuevo,           // PASO 1
+                sprOruga,           // PASO 2
+                sprCrisalida,       // PASO 3
+                sprMariposaAdulta   // PASO 4
+            };
+        }
+
+        // EJERCICIO 2 - PLANTA
+
+        if (ejercicioActual == 1)
+        {
+            return new Sprite[]
+            {
+                sprSemilla,         // PASO 1
+                sprBrote,           // PASO 2
+                sprPlantaGrande,    // PASO 3
+                sprFlor            // PASO 4
+            };
+        }
+
+        // EJERCICIO 3 - AGUA
+
+        return new Sprite[]
+        {
+            sprEvaporacion,     // PASO 1
+            sprCondensacion,    // PASO 2
+            sprPrecipitacion,   // PASO 3
+            sprAcumulacion      // PASO 4
+        };
+    }
+
+    // =====================================================
+    // CARGAR EJERCICIO
+    // =====================================================
+
     void CargarEjercicio()
     {
-        tarjetaSeleccionada = -1;
+        ejercicioCompletado = false;
 
-        txtResultado.text = "";
-
-        txtPregunta.text = preguntas[ejercicioActual];
-
-        txtProgreso.text =
-            "Ejercicio " + (ejercicioActual + 1) + " de 3";
-
-        List<string> elementos = new List<string>();
-
-        for (int i = 0; i < botonesPasos.Length; i++)
+        if (ejercicioActual == 0)
         {
-            elementos.Add(secuenciasCorrectas[ejercicioActual, i]);
+            txtPregunta.text =
+                "Ordena las etapas del ciclo de la mariposa.";
+
+            CambiarImagen(imagenFondo, fondoMariposa);
+            CambiarImagen(imagenTitulo, tituloMariposa);
         }
-
-        Mezclar(elementos);
-
-        for (int i = 0; i < botonesPasos.Length; i++)
+        else if (ejercicioActual == 1)
         {
-            botonesPasos[i]
-                .GetComponentInChildren<TMP_Text>()
-                .text = elementos[i];
+            txtPregunta.text =
+                "Ordena las etapas del crecimiento de una planta.";
 
-            botonesPasos[i].interactable = true;
-        }
-
-        btnComprobar.gameObject.SetActive(true);
-        btnSiguiente.gameObject.SetActive(false);
-    }
-
-    void Mezclar(List<string> lista)
-    {
-        for (int i = 0; i < lista.Count; i++)
-        {
-            int posicionAleatoria = Random.Range(i, lista.Count);
-
-            string temporal = lista[i];
-            lista[i] = lista[posicionAleatoria];
-            lista[posicionAleatoria] = temporal;
-        }
-    }
-
-    void SeleccionarTarjeta(int indice)
-    {
-        if (tarjetaSeleccionada == -1)
-        {
-            tarjetaSeleccionada = indice;
-
-            txtResultado.text =
-                "Seleccionaste: " +
-                botonesPasos[indice]
-                .GetComponentInChildren<TMP_Text>()
-                .text;
+            CambiarImagen(imagenFondo, fondoPlanta);
+            CambiarImagen(imagenTitulo, tituloPlanta);
         }
         else
         {
-            IntercambiarTarjetas(
-                tarjetaSeleccionada,
-                indice
-            );
+            txtPregunta.text =
+                "Ordena las etapas del ciclo del agua.";
 
-            tarjetaSeleccionada = -1;
+            CambiarImagen(imagenFondo, fondoAgua);
+            CambiarImagen(imagenTitulo, tituloAgua);
+        }
 
-            txtResultado.text =
-                "Tarjetas intercambiadas.";
+        txtResultado.text =
+            "¡Arrastra las fichas a los espacios numerados!";
+
+        txtProgreso.text =
+            "Ejercicio " + (ejercicioActual + 1) +
+            " de " + totalEjercicios;
+
+        txtProgreso.enableWordWrapping = false;
+        txtProgreso.overflowMode = TextOverflowModes.Overflow;
+
+        ActualizarIndicadorProgreso();
+
+        // Vaciar los cuatro espacios.
+
+        for (int i = 0; i < 4; i++)
+        {
+            contenidoEspacios[i] = -1;
+
+            espacios[i].gameObject.SetActive(true);
+
+            // NO reemplazamos la imagen numerada.
+
+            imagenesColocadas[i].sprite = null;
+            imagenesColocadas[i].gameObject.SetActive(false);
+
+            Button botonEspacio =
+                espacios[i].GetComponent<Button>();
+
+            botonEspacio.interactable = true;
+        }
+
+        // Mezclar las fichas disponibles.
+
+        MezclarFichas();
+
+        Sprite[] pasos = ObtenerPasos();
+
+        for (int i = 0; i < 4; i++)
+        {
+            fichas[i].gameObject.SetActive(true);
+            fichas[i].interactable = true;
+
+            fichas[i].image.sprite =
+                pasos[ordenFichas[i]];
+
+            fichas[i].image.color = Color.white;
+            fichas[i].image.preserveAspect = false;
+
+            // Evita tintes por la transicion del boton.
+            fichas[i].transition =
+                Selectable.Transition.None;
+        }
+
+        btnComprobar.gameObject.SetActive(true);
+        btnComprobar.interactable = true;
+
+        btnSiguiente.gameObject.SetActive(false);
+    }
+
+    // =====================================================
+    // CAMBIAR IMAGEN
+    // =====================================================
+
+    void CambiarImagen(Image destino, Sprite nueva)
+    {
+        if (destino != null && nueva != null)
+        {
+            destino.sprite = nueva;
+            destino.preserveAspect = false;
         }
     }
 
-    void IntercambiarTarjetas(int primera, int segunda)
+    // =====================================================
+    // MEZCLAR FICHAS
+    // =====================================================
+
+    void MezclarFichas()
     {
-        TMP_Text textoPrimero =
-            botonesPasos[primera]
-            .GetComponentInChildren<TMP_Text>();
+        for (int i = 0; i < 4; i++)
+            ordenFichas[i] = i;
 
-        TMP_Text textoSegundo =
-            botonesPasos[segunda]
-            .GetComponentInChildren<TMP_Text>();
+        // Mezcla Fisher-Yates.
 
-        string temporal = textoPrimero.text;
+        for (int i = 3; i > 0; i--)
+        {
+            int aleatorio = Random.Range(0, i + 1);
 
-        textoPrimero.text = textoSegundo.text;
-        textoSegundo.text = temporal;
+            int temporal = ordenFichas[i];
+
+            ordenFichas[i] = ordenFichas[aleatorio];
+            ordenFichas[aleatorio] = temporal;
+        }
+
+        // Evitar que empiecen completamente ordenadas.
+
+        bool ordenadas = true;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (ordenFichas[i] != i)
+            {
+                ordenadas = false;
+                break;
+            }
+        }
+
+        if (ordenadas)
+        {
+            int temporal = ordenFichas[0];
+            ordenFichas[0] = ordenFichas[1];
+            ordenFichas[1] = temporal;
+        }
     }
 
-    void ComprobarSecuencia()
+    // =====================================================
+    // CREAR IMAGEN DENTRO DE CADA ESPACIO
+    // =====================================================
+
+    void CrearImagenParaEspacio(int indice)
     {
-        for (int i = 0; i < botonesPasos.Length; i++)
+        GameObject objeto = new GameObject(
+            "Ficha_Colocada",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image)
+        );
+
+        objeto.transform.SetParent(
+            espacios[indice].transform,
+            false
+        );
+
+        RectTransform rect =
+            objeto.GetComponent<RectTransform>();
+
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        Image imagen = objeto.GetComponent<Image>();
+
+        imagen.raycastTarget = false;
+        imagen.preserveAspect = false;
+
+        imagenesColocadas[indice] = imagen;
+
+        objeto.SetActive(false);
+    }
+
+    // =====================================================
+    // COMENZAR A ARRASTRAR
+    // =====================================================
+
+    public void ComenzarArrastre(
+        int indiceFicha,
+        PointerEventData evento)
+    {
+        if (ejercicioCompletado ||
+            !fichas[indiceFicha].gameObject.activeInHierarchy)
+            return;
+
+        if (imagenArrastrada != null)
+            Destroy(imagenArrastrada.gameObject);
+
+        GameObject objeto = new GameObject(
+            "Ficha_Arrastrando",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image)
+        );
+
+        objeto.transform.SetParent(
+            canvasPrincipal.transform,
+            false
+        );
+
+        objeto.transform.SetAsLastSibling();
+
+        imagenArrastrada = objeto.GetComponent<Image>();
+
+        imagenArrastrada.sprite =
+            fichas[indiceFicha].image.sprite;
+
+        imagenArrastrada.color =
+            new Color(1f, 1f, 1f, 0.85f);
+
+        imagenArrastrada.raycastTarget = false;
+
+        RectTransform rectFicha =
+            fichas[indiceFicha].GetComponent<RectTransform>();
+
+        imagenArrastrada.rectTransform.sizeDelta =
+            rectFicha.rect.size;
+
+        MoverArrastre(evento);
+    }
+
+    // =====================================================
+    // MOVER FICHA
+    // =====================================================
+
+    public void MoverArrastre(PointerEventData evento)
+    {
+        if (imagenArrastrada == null)
+            return;
+
+        RectTransform canvasRect =
+            canvasPrincipal.GetComponent<RectTransform>();
+
+        Vector2 posicion;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            evento.position,
+            ObtenerCamaraCanvas(),
+            out posicion))
         {
-            string textoActual =
-                botonesPasos[i]
-                .GetComponentInChildren<TMP_Text>()
-                .text;
+            imagenArrastrada.rectTransform.anchoredPosition =
+                posicion;
+        }
+    }
 
-            if (textoActual != secuenciasCorrectas[ejercicioActual, i])
+    // =====================================================
+    // SOLTAR FICHA
+    // =====================================================
+
+    public void TerminarArrastre(
+        int indiceFicha,
+        PointerEventData evento)
+    {
+        if (imagenArrastrada != null)
+        {
+            Destroy(imagenArrastrada.gameObject);
+            imagenArrastrada = null;
+        }
+
+        if (ejercicioCompletado)
+            return;
+
+        for (int i = 0; i < 4; i++)
+        {
+            bool dentro =
+                RectTransformUtility.RectangleContainsScreenPoint(
+                    espacios[i].rectTransform,
+                    evento.position,
+                    ObtenerCamaraCanvas()
+                );
+
+            if (dentro)
             {
-                txtResultado.text =
-                    "❌ La secuencia todavía no está correcta.";
-
+                ColocarFicha(indiceFicha, i);
                 return;
             }
         }
 
         txtResultado.text =
-            "⭐ ¡Correcto! Ordenaste la secuencia.";
+            "¡Arrastra la ficha dentro de un espacio!";
+    }
+
+    Camera ObtenerCamaraCanvas()
+    {
+        if (canvasPrincipal.renderMode ==
+            RenderMode.ScreenSpaceOverlay)
+            return null;
+
+        return canvasPrincipal.worldCamera;
+    }
+
+    // =====================================================
+    // COLOCAR FICHA EN UN ESPACIO
+    // =====================================================
+
+    void ColocarFicha(int indiceFicha, int indiceEspacio)
+    {
+        if (ejercicioCompletado)
+            return;
+
+        // Si hay una ficha anterior, devolverla.
+
+        int fichaAnterior =
+            contenidoEspacios[indiceEspacio];
+
+        if (fichaAnterior != -1)
+        {
+            fichas[fichaAnterior].gameObject.SetActive(true);
+        }
+
+        contenidoEspacios[indiceEspacio] = indiceFicha;
+
+        // Mostrar la ficha sobre el espacio numerado.
+
+        imagenesColocadas[indiceEspacio].sprite =
+            fichas[indiceFicha].image.sprite;
+
+        imagenesColocadas[indiceEspacio]
+            .gameObject.SetActive(true);
+
+        fichas[indiceFicha].gameObject.SetActive(false);
+
+        txtResultado.text =
+            "¡Bien! Sigue colocando las demás fichas.";
+    }
+
+    // =====================================================
+    // QUITAR UNA FICHA DEL ESPACIO
+    // =====================================================
+
+    void QuitarFicha(int indiceEspacio)
+    {
+        if (ejercicioCompletado)
+            return;
+
+        int ficha = contenidoEspacios[indiceEspacio];
+
+        if (ficha == -1)
+            return;
+
+        fichas[ficha].gameObject.SetActive(true);
+        fichas[ficha].interactable = true;
+
+        contenidoEspacios[indiceEspacio] = -1;
+
+        imagenesColocadas[indiceEspacio].sprite = null;
+
+        imagenesColocadas[indiceEspacio]
+            .gameObject.SetActive(false);
+
+        txtResultado.text =
+            "¡Puedes colocar nuevamente esa ficha!";
+    }
+
+    // =====================================================
+    // COMPROBAR ORDEN
+    // =====================================================
+
+    void Comprobar()
+    {
+        if (ejercicioCompletado)
+            return;
+
+        // Revisar que no falten fichas.
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (contenidoEspacios[i] == -1)
+            {
+                txtResultado.text =
+                    "¡Primero llena los cuatro espacios!";
+                return;
+            }
+        }
+
+        // Revisar el orden de los cuatro pasos.
+
+        for (int i = 0; i < 4; i++)
+        {
+            int ficha = contenidoEspacios[i];
+
+            int pasoReal = ordenFichas[ficha];
+
+            if (pasoReal != i)
+            {
+                txtResultado.text =
+                    "¡Casi! Revisa el orden e inténtalo otra vez.";
+                return;
+            }
+        }
+
+        // Todos los pasos estan correctamente ordenados.
+
+        ejercicioCompletado = true;
+
+        txtResultado.text =
+            "¡Excelente! Ordenaste correctamente la secuencia.";
+
+        for (int i = 0; i < 4; i++)
+        {
+            espacios[i].GetComponent<Button>()
+                .interactable = false;
+        }
 
         btnComprobar.gameObject.SetActive(false);
         btnSiguiente.gameObject.SetActive(true);
-
-        foreach (Button boton in botonesPasos)
-        {
-            boton.interactable = false;
-        }
     }
+
+    // =====================================================
+    // SIGUIENTE EJERCICIO
+    // =====================================================
 
     void SiguienteEjercicio()
     {
+        if (!ejercicioCompletado)
+            return;
+
         ejercicioActual++;
 
-        if (ejercicioActual < 3)
-        {
+        if (ejercicioActual < totalEjercicios)
             CargarEjercicio();
-        }
         else
-        {
             FinalizarMision();
-        }
     }
+
+    // =====================================================
+    // FINALIZAR MISION
+    // =====================================================
 
     void FinalizarMision()
     {
-        txtPregunta.text =
-            "🏆 ¡MISIÓN COMPLETADA!";
+        txtPregunta.text = "¡MISIÓN COMPLETADA!";
+
+        txtResultado.text =
+            "¡Felicidades! Ordenaste las 3 secuencias.";
 
         txtProgreso.text = "";
 
-        txtResultado.text =
-            "Ordenaste correctamente las 3 secuencias.";
+        foreach (Image espacio in espacios)
+            espacio.gameObject.SetActive(false);
 
-        foreach (Button boton in botonesPasos)
-        {
-            boton.gameObject.SetActive(false);
-        }
+        foreach (Button ficha in fichas)
+            ficha.gameObject.SetActive(false);
 
         btnComprobar.gameObject.SetActive(false);
         btnSiguiente.gameObject.SetActive(false);
+
+        if (circulosProgreso != null)
+        {
+            foreach (Image circulo in circulosProgreso)
+            {
+                if (circulo != null)
+                    circulo.transform.parent.gameObject
+                        .SetActive(false);
+            }
+        }
+    }
+
+    // =====================================================
+    // CREAR SPRITE CIRCULAR
+    // =====================================================
+
+    Sprite CrearSpriteCircular()
+    {
+        int resolucion = 128;
+
+        Texture2D textura = new Texture2D(
+            resolucion,
+            resolucion,
+            TextureFormat.RGBA32,
+            false
+        );
+
+        textura.filterMode = FilterMode.Bilinear;
+
+        float centro = (resolucion - 1) / 2f;
+        float radio = centro - 1f;
+
+        for (int y = 0; y < resolucion; y++)
+        {
+            for (int x = 0; x < resolucion; x++)
+            {
+                float distancia = Vector2.Distance(
+                    new Vector2(x, y),
+                    new Vector2(centro, centro)
+                );
+
+                float alpha = Mathf.Clamp01(
+                    radio - distancia + 0.5f
+                );
+
+                textura.SetPixel(
+                    x,
+                    y,
+                    new Color(1f, 1f, 1f, alpha)
+                );
+            }
+        }
+
+        textura.Apply();
+
+        return Sprite.Create(
+            textura,
+            new Rect(0, 0, resolucion, resolucion),
+            new Vector2(0.5f, 0.5f),
+            100f
+        );
+    }
+
+    // =====================================================
+    // CREAR CIRCULITOS DE PROGRESO
+    // =====================================================
+
+    void CrearIndicadorProgreso()
+    {
+        if (panelProgreso == null && txtProgreso != null)
+        {
+            panelProgreso =
+                txtProgreso.transform.parent as RectTransform;
+        }
+
+        if (panelProgreso == null)
+            return;
+
+        spriteCirculo = CrearSpriteCircular();
+
+        circulosProgreso = new Image[3];
+
+        for (int i = 0; i < 3; i++)
+        {
+            GameObject objeto = new GameObject(
+                "Circulo_Progreso_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            objeto.transform.SetParent(panelProgreso, false);
+
+            RectTransform rect =
+                objeto.GetComponent<RectTransform>();
+
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+
+            rect.pivot = new Vector2(0.5f, 0.5f);
+
+            rect.sizeDelta = new Vector2(
+                tamanoCirculo,
+                tamanoCirculo
+            );
+
+            rect.anchoredPosition = new Vector2(
+                (i - 1) * separacionCirculos,
+                posicionVerticalCirculos
+            );
+
+            Image borde = objeto.GetComponent<Image>();
+
+            borde.sprite = spriteCirculo;
+            borde.color = colorBorde;
+            borde.raycastTarget = false;
+
+            GameObject interior = new GameObject(
+                "Interior",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
+            interior.transform.SetParent(
+                objeto.transform,
+                false
+            );
+
+            RectTransform rectInterior =
+                interior.GetComponent<RectTransform>();
+
+            rectInterior.anchorMin = Vector2.zero;
+            rectInterior.anchorMax = Vector2.one;
+
+            rectInterior.offsetMin = new Vector2(2f, 2f);
+            rectInterior.offsetMax = new Vector2(-2f, -2f);
+
+            Image imagenInterior =
+                interior.GetComponent<Image>();
+
+            imagenInterior.sprite = spriteCirculo;
+            imagenInterior.raycastTarget = false;
+
+            circulosProgreso[i] = imagenInterior;
+
+            GameObject numero = new GameObject(
+                "Numero_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(TextMeshProUGUI)
+            );
+
+            numero.transform.SetParent(
+                objeto.transform,
+                false
+            );
+
+            RectTransform rectNumero =
+                numero.GetComponent<RectTransform>();
+
+            rectNumero.anchorMin = Vector2.zero;
+            rectNumero.anchorMax = Vector2.one;
+            rectNumero.offsetMin = Vector2.zero;
+            rectNumero.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI texto =
+                numero.GetComponent<TextMeshProUGUI>();
+
+            texto.text = (i + 1).ToString();
+            texto.fontSize = tamanoCirculo * 0.5f;
+            texto.fontStyle = FontStyles.Bold;
+            texto.alignment = TextAlignmentOptions.Center;
+            texto.color = Color.white;
+            texto.raycastTarget = false;
+        }
+
+        ActualizarIndicadorProgreso();
+    }
+
+    // =====================================================
+    // ACTUALIZAR PROGRESO
+    // =====================================================
+
+    void ActualizarIndicadorProgreso()
+    {
+        if (circulosProgreso == null)
+            return;
+
+        for (int i = 0; i < circulosProgreso.Length; i++)
+        {
+            circulosProgreso[i].color =
+                i <= ejercicioActual
+                ? colorActivo
+                : colorPendiente;
+        }
+    }
+}
+
+// =========================================================
+// ARRASTRE DE FICHAS
+// =========================================================
+
+// ESTA CLASE VA EN EL MISMO ARCHIVO.
+// NO CREES OTRO SCRIPT.
+
+public class ArrastrarFichaSecuencia :
+    MonoBehaviour,
+    IBeginDragHandler,
+    IDragHandler,
+    IEndDragHandler
+{
+    private JuegoOrdenarSecuencia juego;
+    private int indiceFicha;
+
+    public void Configurar(
+        JuegoOrdenarSecuencia controlador,
+        int indice)
+    {
+        juego = controlador;
+        indiceFicha = indice;
+    }
+
+    public void OnBeginDrag(PointerEventData evento)
+    {
+        if (juego != null)
+            juego.ComenzarArrastre(indiceFicha, evento);
+    }
+
+    public void OnDrag(PointerEventData evento)
+    {
+        if (juego != null)
+            juego.MoverArrastre(evento);
+    }
+
+    public void OnEndDrag(PointerEventData evento)
+    {
+        if (juego != null)
+            juego.TerminarArrastre(indiceFicha, evento);
     }
 }
