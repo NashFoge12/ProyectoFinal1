@@ -1,0 +1,705 @@
+fileFormatVersion: 2
+guid: 6589d5cc14fa21641998dc4422718373
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_0"
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 762
+        width: 518
+        height: 249
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 53c1cae1438bcc949bd54f150f5a9755
+      internalID: 1183877096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_1"
+      rect:
+        serializedVersion: 2
+        x: 529
+        y: 757
+        width: 491
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2154d5b127b858945aefee97d32d0f7a
+      internalID: 974464708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_2"
+      rect:
+        serializedVersion: 2
+        x: 1026
+        y: 751
+        width: 510
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad4f712ed64ac2943bc2019e2089db0e
+      internalID: -264084158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_3"
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 531
+        width: 160
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03c45fd31daeccc49806627258058b1f
+      internalID: -1968424879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_4"
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 530
+        width: 160
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6dab5dad3c95624aab06f102f17b4c0
+      internalID: 491213015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_5"
+      rect:
+        serializedVersion: 2
+        x: 350
+        y: 531
+        width: 161
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9e27a949ee860e40afad07aec04eeab
+      internalID: -14383618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_6"
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 310
+        width: 167
+        height: 216
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a57f6bb8fdd0071408e6accebf42650d
+      internalID: 1002694062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_7"
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 311
+        width: 167
+        height: 215
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34b9e09ecfe9c754697e55bdcf559a91
+      internalID: -2117686583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_8"
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 311
+        width: 156
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c16fb2e59c020ab45b1f0e0ea00ec213
+      internalID: -1744362674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_9"
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 65
+        width: 209
+        height: 242
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58d19bad062438741b0045175da67900
+      internalID: 1655750457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_10"
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 64
+        width: 211
+        height: 243
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 775fecfbfd4df4949a1e8b2bace5f6b2
+      internalID: 1355267907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_11"
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 532
+        width: 163
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f0da277515f78d45a7d8c0f4aacb48f
+      internalID: -1601003930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_12"
+      rect:
+        serializedVersion: 2
+        x: 686
+        y: 532
+        width: 163
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20f7740b9a3758d4eba6f47241226d5c
+      internalID: -563779199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_13"
+      rect:
+        serializedVersion: 2
+        x: 851
+        y: 532
+        width: 161
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81c9d9a05a2158d4685fbdda5f3606d3
+      internalID: 1577962886
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_14"
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 312
+        width: 163
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f0e0bc8c389b8c4290ca7fae2c06775
+      internalID: -489671995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_15"
+      rect:
+        serializedVersion: 2
+        x: 694
+        y: 312
+        width: 156
+        height: 214
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 174286b042065ce41a52967a324579e9
+      internalID: 1675777847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_16"
+      rect:
+        serializedVersion: 2
+        x: 559
+        y: 64
+        width: 205
+        height: 240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b73ac5fd404b3d4e8c0d3d8ac167311
+      internalID: -2098036342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_17"
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 64
+        width: 209
+        height: 239
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c52485fb5986e3845a45d7e6b534a85e
+      internalID: 594740891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_18"
+      rect:
+        serializedVersion: 2
+        x: 1025
+        y: 533
+        width: 163
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2f776e6f4499c1478d0ac6dd2bc032b
+      internalID: 829352055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_19"
+      rect:
+        serializedVersion: 2
+        x: 1190
+        y: 530
+        width: 163
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fcade8358fa83324abc8801c9e1e5233
+      internalID: 1342799272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_20"
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 531
+        width: 159
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e525e92a9e93184589d30062928cba2
+      internalID: 2028602757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_21"
+      rect:
+        serializedVersion: 2
+        x: 1026
+        y: 310
+        width: 164
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 69c3fcdffda27e741a362fc1c81a3055
+      internalID: -1006174736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_22"
+      rect:
+        serializedVersion: 2
+        x: 1192
+        y: 310
+        width: 164
+        height: 215
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8cbdbddbcadf3b40a8239ce8a45e4ed
+      internalID: -421289843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_23"
+      rect:
+        serializedVersion: 2
+        x: 1069
+        y: 67
+        width: 197
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3d32e07782d5884794330ef9c5cdd1b
+      internalID: -1585259372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_24"
+      rect:
+        serializedVersion: 2
+        x: 1278
+        y: 64
+        width: 202
+        height: 238
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 965937dc62097f44d97dd6d01c116567
+      internalID: -185029885
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 9a31ee99c1bdd8243b002bf2701b5512
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_0": 1183877096
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_1": 974464708
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_10": 1355267907
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_11": -1601003930
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_12": -563779199
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_13": 1577962886
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_14": -489671995
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_15": 1675777847
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_16": -2098036342
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_17": 594740891
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_18": 829352055
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_19": 1342799272
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_2": -264084158
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_20": 2028602757
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_21": -1006174736
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_22": -421289843
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_23": -1585259372
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_24": -185029885
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_3": -1968424879
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_4": 491213015
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_5": -14383618
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_6": 1002694062
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_7": -2117686583
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_8": -1744362674
+      "Atlas de Misiones Algor\xEDtmicas Coloridas (1)_9": 1655750457
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

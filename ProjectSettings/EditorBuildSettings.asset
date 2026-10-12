@@ -30,7 +30,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Mision1_Secuencias.unity
     guid: 4cf6bb2aeb1c3a54dad9269de9c1d09d
   - enabled: 1
-    path: Assets/Scenes/Mision2_Algoritmos.unity
+    path: Assets/Scenes/Mision2_Algoritllmos.unity
     guid: 3fecb1df214baf0468f61aed932be117
   - enabled: 1
     path: Assets/Scenes/Mision3_Secuencias.unity
