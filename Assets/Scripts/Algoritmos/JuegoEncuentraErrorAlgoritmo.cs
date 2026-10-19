@@ -4,14 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JuegoPasoSobrante : MonoBehaviour
+public class JuegoEncuentraAlgoritmo : MonoBehaviour
 {
     // =====================================================
-    // TEXTOS DE INTERFAZ
+    // TEXTOS
     // =====================================================
 
     [Header("TEXTOS DE INTERFAZ")]
-
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
     public TMP_Text txtResultado;
@@ -21,7 +20,6 @@ public class JuegoPasoSobrante : MonoBehaviour
     // =====================================================
 
     [Header("FONDOS DE LOS 3 TEMAS")]
-
     public Image imagenFondo;
 
     public Sprite fondoPastel;
@@ -33,7 +31,6 @@ public class JuegoPasoSobrante : MonoBehaviour
     // =====================================================
 
     [Header("TITULOS EN IMAGEN")]
-
     public Image imagenTitulo;
 
     public Sprite tituloPastel;
@@ -41,11 +38,10 @@ public class JuegoPasoSobrante : MonoBehaviour
     public Sprite tituloColegio;
 
     // =====================================================
-    // CUATRO TARJETAS SELECCIONABLES
+    // TARJETAS
     // =====================================================
 
     [Header("PANEL PASOS - 4 BOTONES")]
-
     public Button[] botonesPasos = new Button[4];
 
     // =====================================================
@@ -53,65 +49,37 @@ public class JuegoPasoSobrante : MonoBehaviour
     // =====================================================
 
     [Header("BOTONES")]
-
     public Button btnComprobar;
     public Button btnSiguiente;
 
-    // Btn_Volver funciona con Navegacion.
-    // No necesita modificarse desde este script.
-
     // =====================================================
-    // TEMA 1 - HORNEAR UN PASTEL
+    // EJERCICIO 1 - PASTEL
     // =====================================================
 
     [Header("TEMA 1 - HORNEAR UN PASTEL")]
-
-    // PASO CORRECTO 1
     public Sprite sprPesarIngredientes;
-
-    // PASO CORRECTO 2
     public Sprite sprMezclarIngredientes;
-
-    // PASO INCORRECTO
     public Sprite sprComersePastelAntes;
-
-    // PASO CORRECTO 3
     public Sprite sprHornear180Grados;
 
     // =====================================================
-    // TEMA 2 - CRUZAR LA CALLE
+    // EJERCICIO 2 - CALLE
     // =====================================================
 
     [Header("TEMA 2 - CRUZAR LA CALLE")]
-
-    // PASO CORRECTO 1
     public Sprite sprDetenerseEnVereda;
-
-    // PASO CORRECTO 2
     public Sprite sprMirarAmbosLados;
-
-    // PASO INCORRECTO
     public Sprite sprCorrerSinMirar;
-
-    // PASO CORRECTO 3
     public Sprite sprCruzarPasoPeatonal;
 
     // =====================================================
-    // TEMA 3 - IR AL COLEGIO
+    // EJERCICIO 3 - COLEGIO
     // =====================================================
 
     [Header("TEMA 3 - PREPARARSE PARA EL COLEGIO")]
-
-    // PASO CORRECTO 1
     public Sprite sprAbrirLaPuerta;
-
-    // PASO CORRECTO 2
     public Sprite sprPonerseZapatos;
-
-    // PASO CORRECTO 3
     public Sprite sprGuardarUtilesMochila;
-
-    // PASO INCORRECTO
     public Sprite sprDesayunarDespuesVolver;
 
     // =====================================================
@@ -119,7 +87,6 @@ public class JuegoPasoSobrante : MonoBehaviour
     // =====================================================
 
     [Header("INDICADOR DE PROGRESO")]
-
     public RectTransform panelProgreso;
 
     public float tamanoCirculo = 28f;
@@ -133,11 +100,10 @@ public class JuegoPasoSobrante : MonoBehaviour
         new Color(0.78f, 0.76f, 0.72f, 1f);
 
     // =====================================================
-    // COLORES DE LAS TARJETAS
+    // COLORES
     // =====================================================
 
     [Header("COLORES DE SELECCION")]
-
     public Color colorNormal = Color.white;
 
     public Color colorSeleccionado =
@@ -147,21 +113,16 @@ public class JuegoPasoSobrante : MonoBehaviour
         new Color(0.68f, 1f, 0.73f, 1f);
 
     // =====================================================
-    // CLASE PARA LOS DATOS DEL EJERCICIO
+    // DATOS DE LOS EJERCICIOS
     // =====================================================
 
     private class Ejercicio
     {
         public string pregunta;
-
         public string mensajeCorrecto;
-
         public Sprite fondo;
         public Sprite titulo;
-
         public Sprite[] tarjetas;
-
-        // Indice original del paso incorrecto.
         public int pasoIncorrecto;
     }
 
@@ -169,32 +130,26 @@ public class JuegoPasoSobrante : MonoBehaviour
         new List<Ejercicio>();
 
     // =====================================================
-    // VARIABLES DEL JUEGO
+    // VARIABLES
     // =====================================================
 
     private int ejercicioActual = 0;
-
     private int tarjetaSeleccionada = -1;
-
     private int posicionIncorrecta = -1;
 
     private bool ejercicioCompletado = false;
 
     private Image[] circulosProgreso;
-
     private Sprite spriteCirculo;
 
-    // Para identificar cada tarjeta despues de mezclar.
     private int[] indicesTarjetas = new int[4];
 
     // =====================================================
-    // START
+    // INICIO
     // =====================================================
 
     void Start()
     {
-        // Comprobar referencias principales.
-
         if (txtPregunta == null ||
             txtProgreso == null ||
             txtResultado == null ||
@@ -235,8 +190,6 @@ public class JuegoPasoSobrante : MonoBehaviour
 
         CrearEjercicios();
 
-        // Asignar los eventos de cada tarjeta.
-
         for (int i = 0; i < botonesPasos.Length; i++)
         {
             int indice = i;
@@ -247,11 +200,9 @@ public class JuegoPasoSobrante : MonoBehaviour
         }
 
         btnComprobar.onClick.AddListener(Comprobar);
-
         btnSiguiente.onClick.AddListener(SiguienteEjercicio);
 
         CrearIndicadorProgreso();
-
         CargarEjercicio();
     }
 
@@ -280,25 +231,11 @@ public class JuegoPasoSobrante : MonoBehaviour
 
             tarjetas = new Sprite[]
             {
-                // TARJETA 1
-                // Pesar los ingredientes.
                 sprPesarIngredientes,
-
-                // TARJETA 2
-                // Mezclar la harina, el huevo y el azucar.
                 sprMezclarIngredientes,
-
-                // TARJETA 3 - INCORRECTA
-                // Comerse el pastel antes de hornearlo.
                 sprComersePastelAntes,
-
-                // TARJETA 4
-                // Hornear a 180 grados.
                 sprHornear180Grados
             },
-
-            // La tarjeta incorrecta es la tercera.
-            // En C# contamos desde cero.
 
             pasoIncorrecto = 2
         });
@@ -320,20 +257,9 @@ public class JuegoPasoSobrante : MonoBehaviour
 
             tarjetas = new Sprite[]
             {
-                // TARJETA 1
-                // Detenerse en la vereda.
                 sprDetenerseEnVereda,
-
-                // TARJETA 2
-                // Mirar a ambos lados.
                 sprMirarAmbosLados,
-
-                // TARJETA 3 - INCORRECTA
-                // Correr sin mirar entre los autos.
                 sprCorrerSinMirar,
-
-                // TARJETA 4
-                // Cruzar por el paso peatonal.
                 sprCruzarPasoPeatonal
             },
 
@@ -341,7 +267,7 @@ public class JuegoPasoSobrante : MonoBehaviour
         });
 
         // =================================================
-        // EJERCICIO 3 - PREPARARSE PARA IR AL COLEGIO
+        // EJERCICIO 3 - PREPARARSE PARA EL COLEGIO
         // =================================================
 
         ejercicios.Add(new Ejercicio
@@ -350,27 +276,16 @@ public class JuegoPasoSobrante : MonoBehaviour
                 "¿Qué paso no corresponde al prepararse para ir al colegio?",
 
             mensajeCorrecto =
-                "¡Excelente! Desayunar despues de volver no ayuda a prepararse para salir.",
+                "¡Excelente! Desayunar después de volver no ayuda a prepararse para salir.",
 
             fondo = fondoColegio,
             titulo = tituloColegio,
 
             tarjetas = new Sprite[]
             {
-                // TARJETA 1
-                // Abrir la puerta.
                 sprAbrirLaPuerta,
-
-                // TARJETA 2
-                // Ponerse los zapatos.
                 sprPonerseZapatos,
-
-                // TARJETA 3
-                // Guardar los utiles en la mochila.
                 sprGuardarUtilesMochila,
-
-                // TARJETA 4 - INCORRECTA
-                // Desayunar despues de volver.
                 sprDesayunarDespuesVolver
             },
 
@@ -385,27 +300,14 @@ public class JuegoPasoSobrante : MonoBehaviour
     void CargarEjercicio()
     {
         tarjetaSeleccionada = -1;
-
         ejercicioCompletado = false;
 
         Ejercicio ejercicio = ejercicios[ejercicioActual];
 
-        // -------------------------------------------------
-        // PREGUNTA
-        // -------------------------------------------------
-
         txtPregunta.text = ejercicio.pregunta;
-
-        // -------------------------------------------------
-        // MENSAJE INICIAL
-        // -------------------------------------------------
 
         txtResultado.text =
             "¡Observa las tarjetas y encuentra el paso sobrante!";
-
-        // -------------------------------------------------
-        // PROGRESO
-        // -------------------------------------------------
 
         txtProgreso.text =
             "Ejercicio " +
@@ -417,19 +319,11 @@ public class JuegoPasoSobrante : MonoBehaviour
 
         ActualizarIndicadorProgreso();
 
-        // -------------------------------------------------
-        // CAMBIAR FONDO
-        // -------------------------------------------------
-
         if (imagenFondo != null &&
             ejercicio.fondo != null)
         {
             imagenFondo.sprite = ejercicio.fondo;
         }
-
-        // -------------------------------------------------
-        // CAMBIAR TITULO
-        // -------------------------------------------------
 
         if (imagenTitulo != null &&
             ejercicio.titulo != null)
@@ -437,15 +331,7 @@ public class JuegoPasoSobrante : MonoBehaviour
             imagenTitulo.sprite = ejercicio.titulo;
         }
 
-        // -------------------------------------------------
-        // MEZCLAR TARJETAS
-        // -------------------------------------------------
-
         MezclarTarjetas(ejercicio);
-
-        // -------------------------------------------------
-        // MOSTRAR BOTONES
-        // -------------------------------------------------
 
         btnComprobar.gameObject.SetActive(true);
         btnComprobar.interactable = true;
@@ -459,15 +345,12 @@ public class JuegoPasoSobrante : MonoBehaviour
 
     void MezclarTarjetas(Ejercicio ejercicio)
     {
-        // Cada numero representa la posicion original
-        // de la tarjeta dentro del ejercicio.
-
         for (int i = 0; i < 4; i++)
         {
             indicesTarjetas[i] = i;
         }
 
-        // Barajar usando Fisher-Yates.
+        // Mezcla Fisher-Yates.
 
         for (int i = 3; i > 0; i--)
         {
@@ -481,14 +364,13 @@ public class JuegoPasoSobrante : MonoBehaviour
             indicesTarjetas[aleatorio] = temporal;
         }
 
-        // Evitar que el paso incorrecto aparezca
-        // inmediatamente en la misma posicion que
-        // en la partida anterior de este tema.
+        // Evitar repetir la posicion incorrecta.
 
         string clave =
             "MundoPujllay_PasoSobrante_" + ejercicioActual;
 
-        int ultimaPosicion = PlayerPrefs.GetInt(clave, -1);
+        int ultimaPosicion =
+            PlayerPrefs.GetInt(clave, -1);
 
         int posicionActual =
             System.Array.IndexOf(
@@ -501,7 +383,8 @@ public class JuegoPasoSobrante : MonoBehaviour
             int otraPosicion =
                 (posicionActual + Random.Range(1, 4)) % 4;
 
-            int temporal = indicesTarjetas[posicionActual];
+            int temporal =
+                indicesTarjetas[posicionActual];
 
             indicesTarjetas[posicionActual] =
                 indicesTarjetas[otraPosicion];
@@ -509,7 +392,7 @@ public class JuegoPasoSobrante : MonoBehaviour
             indicesTarjetas[otraPosicion] = temporal;
         }
 
-        // Cargar las imagenes mezcladas.
+        // Mostrar tarjetas mezcladas.
 
         for (int i = 0; i < 4; i++)
         {
@@ -524,12 +407,8 @@ public class JuegoPasoSobrante : MonoBehaviour
                 ejercicio.tarjetas[indiceOriginal];
 
             boton.image.color = colorNormal;
-
             boton.image.preserveAspect = false;
         }
-
-        // Encontrar la posicion actual de la
-        // tarjeta incorrecta despues de mezclar.
 
         posicionIncorrecta =
             System.Array.IndexOf(
@@ -546,7 +425,7 @@ public class JuegoPasoSobrante : MonoBehaviour
     }
 
     // =====================================================
-    // SELECCIONAR UNA TARJETA
+    // SELECCIONAR TARJETA
     // =====================================================
 
     void SeleccionarTarjeta(int indice)
@@ -556,14 +435,14 @@ public class JuegoPasoSobrante : MonoBehaviour
 
         tarjetaSeleccionada = indice;
 
-        // Restaurar el color de todas.
+        // Restaurar colores.
 
         for (int i = 0; i < botonesPasos.Length; i++)
         {
             botonesPasos[i].image.color = colorNormal;
         }
 
-        // Resaltar la tarjeta elegida.
+        // Resaltar la seleccionada.
 
         botonesPasos[indice].image.color =
             colorSeleccionado;
@@ -573,17 +452,13 @@ public class JuegoPasoSobrante : MonoBehaviour
     }
 
     // =====================================================
-    // COMPROBAR
+    // COMPROBAR RESPUESTA
     // =====================================================
 
     void Comprobar()
     {
         if (ejercicioCompletado)
             return;
-
-        // -------------------------------------------------
-        // NO SELECCIONO NINGUNA TARJETA
-        // -------------------------------------------------
 
         if (tarjetaSeleccionada == -1)
         {
@@ -593,53 +468,59 @@ public class JuegoPasoSobrante : MonoBehaviour
             return;
         }
 
-        // -------------------------------------------------
+        // =================================================
         // RESPUESTA CORRECTA
-        // -------------------------------------------------
+        // =================================================
 
         if (tarjetaSeleccionada == posicionIncorrecta)
         {
             ejercicioCompletado = true;
 
+            // =============================================
+            // NUEVO: GUARDAR ESTRELLA DE LA MISION 3
+            // =============================================
+
+            ProgresoEstrellas.GuardarEjercicio(
+                "Algoritmos",
+                3,
+                ejercicioActual + 1
+            );
+
+            Debug.Log(
+                "Mision 3 - Estrella guardada: " +
+                (ejercicioActual + 1)
+            );
+
+            // =============================================
+            // RESPUESTA CORRECTA
+            // =============================================
+
             txtResultado.text =
                 ejercicios[ejercicioActual].mensajeCorrecto;
 
-            // Resaltar la tarjeta identificada.
-
             botonesPasos[tarjetaSeleccionada]
                 .image.color = colorCorrecto;
-
-            // Desactivar las cuatro tarjetas.
 
             foreach (Button boton in botonesPasos)
             {
                 boton.interactable = false;
             }
 
-            // Ocultar Comprobar.
-
             btnComprobar.gameObject.SetActive(false);
-
-            // Mostrar Siguiente.
-
             btnSiguiente.gameObject.SetActive(true);
         }
 
-        // -------------------------------------------------
+        // =================================================
         // RESPUESTA INCORRECTA
-        // -------------------------------------------------
+        // =================================================
 
         else
         {
             txtResultado.text =
                 "¡Casi! Observa los pasos e inténtalo otra vez.";
 
-            // Restaurar el color de la tarjeta.
-
             botonesPasos[tarjetaSeleccionada]
                 .image.color = colorNormal;
-
-            // Permitir un nuevo intento.
 
             tarjetaSeleccionada = -1;
         }
@@ -680,19 +561,13 @@ public class JuegoPasoSobrante : MonoBehaviour
 
         txtProgreso.text = "";
 
-        // Ocultar las cuatro tarjetas.
-
         foreach (Button boton in botonesPasos)
         {
             boton.gameObject.SetActive(false);
         }
 
-        // Ocultar botones.
-
         btnComprobar.gameObject.SetActive(false);
         btnSiguiente.gameObject.SetActive(false);
-
-        // Ocultar indicador de progreso.
 
         if (circulosProgreso != null)
         {
@@ -704,8 +579,6 @@ public class JuegoPasoSobrante : MonoBehaviour
                 }
             }
         }
-
-        // Btn_Volver permanece disponible.
     }
 
     // =====================================================
@@ -786,10 +659,6 @@ public class JuegoPasoSobrante : MonoBehaviour
 
         for (int i = 0; i < ejercicios.Count; i++)
         {
-            // ---------------------------------------------
-            // OBJETO CIRCULO
-            // ---------------------------------------------
-
             GameObject objetoCirculo = new GameObject(
                 "Circulo_Progreso_" + (i + 1),
                 typeof(RectTransform),
@@ -814,11 +683,8 @@ public class JuegoPasoSobrante : MonoBehaviour
                 tamanoCirculo
             );
 
-            float posicionX =
-                (i - 1) * separacionCirculos;
-
             rect.anchoredPosition = new Vector2(
-                posicionX,
+                (i - 1) * separacionCirculos,
                 posicionVerticalCirculos
             );
 
@@ -830,9 +696,7 @@ public class JuegoPasoSobrante : MonoBehaviour
 
             circulosProgreso[i] = imagen;
 
-            // ---------------------------------------------
             // NUMERO DEL CIRCULO
-            // ---------------------------------------------
 
             GameObject objetoNumero = new GameObject(
                 "Numero_" + (i + 1),
@@ -869,7 +733,7 @@ public class JuegoPasoSobrante : MonoBehaviour
     }
 
     // =====================================================
-    // ACTUALIZAR INDICADOR DE PROGRESO
+    // ACTUALIZAR CIRCULOS
     // =====================================================
 
     void ActualizarIndicadorProgreso()

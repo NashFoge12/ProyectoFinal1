@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,75 +7,44 @@ using UnityEngine.UI;
 
 public class JuegoCompletarAlgoritmo : MonoBehaviour
 {
-    // =====================================================
-    // TEXTOS DE INTERFAZ
-    // =====================================================
-
     [Header("TEXTOS")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
-    public TMP_Text txtResultado;
 
-    // =====================================================
-    // FONDOS
-    // =====================================================
+    [Header("TIEMPO DE LA PREGUNTA")]
+    [Range(1f, 5f)]
+    public float tiempoPregunta = 2f;
+
+    private Coroutine rutinaPregunta;
 
     [Header("FONDOS DE LOS 3 TEMAS")]
     public Image imagenFondo;
-
     public Sprite fondoSandwich;
     public Sprite fondoManos;
     public Sprite fondoPlanta;
 
-    // =====================================================
-    // TITULOS
-    // =====================================================
-
     [Header("TITULOS DE LOS 3 TEMAS")]
     public Image imagenTitulo;
-
     public Sprite tituloSandwich;
     public Sprite tituloManos;
     public Sprite tituloPlanta;
 
-    // =====================================================
-    // TARJETA CON SIGNO DE PREGUNTA
-    // =====================================================
-
     [Header("TARJETAS DE INTERROGACION")]
-
     public Sprite interrogacionSandwich;
     public Sprite interrogacionManos;
     public Sprite interrogacionPlanta;
 
-    // =====================================================
-    // PANEL ALGORITMO
-    // =====================================================
-
     [Header("PANEL ALGORITMO - 5 PASOS EN ORDEN")]
     public Image[] imagenesPasos = new Image[5];
 
-    // =====================================================
-    // PANEL ALTERNATIVAS
-    // =====================================================
-
     [Header("PANEL ALTERNATIVAS - 3 BOTONES")]
     public Button[] botonesOpciones = new Button[3];
-
-    // =====================================================
-    // BOTONES
-    // =====================================================
 
     [Header("BOTONES")]
     public Button btnComprobar;
     public Button btnSiguiente;
 
-    // =====================================================
-    // TEMA 1 - PREPARAR UN SANDWICH
-    // =====================================================
-
     [Header("TEMA 1 - SANDWICH - PASOS CORRECTOS")]
-
     public Sprite sprSacarElPan;
     public Sprite sprUntarLaMantequilla;
     public Sprite sprColocarLasVerduras;
@@ -82,16 +52,10 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     public Sprite sprCerrarElSandwich;
 
     [Header("TEMA 1 - RESPUESTAS INCORRECTAS")]
-
     public Sprite sprPintarElPan;
     public Sprite sprGolpearElPan;
 
-    // =====================================================
-    // TEMA 2 - LAVARSE LAS MANOS
-    // =====================================================
-
     [Header("TEMA 2 - MANOS - PASOS CORRECTOS")]
-
     public Sprite sprAbrirElGrifo;
     public Sprite sprColocarJabonEnLasManos;
     public Sprite sprFrotarLasManos;
@@ -99,16 +63,10 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     public Sprite sprSecarLasManos;
 
     [Header("TEMA 2 - RESPUESTAS INCORRECTAS")]
-
     public Sprite sprCepillarseLosDientes;
     public Sprite sprGuardarJuguetes;
 
-    // =====================================================
-    // TEMA 3 - SEMBRAR UNA PLANTA
-    // =====================================================
-
     [Header("TEMA 3 - PLANTA - PASOS CORRECTOS")]
-
     public Sprite sprConseguirLaMaceta;
     public Sprite sprColocarLaTierra;
     public Sprite sprHacerUnHueco;
@@ -116,18 +74,11 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     public Sprite sprRegarConAgua;
 
     [Header("TEMA 3 - RESPUESTAS INCORRECTAS")]
-
     public Sprite sprRegarConJugo;
     public Sprite sprMeterAlCongelador;
 
-    // =====================================================
-    // INDICADOR DE PROGRESO
-    // =====================================================
-
     [Header("INDICADOR DE PROGRESO")]
-
     public RectTransform panelProgreso;
-
     public float tamanoCirculo = 28f;
     public float separacionCirculos = 38f;
     public float posicionVerticalCirculos = -20f;
@@ -138,30 +89,19 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     public Color colorPendiente =
         new Color(0.78f, 0.76f, 0.72f, 1f);
 
-    // =====================================================
-    // COLORES DE SELECCION
-    // =====================================================
-
     [Header("COLORES")]
-
     public Color colorNormal = Color.white;
 
     public Color colorSeleccionado =
         new Color(0.65f, 0.90f, 1f, 1f);
 
-    // =====================================================
-    // DATOS DEL EJERCICIO
-    // =====================================================
-
     private class Ejercicio
     {
         public string nombre;
         public string pregunta;
-
         public Sprite fondo;
         public Sprite titulo;
         public Sprite interrogacion;
-
         public Sprite[] pasos;
         public Sprite[] incorrectas;
     }
@@ -170,24 +110,20 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
         new List<Ejercicio>();
 
     private int ejercicioActual = 0;
-
     private int pasoFaltante = -1;
     private int respuestaCorrecta = -1;
     private int opcionSeleccionada = -1;
-
     private bool ejercicioCompletado = false;
 
     private Image[] circulosProgreso;
     private Sprite spriteCirculo;
 
     // =====================================================
-    // START
+    // INICIO
     // =====================================================
 
     void Start()
     {
-        // Comprobar referencias importantes.
-
         if (imagenesPasos == null ||
             imagenesPasos.Length != 5 ||
             botonesOpciones == null ||
@@ -196,21 +132,18 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             Debug.LogError(
                 "Debes configurar 5 pasos y 3 alternativas."
             );
-
             enabled = false;
             return;
         }
 
         if (txtPregunta == null ||
             txtProgreso == null ||
-            txtResultado == null ||
             btnComprobar == null ||
             btnSiguiente == null)
         {
             Debug.LogError(
                 "Faltan textos o botones del juego."
             );
-
             enabled = false;
             return;
         }
@@ -222,7 +155,6 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
                 Debug.LogError(
                     "Falta asignar Paso_" + (i + 1)
                 );
-
                 enabled = false;
                 return;
             }
@@ -235,13 +167,11 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
                 Debug.LogError(
                     "Falta asignar Boton_Opcion_" + (i + 1)
                 );
-
                 enabled = false;
                 return;
             }
 
             int indice = i;
-
             botonesOpciones[i].onClick.AddListener(
                 () => SeleccionarOpcion(indice)
             );
@@ -256,37 +186,72 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // CREAR LOS TRES TEMAS
+    // MENSAJES
+    // =====================================================
+
+    void MostrarMensaje(string mensaje)
+    {
+        if (txtPregunta != null)
+            txtPregunta.text = mensaje;
+    }
+
+    void IniciarPregunta(string pregunta)
+    {
+        DetenerPreguntaTemporal();
+
+        rutinaPregunta = StartCoroutine(
+            MostrarPreguntaTemporal(pregunta)
+        );
+    }
+
+    IEnumerator MostrarPreguntaTemporal(string pregunta)
+    {
+        MostrarMensaje(pregunta);
+
+        yield return new WaitForSeconds(tiempoPregunta);
+
+        MostrarMensaje(
+            "¡Observa los pasos y descubre cuál falta!"
+        );
+
+        rutinaPregunta = null;
+    }
+
+    void DetenerPreguntaTemporal()
+    {
+        if (rutinaPregunta != null)
+        {
+            StopCoroutine(rutinaPregunta);
+            rutinaPregunta = null;
+        }
+    }
+
+    // =====================================================
+    // CREAR EJERCICIOS
     // =====================================================
 
     void CrearEjercicios()
     {
         ejercicios.Clear();
 
-        // -------------------------------------------------
-        // TEMA 1: PREPARAR UN SANDWICH
-        // -------------------------------------------------
+        // EJERCICIO 1: SANDWICH
 
         ejercicios.Add(new Ejercicio
         {
             nombre = "Sandwich",
-
             pregunta =
                 "¿Qué paso falta para preparar un sándwich?",
-
             fondo = fondoSandwich,
             titulo = tituloSandwich,
             interrogacion = interrogacionSandwich,
 
-            // ORDEN CORRECTO - NUNCA SE DESORDENA
-
             pasos = new Sprite[]
             {
-                sprSacarElPan,             // PASO 1
-                sprUntarLaMantequilla,     // PASO 2
-                sprColocarLasVerduras,     // PASO 3
-                sprColocarElJamon,         // PASO 4
-                sprCerrarElSandwich        // PASO 5
+                sprSacarElPan,
+                sprUntarLaMantequilla,
+                sprColocarLasVerduras,
+                sprColocarElJamon,
+                sprCerrarElSandwich
             },
 
             incorrectas = new Sprite[]
@@ -296,30 +261,24 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             }
         });
 
-        // -------------------------------------------------
-        // TEMA 2: LAVARSE LAS MANOS
-        // -------------------------------------------------
+        // EJERCICIO 2: LAVARSE LAS MANOS
 
         ejercicios.Add(new Ejercicio
         {
             nombre = "Manos",
-
             pregunta =
                 "¿Qué paso falta para lavarse las manos?",
-
             fondo = fondoManos,
             titulo = tituloManos,
             interrogacion = interrogacionManos,
 
-            // ORDEN CORRECTO - NUNCA SE DESORDENA
-
             pasos = new Sprite[]
             {
-                sprAbrirElGrifo,             // PASO 1
-                sprColocarJabonEnLasManos,   // PASO 2
-                sprFrotarLasManos,           // PASO 3
-                sprEnjuagarLasManos,         // PASO 4
-                sprSecarLasManos             // PASO 5
+                sprAbrirElGrifo,
+                sprColocarJabonEnLasManos,
+                sprFrotarLasManos,
+                sprEnjuagarLasManos,
+                sprSecarLasManos
             },
 
             incorrectas = new Sprite[]
@@ -329,30 +288,24 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             }
         });
 
-        // -------------------------------------------------
-        // TEMA 3: SEMBRAR UNA PLANTA
-        // -------------------------------------------------
+        // EJERCICIO 3: SEMBRAR UNA PLANTA
 
         ejercicios.Add(new Ejercicio
         {
             nombre = "Planta",
-
             pregunta =
                 "¿Qué paso falta para sembrar una planta?",
-
             fondo = fondoPlanta,
             titulo = tituloPlanta,
             interrogacion = interrogacionPlanta,
 
-            // ORDEN CORRECTO - NUNCA SE DESORDENA
-
             pasos = new Sprite[]
             {
-                sprConseguirLaMaceta,         // PASO 1
-                sprColocarLaTierra,           // PASO 2
-                sprHacerUnHueco,              // PASO 3
-                sprPonerLaSemillaYCubrirla,   // PASO 4
-                sprRegarConAgua               // PASO 5
+                sprConseguirLaMaceta,
+                sprColocarLaTierra,
+                sprHacerUnHueco,
+                sprPonerLaSemillaYCubrirla,
+                sprRegarConAgua
             },
 
             incorrectas = new Sprite[]
@@ -364,32 +317,23 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // ELEGIR UN PASO FALTANTE ALEATORIO
+    // PASO FALTANTE ALEATORIO
     // =====================================================
 
     int ElegirPasoAleatorio()
     {
-        // Se guarda el ultimo paso faltante de cada
-        // tema para evitar repetirlo en la siguiente
-        // partida, incluso si se cierra el juego.
-
         string clave =
             "MundoPujllay_UltimoPaso_" + ejercicioActual;
 
         int anterior = PlayerPrefs.GetInt(clave, -1);
-
         int nuevo = Random.Range(0, 5);
-
-        // No repetir el mismo paso inmediatamente.
 
         if (anterior >= 0 && anterior < 5)
         {
             nuevo = Random.Range(0, 4);
 
             if (nuevo >= anterior)
-            {
                 nuevo++;
-            }
         }
 
         PlayerPrefs.SetInt(clave, nuevo);
@@ -404,31 +348,16 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
 
     void CargarEjercicio()
     {
+        DetenerPreguntaTemporal();
+
         ejercicioCompletado = false;
         opcionSeleccionada = -1;
 
         Ejercicio ejercicio = ejercicios[ejercicioActual];
 
-        // Elegir un paso diferente aleatoriamente.
-
         pasoFaltante = ElegirPasoAleatorio();
 
-        // -------------------------------------------------
-        // PREGUNTA
-        // -------------------------------------------------
-
-        txtPregunta.text = ejercicio.pregunta;
-
-        // -------------------------------------------------
-        // PANEL MENSAJE
-        // -------------------------------------------------
-
-        txtResultado.text =
-            "¡Observa los pasos y descubre cuál falta!";
-
-        // -------------------------------------------------
-        // PROGRESO
-        // -------------------------------------------------
+        IniciarPregunta(ejercicio.pregunta);
 
         txtProgreso.text =
             "Ejercicio " +
@@ -439,10 +368,6 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
         txtProgreso.enableWordWrapping = false;
 
         ActualizarIndicadorProgreso();
-
-        // -------------------------------------------------
-        // FONDO Y TITULO
-        // -------------------------------------------------
 
         if (imagenFondo != null &&
             ejercicio.fondo != null)
@@ -456,9 +381,7 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             imagenTitulo.sprite = ejercicio.titulo;
         }
 
-        // -------------------------------------------------
-        // MOSTRAR LOS 5 PASOS EN ORDEN
-        // -------------------------------------------------
+        // Mostrar 5 pasos ordenados.
 
         for (int i = 0; i < 5; i++)
         {
@@ -467,12 +390,7 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             imagen.gameObject.SetActive(true);
             imagen.color = Color.white;
             imagen.preserveAspect = false;
-
-            // Mostrar la tarjeta del paso correspondiente.
-
             imagen.sprite = ejercicio.pasos[i];
-
-            // Solo reemplazar el paso elegido por "?".
 
             if (i == pasoFaltante)
             {
@@ -480,55 +398,39 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             }
         }
 
-        // -------------------------------------------------
-        // PREPARAR LAS 3 ALTERNATIVAS
-        // -------------------------------------------------
-
         CrearAlternativas(ejercicio);
 
         btnComprobar.gameObject.SetActive(true);
         btnComprobar.interactable = true;
-
         btnSiguiente.gameObject.SetActive(false);
     }
 
     // =====================================================
-    // CREAR ALTERNATIVAS ALEATORIAS
+    // CREAR ALTERNATIVAS
     // =====================================================
 
     void CrearAlternativas(Ejercicio ejercicio)
     {
-        // La alternativa correcta siempre es
-        // el paso que ha desaparecido.
-
-        Sprite correcta = ejercicio.pasos[pasoFaltante];
-
-        // Dos opciones incorrectas de ese tema.
-
-        Sprite incorrecta1 = ejercicio.incorrectas[0];
-        Sprite incorrecta2 = ejercicio.incorrectas[1];
+        Sprite correcta =
+            ejercicio.pasos[pasoFaltante];
 
         Sprite[] opciones = new Sprite[]
         {
             correcta,
-            incorrecta1,
-            incorrecta2
+            ejercicio.incorrectas[0],
+            ejercicio.incorrectas[1]
         };
 
-        // Mezclar las tres alternativas.
+        // Mezclar las respuestas.
 
         for (int i = opciones.Length - 1; i > 0; i--)
         {
             int aleatorio = Random.Range(0, i + 1);
 
             Sprite temporal = opciones[i];
-
             opciones[i] = opciones[aleatorio];
             opciones[aleatorio] = temporal;
         }
-
-        // Mostrar las alternativas y localizar
-        // la posicion de la respuesta correcta.
 
         respuestaCorrecta = -1;
 
@@ -551,7 +453,7 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // SELECCIONAR UNA TARJETA
+    // SELECCIONAR OPCION
     // =====================================================
 
     void SeleccionarOpcion(int indice)
@@ -559,26 +461,25 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
         if (ejercicioCompletado)
             return;
 
-        opcionSeleccionada = indice;
+        DetenerPreguntaTemporal();
 
-        // Restaurar colores.
+        opcionSeleccionada = indice;
 
         foreach (Button boton in botonesOpciones)
         {
             boton.image.color = colorNormal;
         }
 
-        // Marcar la tarjeta seleccionada.
-
         botonesOpciones[indice].image.color =
             colorSeleccionado;
 
-        txtResultado.text =
-            "¡Muy bien! Ahora presiona COMPROBAR.";
+        MostrarMensaje(
+            "¡Muy bien! Ahora presiona COMPROBAR."
+        );
     }
 
     // =====================================================
-    // COMPROBAR
+    // COMPROBAR RESPUESTA
     // =====================================================
 
     void Comprobar()
@@ -586,38 +487,50 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
         if (ejercicioCompletado)
             return;
 
+        DetenerPreguntaTemporal();
+
         if (opcionSeleccionada == -1)
         {
-            txtResultado.text =
-                "¡Primero selecciona una tarjeta!";
-
+            MostrarMensaje(
+                "¡Primero selecciona una tarjeta!"
+            );
             return;
         }
 
         Ejercicio ejercicio = ejercicios[ejercicioActual];
 
-        // -------------------------------------------------
-        // RESPUESTA CORRECTA
-        // -------------------------------------------------
-
         if (opcionSeleccionada == respuestaCorrecta)
         {
             ejercicioCompletado = true;
 
-            txtResultado.text =
-                "¡Excelente! ¡Completaste el algoritmo!";
+            // =============================================
+            // NUEVO: GUARDAR ESTRELLA DE LA MISION 2
+            // =============================================
 
-            // Reemplazar la interrogacion
-            // con el paso correcto.
+            ProgresoEstrellas.GuardarEjercicio(
+                "Algoritmos",
+                2,
+                ejercicioActual + 1
+            );
+
+            Debug.Log(
+                "Mision 2 - Estrella guardada: " +
+                (ejercicioActual + 1)
+            );
+
+            // =============================================
+            // RESPUESTA CORRECTA
+            // =============================================
+
+            MostrarMensaje(
+                "¡Excelente! ¡Completaste el algoritmo!"
+            );
 
             imagenesPasos[pasoFaltante].sprite =
                 ejercicio.pasos[pasoFaltante];
 
             imagenesPasos[pasoFaltante].color =
                 Color.white;
-
-            // Mantener las tarjetas color crema/blanco;
-            // solo la seleccion usa el tinte azul.
 
             foreach (Button boton in botonesOpciones)
             {
@@ -628,15 +541,11 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             btnComprobar.gameObject.SetActive(false);
             btnSiguiente.gameObject.SetActive(true);
         }
-
-        // -------------------------------------------------
-        // RESPUESTA INCORRECTA
-        // -------------------------------------------------
-
         else
         {
-            txtResultado.text =
-                "¡Casi! Observa el orden e inténtalo otra vez.";
+            MostrarMensaje(
+                "¡Casi! Observa el orden e inténtalo otra vez."
+            );
 
             botonesOpciones[opcionSeleccionada]
                 .image.color = colorNormal;
@@ -653,6 +562,8 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     {
         if (!ejercicioCompletado)
             return;
+
+        DetenerPreguntaTemporal();
 
         ejercicioActual++;
 
@@ -672,11 +583,12 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
 
     void FinalizarMision()
     {
-        txtPregunta.text =
-            "¡MISIÓN COMPLETADA!";
+        DetenerPreguntaTemporal();
 
-        txtResultado.text =
-            "¡Felicidades! Completaste los 3 algoritmos.";
+        MostrarMensaje(
+            "¡MISIÓN COMPLETADA!\n" +
+            "¡Felicidades! Completaste los 3 algoritmos."
+        );
 
         txtProgreso.text = "";
 
@@ -773,7 +685,6 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             return;
 
         spriteCirculo = CrearSpriteCircular();
-
         circulosProgreso = new Image[3];
 
         for (int i = 0; i < 3; i++)
@@ -808,7 +719,6 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
             );
 
             Image imagen = objeto.GetComponent<Image>();
-
             imagen.sprite = spriteCirculo;
             imagen.raycastTarget = false;
 
@@ -831,7 +741,6 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
 
             rectNumero.anchorMin = Vector2.zero;
             rectNumero.anchorMax = Vector2.one;
-
             rectNumero.offsetMin = Vector2.zero;
             rectNumero.offsetMax = Vector2.zero;
 
@@ -850,7 +759,7 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // ACTUALIZAR PROGRESO
+    // ACTUALIZAR CIRCULOS
     // =====================================================
 
     void ActualizarIndicadorProgreso()
@@ -868,5 +777,10 @@ public class JuegoCompletarAlgoritmo : MonoBehaviour
                 ? colorActivo
                 : colorPendiente;
         }
+    }
+
+    void OnDisable()
+    {
+        DetenerPreguntaTemporal();
     }
 }

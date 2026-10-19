@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -13,7 +14,12 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     [Header("TEXTOS DE INTERFAZ")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
-    public TMP_Text txtResultado;
+
+    [Header("TIEMPO DE LA PREGUNTA")]
+    [Range(1f, 5f)]
+    public float tiempoPregunta = 2f;
+
+    private Coroutine rutinaPregunta;
 
     // =====================================================
     // FONDOS
@@ -52,68 +58,41 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     public Button btnComprobar;
     public Button btnSiguiente;
 
-    // Btn_Volver sigue utilizando Navegacion.
-
     // =====================================================
     // EJERCICIO 1 - PREPARAR LECHE
     // =====================================================
 
     [Header("EJERCICIO 1 - PREPARAR LA LECHE")]
-
-    // PASO 1
     public Sprite sprServirLaLeche;
-
-    // PASO 2
     public Sprite sprAgregarCocoaAzucar;
-
-    // PASO 3
     public Sprite sprMezclar;
-
-    // PASO 4
     public Sprite sprTomarLaLeche;
 
     // =====================================================
-    // EJERCICIO 2 - SALIR CUANDO LLUEVE
+    // EJERCICIO 2 - CUANDO LLUEVE
     // =====================================================
 
     [Header("EJERCICIO 2 - CUANDO LLUEVE")]
-
-    // PASO 1
     public Sprite sprMirarPorLaVentana;
-
-    // PASO 2
     public Sprite sprPonerseLaCasaca;
-
-    // PASO 3
     public Sprite sprAbrirElParaguas;
-
-    // PASO 4
     public Sprite sprCaminarSobreLosCharcos;
 
     // =====================================================
-    // EJERCICIO 3 - IR AL COLEGIO
+    // EJERCICIO 3 - PREPARAR MOCHILA
     // =====================================================
 
     [Header("EJERCICIO 3 - PREPARAR LA MOCHILA")]
-
-    // PASO 1
     public Sprite sprRevisarLaLista;
-
-    // PASO 2
     public Sprite sprGuardarLosUtiles;
-
-    // PASO 3
     public Sprite sprCerrarLaMochila;
-
-    // PASO 4
     public Sprite sprIrAlColegio;
 
     // =====================================================
-    // COLORES
+    // COLORES DE TARJETAS
     // =====================================================
 
     [Header("COLORES DE LAS TARJETAS")]
-
     public Color colorNormal = Color.white;
 
     public Color colorSeleccionado =
@@ -127,7 +106,6 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     // =====================================================
 
     [Header("INDICADOR DE PROGRESO")]
-
     public RectTransform panelProgreso;
 
     public float tamanoCirculo = 28f;
@@ -150,11 +128,8 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     private class Ejercicio
     {
         public string pregunta;
-
         public Sprite fondo;
         public Sprite titulo;
-
-        // Las 4 tarjetas en su orden verdadero.
         public Sprite[] pasos;
     }
 
@@ -166,10 +141,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     // =====================================================
 
     private int ejercicioActual = 0;
-
     private int tarjetaSeleccionada = -1;
-
-    // Posicion donde aparece la tarjeta desplazada.
     private int posicionError = -1;
 
     private bool ejercicioCompletado = false;
@@ -177,11 +149,10 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     private int[] ordenTarjetas = new int[4];
 
     private Image[] circulosProgreso;
-
     private Sprite spriteCirculo;
 
     // =====================================================
-    // START
+    // INICIO
     // =====================================================
 
     void Start()
@@ -193,8 +164,6 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
         }
 
         CrearEjercicios();
-
-        // Conectar las 4 tarjetas.
 
         for (int i = 0; i < 4; i++)
         {
@@ -210,10 +179,11 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
 
         btnComprobar.onClick.AddListener(Comprobar);
 
-        btnSiguiente.onClick.AddListener(SiguienteEjercicio);
+        btnSiguiente.onClick.AddListener(
+            SiguienteEjercicio
+        );
 
         CrearIndicadorProgreso();
-
         CargarEjercicio();
     }
 
@@ -225,7 +195,6 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     {
         if (txtPregunta == null ||
             txtProgreso == null ||
-            txtResultado == null ||
             btnComprobar == null ||
             btnSiguiente == null)
         {
@@ -272,73 +241,120 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     }
 
     // =====================================================
-    // CREAR LOS 3 EJERCICIOS
+    // MOSTRAR MENSAJE
+    // =====================================================
+
+    void MostrarMensaje(string mensaje)
+    {
+        if (txtPregunta == null)
+            return;
+
+        txtPregunta.text = mensaje;
+    }
+
+    // =====================================================
+    // PREGUNTA TEMPORAL
+    // =====================================================
+
+    void IniciarPregunta(string pregunta)
+    {
+        DetenerPreguntaTemporal();
+
+        rutinaPregunta = StartCoroutine(
+            MostrarPreguntaTemporal(pregunta)
+        );
+    }
+
+    IEnumerator MostrarPreguntaTemporal(string pregunta)
+    {
+        MostrarMensaje(pregunta);
+
+        yield return new WaitForSeconds(
+            tiempoPregunta
+        );
+
+        MostrarMensaje(
+            "¡Observa la secuencia y encuentra " +
+            "la tarjeta fuera de orden!"
+        );
+
+        rutinaPregunta = null;
+    }
+
+    void DetenerPreguntaTemporal()
+    {
+        if (rutinaPregunta != null)
+        {
+            StopCoroutine(rutinaPregunta);
+            rutinaPregunta = null;
+        }
+    }
+
+    // =====================================================
+    // CREAR LOS TRES EJERCICIOS
     // =====================================================
 
     void CrearEjercicios()
     {
         ejercicios.Clear();
 
-        // -------------------------------------------------
-        // EJERCICIO 1 - PREPARAR LA LECHE
-        // -------------------------------------------------
+        // EJERCICIO 1 - LECHE
 
         ejercicios.Add(new Ejercicio
         {
             pregunta =
-                "¿Qué tarjeta está fuera de orden al preparar la leche?",
+                "¿Qué tarjeta está fuera de orden " +
+                "al preparar la leche?",
 
             fondo = fondoLeche,
             titulo = tituloLeche,
 
             pasos = new Sprite[]
             {
-                sprServirLaLeche,       // PASO 1
-                sprAgregarCocoaAzucar,  // PASO 2
-                sprMezclar,            // PASO 3
-                sprTomarLaLeche        // PASO 4
+                sprServirLaLeche,
+                sprAgregarCocoaAzucar,
+                sprMezclar,
+                sprTomarLaLeche
             }
         });
 
-        // -------------------------------------------------
-        // EJERCICIO 2 - CUANDO LLUEVE
-        // -------------------------------------------------
+        // EJERCICIO 2 - LLUVIA
 
         ejercicios.Add(new Ejercicio
         {
             pregunta =
-                "¿Qué tarjeta está fuera de orden al salir cuando llueve?",
+                "¿Qué tarjeta está fuera de orden " +
+                "al salir cuando llueve?",
 
             fondo = fondoLluvia,
             titulo = tituloLluvia,
 
             pasos = new Sprite[]
             {
-                sprMirarPorLaVentana,      // PASO 1
-                sprPonerseLaCasaca,        // PASO 2
-                sprAbrirElParaguas,        // PASO 3
-                sprCaminarSobreLosCharcos  // PASO 4
+                sprMirarPorLaVentana,
+                sprPonerseLaCasaca,
+                sprAbrirElParaguas,
+                sprCaminarSobreLosCharcos
             }
         });
 
-        // -------------------------------------------------
-        // EJERCICIO 3 - PREPARAR LA MOCHILA
-        // -------------------------------------------------
+        // EJERCICIO 3 - COLEGIO
 
         ejercicios.Add(new Ejercicio
         {
             pregunta =
-                "¿Qué tarjeta está fuera de orden al preparar la mochila?",
+                "¿Qué tarjeta está fuera de orden " +
+                "al preparar la mochila?",
 
             fondo = fondoColegio,
             titulo = tituloColegio,
 
             pasos = new Sprite[]
             {
-                sprRevisarLaLista,      // PASO 1
-                sprGuardarLosUtiles,    // PASO 2
-                sprCerrarLaMochila,     // PASO 3
-                sprIrAlColegio         // PASO 4
+                sprRevisarLaLista,
+                sprGuardarLosUtiles,
+                sprCerrarLaMochila,
+                sprIrAlColegio
             }
         });
     }
@@ -349,29 +365,15 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
 
     void CargarEjercicio()
     {
-        ejercicioCompletado = false;
+        DetenerPreguntaTemporal();
 
+        ejercicioCompletado = false;
         tarjetaSeleccionada = -1;
 
         Ejercicio ejercicio =
             ejercicios[ejercicioActual];
 
-        // ---------------------------------------------
-        // PREGUNTA
-        // ---------------------------------------------
-
-        txtPregunta.text = ejercicio.pregunta;
-
-        // ---------------------------------------------
-        // PANEL MENSAJE
-        // ---------------------------------------------
-
-        txtResultado.text =
-            "¡Observa la secuencia y encuentra la tarjeta fuera de orden!";
-
-        // ---------------------------------------------
-        // PROGRESO
-        // ---------------------------------------------
+        IniciarPregunta(ejercicio.pregunta);
 
         txtProgreso.text =
             "Ejercicio " +
@@ -386,40 +388,23 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
 
         ActualizarIndicadorProgreso();
 
-        // ---------------------------------------------
-        // FONDO
-        // ---------------------------------------------
-
         CambiarImagen(
             imagenFondo,
             ejercicio.fondo
         );
-
-        // ---------------------------------------------
-        // TITULO
-        // ---------------------------------------------
 
         CambiarImagen(
             imagenTitulo,
             ejercicio.titulo
         );
 
-        // ---------------------------------------------
-        // CREAR ERROR ALEATORIO
-        // ---------------------------------------------
-
         CrearSecuenciaConError();
-
-        // ---------------------------------------------
-        // MOSTRAR TARJETAS
-        // ---------------------------------------------
 
         for (int i = 0; i < 4; i++)
         {
             Button boton = botonesPasos[i];
 
             boton.gameObject.SetActive(true);
-
             boton.interactable = true;
 
             int pasoOriginal = ordenTarjetas[i];
@@ -428,13 +413,8 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
                 ejercicio.pasos[pasoOriginal];
 
             boton.image.color = colorNormal;
-
             boton.image.preserveAspect = false;
         }
-
-        // ---------------------------------------------
-        // BOTONES
-        // ---------------------------------------------
 
         btnComprobar.gameObject.SetActive(true);
         btnComprobar.interactable = true;
@@ -454,26 +434,19 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
             return;
 
         imagen.sprite = spriteNuevo;
-
         imagen.preserveAspect = false;
     }
 
     // =====================================================
-    // CREAR SECUENCIA CON UN PASO DESPLAZADO
+    // CREAR ERROR ALEATORIO
     // =====================================================
 
     void CrearSecuenciaConError()
     {
-        // Orden correcto:
-        // 0 - 1 - 2 - 3
-
         List<int> orden = new List<int>()
         {
             0, 1, 2, 3
         };
-
-        // Recordar el movimiento de la ultima
-        // partida para no repetirlo inmediatamente.
 
         string clave =
             "MundoPujllay_ErrorSecuencia_" +
@@ -486,42 +459,29 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
         int destino;
         int movimientoActual;
 
-        // Generar un movimiento diferente.
         do
         {
             origen = Random.Range(0, 4);
-
             destino = Random.Range(0, 4);
 
             movimientoActual = origen * 4 + destino;
         }
-        while (origen == destino ||
-               movimientoActual == movimientoAnterior);
-
-        // Sacar una tarjeta de su posicion original.
+        while (
+            origen == destino ||
+            movimientoActual == movimientoAnterior
+        );
 
         int tarjetaMovida = orden[origen];
 
         orden.RemoveAt(origen);
-
-        // Insertarla en otra posicion.
-
         orden.Insert(destino, tarjetaMovida);
-
-        // Guardar el orden resultante.
 
         for (int i = 0; i < 4; i++)
         {
             ordenTarjetas[i] = orden[i];
         }
 
-        // Esta es la tarjeta que el juego
-        // considera como el error.
-
         posicionError = destino;
-
-        // Guardar para evitar repetir el movimiento
-        // en la siguiente partida.
 
         PlayerPrefs.SetInt(
             clave,
@@ -532,7 +492,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     }
 
     // =====================================================
-    // SELECCIONAR UNA TARJETA
+    // SELECCIONAR TARJETA
     // =====================================================
 
     void SeleccionarTarjeta(int indice)
@@ -540,9 +500,9 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
         if (ejercicioCompletado)
             return;
 
-        tarjetaSeleccionada = indice;
+        DetenerPreguntaTemporal();
 
-        // Restaurar los colores.
+        tarjetaSeleccionada = indice;
 
         for (int i = 0; i < 4; i++)
         {
@@ -550,15 +510,13 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
                 colorNormal;
         }
 
-        // Resaltar tarjeta seleccionada.
-
         botonesPasos[indice].image.color =
             colorSeleccionado;
 
-        // Panel_Mensaje
-
-        txtResultado.text =
-            "¡Tarjeta seleccionada! Presiona COMPROBAR.";
+        MostrarMensaje(
+            "¡Tarjeta seleccionada! " +
+            "Presiona COMPROBAR."
+        );
     }
 
     // =====================================================
@@ -570,40 +528,39 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
         if (ejercicioCompletado)
             return;
 
-        // ---------------------------------------------
-        // NO SELECCIONO UNA TARJETA
-        // ---------------------------------------------
+        DetenerPreguntaTemporal();
 
         if (tarjetaSeleccionada == -1)
         {
-            txtResultado.text =
-                "¡Primero selecciona una tarjeta!";
+            MostrarMensaje(
+                "¡Primero selecciona una tarjeta!"
+            );
 
             return;
         }
 
-        // ---------------------------------------------
+        // =================================================
         // RESPUESTA CORRECTA
-        // ---------------------------------------------
+        // =================================================
 
         if (tarjetaSeleccionada == posicionError)
         {
             ejercicioCompletado = true;
 
-            txtResultado.text =
-                "¡Excelente! Encontraste la tarjeta fuera de orden.";
+            // =============================================
+            // GUARDAR ESTRELLAS - SECUENCIAS MISION 3
+            // =============================================
 
-            // Colorear tarjeta seleccionada.
+            ProgresoEstrellas.GuardarEjercicio(
+                "Secuencias",
+                3,
+                ejercicioActual + 1
+            );
 
             botonesPasos[tarjetaSeleccionada]
                 .image.color = colorCorrecto;
 
-            // Restaurar la secuencia correcta
-            // para mostrar como deberia quedar.
-
             MostrarSecuenciaCorrecta();
-
-            // Bloquear las tarjetas.
 
             foreach (Button boton in botonesPasos)
             {
@@ -611,18 +568,16 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
             }
 
             btnComprobar.gameObject.SetActive(false);
-
             btnSiguiente.gameObject.SetActive(true);
         }
-
-        // ---------------------------------------------
-        // RESPUESTA INCORRECTA
-        // ---------------------------------------------
-
         else
         {
-            txtResultado.text =
-                "¡Casi! Observa el orden e inténtalo otra vez.";
+            // RESPUESTA INCORRECTA
+
+            MostrarMensaje(
+                "¡Casi! Observa el orden " +
+                "e inténtalo otra vez."
+            );
 
             botonesPasos[tarjetaSeleccionada]
                 .image.color = colorNormal;
@@ -632,15 +587,13 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     }
 
     // =====================================================
-    // MOSTRAR LA SECUENCIA CORRECTA
+    // MOSTRAR SECUENCIA CORRECTA
     // =====================================================
 
     void MostrarSecuenciaCorrecta()
     {
         Ejercicio ejercicio =
             ejercicios[ejercicioActual];
-
-        // Colocar las cuatro imagenes en orden.
 
         for (int i = 0; i < 4; i++)
         {
@@ -651,8 +604,10 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
                 colorNormal;
         }
 
-        txtResultado.text =
-            "¡Muy bien! Así es el orden correcto de la secuencia.";
+        MostrarMensaje(
+            "¡Excelente! Encontraste la tarjeta " +
+            "fuera de orden. ¡Así es la secuencia correcta!"
+        );
     }
 
     // =====================================================
@@ -663,6 +618,8 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     {
         if (!ejercicioCompletado)
             return;
+
+        DetenerPreguntaTemporal();
 
         ejercicioActual++;
 
@@ -682,27 +639,23 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
 
     void FinalizarMision()
     {
-        txtPregunta.text =
-            "¡MISIÓN COMPLETADA!";
+        DetenerPreguntaTemporal();
 
-        txtResultado.text =
-            "¡Felicidades! Encontraste los errores en las 3 secuencias.";
+        MostrarMensaje(
+            "¡MISIÓN COMPLETADA!\n" +
+            "¡Felicidades! Encontraste los errores " +
+            "en las 3 secuencias."
+        );
 
         txtProgreso.text = "";
-
-        // Ocultar tarjetas.
 
         foreach (Button boton in botonesPasos)
         {
             boton.gameObject.SetActive(false);
         }
 
-        // Ocultar botones.
-
         btnComprobar.gameObject.SetActive(false);
         btnSiguiente.gameObject.SetActive(false);
-
-        // Ocultar circulos.
 
         OcultarIndicadorProgreso();
     }
@@ -789,9 +742,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
 
         for (int i = 0; i < ejercicios.Count; i++)
         {
-            // -----------------------------------------
-            // CIRCULO EXTERIOR - BORDE
-            // -----------------------------------------
+            // CIRCULO EXTERIOR
 
             GameObject objetoCirculo =
                 new GameObject(
@@ -809,9 +760,14 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
             RectTransform rect =
                 objetoCirculo.GetComponent<RectTransform>();
 
-            rect.anchorMin = new Vector2(0.5f, 0.5f);
-            rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchorMin =
+                new Vector2(0.5f, 0.5f);
+
+            rect.anchorMax =
+                new Vector2(0.5f, 0.5f);
+
+            rect.pivot =
+                new Vector2(0.5f, 0.5f);
 
             rect.sizeDelta = new Vector2(
                 tamanoCirculo,
@@ -830,9 +786,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
             imagenBorde.color = colorBorde;
             imagenBorde.raycastTarget = false;
 
-            // -----------------------------------------
             // CIRCULO INTERIOR
-            // -----------------------------------------
 
             GameObject objetoInterior =
                 new GameObject(
@@ -863,13 +817,12 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
                 objetoInterior.GetComponent<Image>();
 
             imagenInterior.sprite = spriteCirculo;
+            imagenInterior.color = colorPendiente;
             imagenInterior.raycastTarget = false;
 
             circulosProgreso[i] = imagenInterior;
 
-            // -----------------------------------------
-            // NUMERO
-            // -----------------------------------------
+            // NUMERO DEL CIRCULO
 
             GameObject objetoNumero =
                 new GameObject(
@@ -914,7 +867,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     }
 
     // =====================================================
-    // ACTUALIZAR PROGRESO
+    // ACTUALIZAR INDICADOR
     // =====================================================
 
     void ActualizarIndicadorProgreso()
@@ -935,7 +888,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     }
 
     // =====================================================
-    // OCULTAR PROGRESO
+    // OCULTAR INDICADOR
     // =====================================================
 
     void OcultarIndicadorProgreso()
@@ -951,5 +904,14 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
                     .SetActive(false);
             }
         }
+    }
+
+    // =====================================================
+    // SEGURIDAD
+    // =====================================================
+
+    void OnDisable()
+    {
+        DetenerPreguntaTemporal();
     }
 }

@@ -53,7 +53,6 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     // =====================================================
 
     [Header("EJERCICIO 1 - CICLO DE LA MARIPOSA")]
-
     public Sprite sprHuevo;
     public Sprite sprOruga;
     public Sprite sprCrisalida;
@@ -64,7 +63,6 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     // =====================================================
 
     [Header("EJERCICIO 2 - CRECIMIENTO DE PLANTA")]
-
     public Sprite sprSemilla;
     public Sprite sprBrote;
     public Sprite sprPlantaGrande;
@@ -75,7 +73,6 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     // =====================================================
 
     [Header("EJERCICIO 3 - CICLO DEL AGUA")]
-
     public Sprite sprEvaporacion;
     public Sprite sprCondensacion;
     public Sprite sprPrecipitacion;
@@ -258,10 +255,10 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         {
             return new Sprite[]
             {
-                sprHuevo,           // PASO 1
-                sprOruga,           // PASO 2
-                sprCrisalida,       // PASO 3
-                sprMariposaAdulta   // PASO 4
+                sprHuevo,
+                sprOruga,
+                sprCrisalida,
+                sprMariposaAdulta
             };
         }
 
@@ -271,10 +268,10 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         {
             return new Sprite[]
             {
-                sprSemilla,         // PASO 1
-                sprBrote,           // PASO 2
-                sprPlantaGrande,    // PASO 3
-                sprFlor            // PASO 4
+                sprSemilla,
+                sprBrote,
+                sprPlantaGrande,
+                sprFlor
             };
         }
 
@@ -282,10 +279,10 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
 
         return new Sprite[]
         {
-            sprEvaporacion,     // PASO 1
-            sprCondensacion,    // PASO 2
-            sprPrecipitacion,   // PASO 3
-            sprAcumulacion      // PASO 4
+            sprEvaporacion,
+            sprCondensacion,
+            sprPrecipitacion,
+            sprAcumulacion
         };
     }
 
@@ -695,6 +692,16 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         // Todos los pasos estan correctamente ordenados.
 
         ejercicioCompletado = true;
+
+        // =================================================
+        // GUARDAR ESTRELLAS - SECUENCIAS MISION 1
+        // =================================================
+
+        ProgresoEstrellas.GuardarEjercicio(
+            "Secuencias",
+            1,
+            ejercicioActual + 1
+        );
 
         txtResultado.text =
             "¡Excelente! Ordenaste correctamente la secuencia.";

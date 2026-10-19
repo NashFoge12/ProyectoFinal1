@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 93a5d8580dc9b264298bef642516dd10
+guid: 3f2dbee87344bd84180a7a509feda4de
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,111 +110,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: edited-photo (1)_0
+      name: Tren de colores en fieltro-1_0
       rect:
         serializedVersion: 2
-        x: 14
-        y: 961
-        width: 816
-        height: 195
+        x: 5
+        y: 865
+        width: 1011
+        height: 361
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3297bb93655f5024a89a1a49eb0260de
-      internalID: 16184021
+      spriteID: 46d909a8c6b84ec4d828c546baa5c455
+      internalID: -237195078
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo (1)_1
+      name: Tren de colores en fieltro-1_1
       rect:
         serializedVersion: 2
-        x: 16
-        y: 513
-        width: 816
-        height: 203
+        x: 9
+        y: 394
+        width: 333
+        height: 364
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 74e709cc8d9aca741a5938ecea25cdc3
-      internalID: 2005454752
+      spriteID: cb50672a30ec2fc409c5bce2aef07cd5
+      internalID: -1722529699
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo (1)_2
+      name: Tren de colores en fieltro-1_2
       rect:
         serializedVersion: 2
-        x: 14
-        y: 741
-        width: 816
-        height: 209
+        x: 349
+        y: 396
+        width: 333
+        height: 364
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8d5c8791b0fc444cb373cd9be48cccc
-      internalID: 70976836
+      spriteID: a49c5497f611c9a44a1ee867bc264ea5
+      internalID: -1381532606
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo (1)_3
+      name: Tren de colores en fieltro-1_3
       rect:
         serializedVersion: 2
-        x: 16
-        y: 292
-        width: 816
-        height: 207
+        x: 687
+        y: 396
+        width: 330
+        height: 363
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6d0a5a2a6f4989642adc079b870b0629
-      internalID: -72162342
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: edited-photo (1)_4
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 75
-        width: 816
-        height: 203
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e8ac0aee3de28b1498e42667777a3a86
-      internalID: -716383489
+      spriteID: f939b7fd11f67f74f997cf638aa90eb5
+      internalID: -1433222295
       vertices: []
       indices: 
       edges: []
@@ -223,7 +201,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 77041320150635248be4e896a93ee648
+    spriteID: 37d461903784fa94781ad0428209bc42
     internalID: 0
     vertices: []
     indices: 
@@ -233,11 +211,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      edited-photo (1)_0: 16184021
-      edited-photo (1)_1: 2005454752
-      edited-photo (1)_2: 70976836
-      edited-photo (1)_3: -72162342
-      edited-photo (1)_4: -716383489
+      Tren de colores en fieltro-1_0: -237195078
+      Tren de colores en fieltro-1_1: -1722529699
+      Tren de colores en fieltro-1_2: -1381532606
+      Tren de colores en fieltro-1_3: -1433222295
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -296,7 +296,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1566326977}
         m_TargetAssemblyTypeName: NavegacionEscenas, Assembly-CSharp
-        m_MethodName: IrAAlgoritmos
+        m_MethodName: IrASecuencias
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -326,7 +326,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -9427239, guid: 29605dab00202bf4f86b534bfe9e06c1, type: 3}
+  m_Sprite: {fileID: -1675211360, guid: 954b017f3a732f34985785887807f4a0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -983,7 +983,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -610942583, guid: 29605dab00202bf4f86b534bfe9e06c1, type: 3}
+  m_Sprite: {fileID: -1675085999, guid: 954b017f3a732f34985785887807f4a0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1345,7 +1345,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 759866027, guid: 29605dab00202bf4f86b534bfe9e06c1, type: 3}
+  m_Sprite: {fileID: 1092606840, guid: 6360652ad2bf18a43a4435ad989e5eb9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3516,14 +3516,14 @@ RectTransform:
   m_GameObject: {fileID: 2128631857}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9902866, y: 0.8920008, z: 1}
+  m_LocalScale: {x: 0.92819566, y: 0.8232275, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1107570260}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 17, y: -5}
+  m_AnchoredPosition: {x: 17, y: 5}
   m_SizeDelta: {x: 850, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2128631859
@@ -3589,7 +3589,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 1
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

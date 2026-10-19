@@ -1,4 +1,5 @@
 ﻿
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,7 +21,12 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     [Header("Textos de interfaz")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
-    public TMP_Text txtResultado;
+
+    [Header("Tiempo de la pregunta")]
+    [Range(1f, 5f)]
+    public float tiempoPregunta = 2f;
+
+    private Coroutine rutinaPregunta;
 
     // =====================================================
     // FONDOS
@@ -97,7 +103,6 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     // =====================================================
 
     [Header("Indicador de progreso")]
-
     [Tooltip("Panel que contiene Txt_Progreso")]
     public RectTransform panelProgreso;
 
@@ -107,7 +112,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     [Tooltip("Separacion entre circulos")]
     public float separacionCirculos = 38f;
 
-    [Tooltip("Posicion vertical de los circulos dentro del panel")]
+    [Tooltip("Posicion vertical de los circulos")]
     public float posicionVerticalCirculos = -20f;
 
     [Tooltip("Color de los ejercicios alcanzados")]
@@ -131,6 +136,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     private int ejercicioActual = 0;
     private int tarjetaSeleccionada = -1;
+    private bool ejercicioCompletado = false;
 
     private List<Tarjeta[]> ejercicios =
         new List<Tarjeta[]>();
@@ -144,6 +150,44 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     void Start()
     {
+        if (txtPregunta == null ||
+            txtProgreso == null ||
+            btnComprobar == null ||
+            btnSiguiente == null)
+        {
+            Debug.LogError(
+                "Faltan referencias de textos o botones."
+            );
+
+            enabled = false;
+            return;
+        }
+
+        if (botonesPasos == null ||
+            botonesPasos.Length != 5)
+        {
+            Debug.LogError(
+                "Debes asignar exactamente 5 tarjetas."
+            );
+
+            enabled = false;
+            return;
+        }
+
+        for (int i = 0; i < botonesPasos.Length; i++)
+        {
+            if (botonesPasos[i] == null ||
+                botonesPasos[i].image == null)
+            {
+                Debug.LogError(
+                    "Falta asignar la tarjeta " + (i + 1)
+                );
+
+                enabled = false;
+                return;
+            }
+        }
+
         CrearEjercicios();
 
         for (int i = 0; i < botonesPasos.Length; i++)
@@ -156,15 +200,64 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         }
 
         btnComprobar.onClick.AddListener(Comprobar);
-        btnSiguiente.onClick.AddListener(SiguienteEjercicio);
+
+        btnSiguiente.onClick.AddListener(
+            SiguienteEjercicio
+        );
 
         CrearIndicadorProgreso();
-
         CargarEjercicio();
     }
 
     // =====================================================
-    // GENERAR SPRITE CIRCULAR POR CODIGO
+    // MOSTRAR MENSAJE EN TXT_PREGUNTA
+    // =====================================================
+
+    void MostrarMensaje(string mensaje)
+    {
+        if (txtPregunta == null)
+            return;
+
+        txtPregunta.text = mensaje;
+    }
+
+    // =====================================================
+    // INICIAR PREGUNTA TEMPORAL
+    // =====================================================
+
+    void IniciarPregunta(string pregunta)
+    {
+        DetenerPreguntaTemporal();
+
+        rutinaPregunta = StartCoroutine(
+            MostrarPreguntaTemporal(pregunta)
+        );
+    }
+
+    IEnumerator MostrarPreguntaTemporal(string pregunta)
+    {
+        MostrarMensaje(pregunta);
+
+        yield return new WaitForSeconds(tiempoPregunta);
+
+        MostrarMensaje(
+            "Toca dos tarjetas para intercambiarlas."
+        );
+
+        rutinaPregunta = null;
+    }
+
+    void DetenerPreguntaTemporal()
+    {
+        if (rutinaPregunta != null)
+        {
+            StopCoroutine(rutinaPregunta);
+            rutinaPregunta = null;
+        }
+    }
+
+    // =====================================================
+    // GENERAR SPRITE CIRCULAR
     // =====================================================
 
     Sprite CrearSpriteCircular()
@@ -216,26 +309,15 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // CREAR LOS 3 CIRCULOS DENTRO DEL PANEL
+    // CREAR LOS 3 CIRCULOS
     // =====================================================
 
     void CrearIndicadorProgreso()
     {
-        if (txtProgreso == null)
-        {
-            Debug.LogError(
-                "No se asigno Txt_Progreso."
-            );
-            return;
-        }
-
-        // Si no asignas el panel en el Inspector,
-        // usamos automaticamente el padre de Txt_Progreso.
         if (panelProgreso == null)
         {
             panelProgreso =
-                txtProgreso.transform.parent
-                as RectTransform;
+                txtProgreso.transform.parent as RectTransform;
         }
 
         if (panelProgreso == null)
@@ -243,6 +325,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             Debug.LogError(
                 "No se encontro Panel_Progreso."
             );
+
             return;
         }
 
@@ -252,17 +335,12 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            // -----------------------------
-            // OBJETO PRINCIPAL
-            // -----------------------------
-
-            GameObject objetoCirculo =
-                new GameObject(
-                    "Circulo_Progreso_" + (i + 1),
-                    typeof(RectTransform),
-                    typeof(CanvasRenderer),
-                    typeof(Image)
-                );
+            GameObject objetoCirculo = new GameObject(
+                "Circulo_Progreso_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
 
             objetoCirculo.transform.SetParent(
                 panelProgreso,
@@ -289,10 +367,6 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
                 posicionVerticalCirculos
             );
 
-            // -----------------------------
-            // IMAGEN CIRCULAR
-            // -----------------------------
-
             Image imagen =
                 objetoCirculo.GetComponent<Image>();
 
@@ -303,17 +377,16 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
             circulosProgreso[i] = imagen;
 
-            // -----------------------------
+            // ---------------------------------------------
             // BORDE INTERIOR
-            // -----------------------------
+            // ---------------------------------------------
 
-            GameObject objetoBorde =
-                new GameObject(
-                    "Borde",
-                    typeof(RectTransform),
-                    typeof(CanvasRenderer),
-                    typeof(Image)
-                );
+            GameObject objetoBorde = new GameObject(
+                "Borde",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
 
             objetoBorde.transform.SetParent(
                 objetoCirculo.transform,
@@ -325,8 +398,12 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
             rectBorde.anchorMin = Vector2.zero;
             rectBorde.anchorMax = Vector2.one;
-            rectBorde.offsetMin = new Vector2(3f, 3f);
-            rectBorde.offsetMax = new Vector2(-3f, -3f);
+
+            rectBorde.offsetMin =
+                new Vector2(3f, 3f);
+
+            rectBorde.offsetMax =
+                new Vector2(-3f, -3f);
 
             Image imagenBorde =
                 objetoBorde.GetComponent<Image>();
@@ -335,17 +412,16 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             imagenBorde.color = colorBorde;
             imagenBorde.raycastTarget = false;
 
-            // -----------------------------
+            // ---------------------------------------------
             // NUMERO DEL EJERCICIO
-            // -----------------------------
+            // ---------------------------------------------
 
-            GameObject objetoNumero =
-                new GameObject(
-                    "Numero_" + (i + 1),
-                    typeof(RectTransform),
-                    typeof(CanvasRenderer),
-                    typeof(TextMeshProUGUI)
-                );
+            GameObject objetoNumero = new GameObject(
+                "Numero_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(TextMeshProUGUI)
+            );
 
             objetoNumero.transform.SetParent(
                 objetoCirculo.transform,
@@ -357,6 +433,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
             rectNumero.anchorMin = Vector2.zero;
             rectNumero.anchorMax = Vector2.one;
+
             rectNumero.offsetMin = Vector2.zero;
             rectNumero.offsetMax = Vector2.zero;
 
@@ -366,9 +443,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             numero.text = (i + 1).ToString();
             numero.fontSize = tamanoCirculo * 0.5f;
             numero.fontStyle = FontStyles.Bold;
-            numero.alignment =
-                TextAlignmentOptions.Center;
-
+            numero.alignment = TextAlignmentOptions.Center;
             numero.color = Color.white;
             numero.raycastTarget = false;
             numero.enableAutoSizing = false;
@@ -378,7 +453,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // ACTUALIZAR COLORES DE LOS CIRCULOS
+    // ACTUALIZAR CIRCULOS
     // =====================================================
 
     void ActualizarIndicadorProgreso()
@@ -398,10 +473,6 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         }
     }
 
-    // =====================================================
-    // OCULTAR CIRCULOS AL TERMINAR
-    // =====================================================
-
     void OcultarIndicadorProgreso()
     {
         if (circulosProgreso == null)
@@ -417,32 +488,42 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // CREAR EJERCICIOS
+    // CREAR LOS 3 EJERCICIOS
     // =====================================================
 
     void CrearEjercicios()
     {
-        // EJERCICIO 1 - DIENTES
+        ejercicios.Clear();
+        respuestasCorrectas.Clear();
+
+        // =================================================
+        // EJERCICIO 1 - LAVARSE LOS DIENTES
+        // =================================================
 
         ejercicios.Add(new Tarjeta[]
         {
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "enjuagar",
                 imagen = sprEnjuagarBoca
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "tomar",
                 imagen = sprTomarCepillo
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "guardar",
                 imagen = sprGuardarCepillo
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "pasta",
                 imagen = sprPonerPasta
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "cepillar",
                 imagen = sprCepillarDientes
             }
@@ -457,27 +538,34 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             "guardar"
         });
 
-        // EJERCICIO 2 - MOCHILA
+        // =================================================
+        // EJERCICIO 2 - PREPARAR LA MOCHILA
+        // =================================================
 
         ejercicios.Add(new Tarjeta[]
         {
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "lapices",
                 imagen = sprColocarLapices
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "cerrar",
                 imagen = sprCerrarMochila
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "horario",
                 imagen = sprRevisarHorario
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "abrir",
                 imagen = sprAbrirMochila
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "cuadernos",
                 imagen = sprColocarCuadernos
             }
@@ -492,27 +580,34 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             "cerrar"
         });
 
-        // EJERCICIO 3 - PLANTA
+        // =================================================
+        // EJERCICIO 3 - REGAR UNA PLANTA
+        // =================================================
 
         ejercicios.Add(new Tarjeta[]
         {
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "regar",
                 imagen = sprRegarPlanta
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "guardarRegadera",
                 imagen = sprGuardarRegadera
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "llenar",
                 imagen = sprLlenarRegadera
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "buscar",
                 imagen = sprBuscarRegadera
             },
-            new Tarjeta {
+            new Tarjeta
+            {
                 id = "acercarse",
                 imagen = sprAcercarsePlanta
             }
@@ -534,15 +629,16 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     void CargarEjercicio()
     {
-        tarjetaSeleccionada = -1;
+        DetenerPreguntaTemporal();
 
-        txtResultado.text =
-            "Toca dos tarjetas para intercambiarlas.";
+        tarjetaSeleccionada = -1;
+        ejercicioCompletado = false;
 
         btnComprobar.gameObject.SetActive(true);
+        btnComprobar.interactable = true;
+
         btnSiguiente.gameObject.SetActive(false);
 
-        // Texto en una sola linea.
         txtProgreso.text =
             "Ejercicio " +
             (ejercicioActual + 1) +
@@ -555,12 +651,15 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
         ActualizarIndicadorProgreso();
 
-        // EJERCICIO 1
+        // =================================================
+        // EJERCICIO 1 - DIENTES
+        // =================================================
 
         if (ejercicioActual == 0)
         {
-            txtPregunta.text =
-                "Ordena los pasos para\nlavarse los dientes.";
+            IniciarPregunta(
+                "Ordena los pasos para\nlavarse los dientes."
+            );
 
             if (imagenFondo != null &&
                 fondoDientes != null)
@@ -575,12 +674,15 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             }
         }
 
-        // EJERCICIO 2
+        // =================================================
+        // EJERCICIO 2 - MOCHILA
+        // =================================================
 
         else if (ejercicioActual == 1)
         {
-            txtPregunta.text =
-                "Ordena los pasos para\npreparar la mochila.";
+            IniciarPregunta(
+                "Ordena los pasos para\npreparar la mochila."
+            );
 
             if (imagenFondo != null &&
                 fondoMochila != null)
@@ -595,12 +697,15 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             }
         }
 
-        // EJERCICIO 3
+        // =================================================
+        // EJERCICIO 3 - PLANTA
+        // =================================================
 
         else
         {
-            txtPregunta.text =
-                "Ordena los pasos para\nregar una planta.";
+            IniciarPregunta(
+                "Ordena los pasos para\nregar una planta."
+            );
 
             if (imagenFondo != null &&
                 fondoPlanta != null)
@@ -615,7 +720,9 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             }
         }
 
-        // CARGAR TARJETAS
+        // =================================================
+        // CARGAR LAS CINCO TARJETAS
+        // =================================================
 
         for (int i = 0; i < botonesPasos.Length; i++)
         {
@@ -627,6 +734,9 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
             botonesPasos[i].image.preserveAspect =
                 false;
+
+            botonesPasos[i].image.color =
+                Color.white;
 
             botonesPasos[i].name =
                 tarjeta.id;
@@ -642,25 +752,39 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     void SeleccionarTarjeta(int indice)
     {
+        if (ejercicioCompletado)
+            return;
+
+        DetenerPreguntaTemporal();
+
+        // PRIMERA TARJETA
+
         if (tarjetaSeleccionada == -1)
         {
             tarjetaSeleccionada = indice;
 
-            txtResultado.text =
-                "Ahora selecciona otra tarjeta para intercambiarlas.";
+            MostrarMensaje(
+                "Ahora selecciona otra tarjeta " +
+                "para intercambiarlas."
+            );
 
             return;
         }
+
+        // MISMA TARJETA
 
         if (tarjetaSeleccionada == indice)
         {
             tarjetaSeleccionada = -1;
 
-            txtResultado.text =
-                "Toca dos tarjetas para intercambiarlas.";
+            MostrarMensaje(
+                "Toca dos tarjetas para intercambiarlas."
+            );
 
             return;
         }
+
+        // INTERCAMBIAR
 
         IntercambiarTarjetas(
             tarjetaSeleccionada,
@@ -669,8 +793,10 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
         tarjetaSeleccionada = -1;
 
-        txtResultado.text =
-            "Puedes seguir ordenando o comprobar tu respuesta.";
+        MostrarMensaje(
+            "Puedes seguir ordenando o " +
+            "comprobar tu respuesta."
+        );
     }
 
     // =====================================================
@@ -679,8 +805,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     void IntercambiarTarjetas(
         int indice1,
-        int indice2
-    )
+        int indice2)
     {
         if (indice1 < 0 ||
             indice2 < 0 ||
@@ -690,8 +815,11 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             Debug.LogError(
                 "Indice de tarjeta fuera de rango."
             );
+
             return;
         }
+
+        // INTERCAMBIAR IMAGENES
 
         Sprite spriteTemporal =
             botonesPasos[indice1].image.sprite;
@@ -701,6 +829,8 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
         botonesPasos[indice2].image.sprite =
             spriteTemporal;
+
+        // INTERCAMBIAR IDENTIFICADORES
 
         string idTemporal =
             botonesPasos[indice1].name;
@@ -713,11 +843,16 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
     }
 
     // =====================================================
-    // COMPROBAR
+    // COMPROBAR RESPUESTA
     // =====================================================
 
     void Comprobar()
     {
+        if (ejercicioCompletado)
+            return;
+
+        DetenerPreguntaTemporal();
+
         bool correcto = true;
 
         for (int i = 0; i < botonesPasos.Length; i++)
@@ -733,10 +868,38 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
             }
         }
 
+        // =================================================
+        // RESPUESTA CORRECTA
+        // =================================================
+
         if (correcto)
         {
-            txtResultado.text =
-                "¡Excelente! Ordenaste correctamente el algoritmo.";
+            ejercicioCompletado = true;
+            tarjetaSeleccionada = -1;
+
+            // =============================================
+            // NUEVO: GUARDAR ESTRELLA
+            // =============================================
+
+            ProgresoEstrellas.GuardarEjercicio(
+                "Algoritmos",
+                1,
+                ejercicioActual + 1
+            );
+
+            Debug.Log(
+                "Mision 1 - Estrella guardada: " +
+                (ejercicioActual + 1)
+            );
+
+            // =============================================
+            // MENSAJE DE ACIERTO
+            // =============================================
+
+            MostrarMensaje(
+                "¡Excelente! Ordenaste correctamente " +
+                "el algoritmo."
+            );
 
             btnComprobar.gameObject.SetActive(false);
             btnSiguiente.gameObject.SetActive(true);
@@ -746,10 +909,17 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
                 boton.interactable = false;
             }
         }
+
+        // =================================================
+        // RESPUESTA INCORRECTA
+        // =================================================
+
         else
         {
-            txtResultado.text =
-                "Aún no está correcto. ¡Inténtalo otra vez!";
+            MostrarMensaje(
+                "Aún no está correcto. " +
+                "¡Inténtalo otra vez!"
+            );
         }
     }
 
@@ -759,6 +929,11 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     void SiguienteEjercicio()
     {
+        if (!ejercicioCompletado)
+            return;
+
+        DetenerPreguntaTemporal();
+
         ejercicioActual++;
 
         if (ejercicioActual < ejercicios.Count)
@@ -777,13 +952,14 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
     void FinalizarMision()
     {
-        txtPregunta.text =
-            "¡MISIÓN COMPLETADA!";
+        DetenerPreguntaTemporal();
+
+        MostrarMensaje(
+            "¡MISIÓN COMPLETADA!\n" +
+            "¡Excelente! Completaste los 3 algoritmos."
+        );
 
         txtProgreso.text = "";
-
-        txtResultado.text =
-            "¡Excelente! Completaste los 3 algoritmos.";
 
         OcultarIndicadorProgreso();
 
@@ -794,5 +970,14 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
 
         btnComprobar.gameObject.SetActive(false);
         btnSiguiente.gameObject.SetActive(false);
+    }
+
+    // =====================================================
+    // SEGURIDAD AL DESACTIVAR
+    // =====================================================
+
+    void OnDisable()
+    {
+        DetenerPreguntaTemporal();
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0c3feaf322981a84496b04417e1aed17
+guid: 92dec7b79ef26054893d209cc3312a43
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: edited-photo_0
+      name: Ejercicio 3_ cuatro rutinas escolares_0
       rect:
         serializedVersion: 2
-        x: 17
-        y: 959
-        width: 812
-        height: 207
+        x: 53
+        y: 1244
+        width: 924
+        height: 284
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb61509a7455e7944ae663f0e90bc2aa
-      internalID: -289379157
+      spriteID: 6232f106a5f36134cab5a98edd205aab
+      internalID: -1721728459
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo_1
+      name: Ejercicio 3_ cuatro rutinas escolares_1
       rect:
         serializedVersion: 2
-        x: 19
-        y: 745
-        width: 812
-        height: 207
+        x: 30
+        y: 540
+        width: 477
+        height: 475
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 176358a048b2c38448188dd8873722c9
-      internalID: -1090900971
+      spriteID: 9daf3a1675bbb0245bd546f9d018a620
+      internalID: -245286370
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo_2
+      name: Ejercicio 3_ cuatro rutinas escolares_2
       rect:
         serializedVersion: 2
-        x: 17
-        y: 510
-        width: 812
-        height: 207
+        x: 521
+        y: 542
+        width: 476
+        height: 472
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2df7d3a5062369b4693a2526bf0b2cb7
-      internalID: -1030541249
+      spriteID: 8d72cbb319b5318458a361d717e403cf
+      internalID: 1768649825
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo_3
+      name: Ejercicio 3_ cuatro rutinas escolares_3
       rect:
         serializedVersion: 2
-        x: 16
-        y: 294
-        width: 812
-        height: 207
+        x: 32
+        y: 53
+        width: 475
+        height: 480
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,20 +191,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dbf2617b1200a61439d6da86e34f1230
-      internalID: 1089953649
+      spriteID: b8782b0934e181b439c7208ad80b05f1
+      internalID: 1171703182
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: edited-photo_4
+      name: Ejercicio 3_ cuatro rutinas escolares_4
       rect:
         serializedVersion: 2
-        x: 17
-        y: 63
-        width: 812
-        height: 216
+        x: 520
+        y: 53
+        width: 476
+        height: 480
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,8 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 73676c3c4dd1c9b42a8938506cf68609
-      internalID: 1399144507
+      spriteID: 665e1b15d91d8c04fb7dd9088b545de7
+      internalID: 549703600
       vertices: []
       indices: 
       edges: []
@@ -223,7 +223,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 309f75cb91143ae4a8210ffb77fc397f
+    spriteID: e83caf1c58a5fdd4abe0842c645eb3af
     internalID: 0
     vertices: []
     indices: 
@@ -233,11 +233,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      edited-photo_0: -289379157
-      edited-photo_1: -1090900971
-      edited-photo_2: -1030541249
-      edited-photo_3: 1089953649
-      edited-photo_4: 1399144507
+      Ejercicio 3_ cuatro rutinas escolares_0: -1721728459
+      Ejercicio 3_ cuatro rutinas escolares_1: -245286370
+      Ejercicio 3_ cuatro rutinas escolares_2: 1768649825
+      Ejercicio 3_ cuatro rutinas escolares_3: 1171703182
+      Ejercicio 3_ cuatro rutinas escolares_4: 549703600
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

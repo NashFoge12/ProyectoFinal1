@@ -325,7 +325,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -9427239, guid: 29605dab00202bf4f86b534bfe9e06c1, type: 3}
+  m_Sprite: {fileID: -1675211360, guid: 954b017f3a732f34985785887807f4a0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -515,7 +515,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 237, y: -294}
+  m_AnchoredPosition: {x: 237, y: -311}
   m_SizeDelta: {x: 760, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &61258650
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1595308214, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
+  m_Sprite: {fileID: -1943380724, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1085,7 +1085,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -610942583, guid: 29605dab00202bf4f86b534bfe9e06c1, type: 3}
+  m_Sprite: {fileID: -1675085999, guid: 954b017f3a732f34985785887807f4a0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1583,7 +1583,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 759866027, guid: 29605dab00202bf4f86b534bfe9e06c1, type: 3}
+  m_Sprite: {fileID: 1092606840, guid: 6360652ad2bf18a43a4435ad989e5eb9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1680,7 +1680,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1321199663, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
+  m_Sprite: {fileID: 468249462, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1777,7 +1777,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 5, y: 514}
+  m_AnchoredPosition: {x: 5, y: 452}
   m_SizeDelta: {x: -580, y: -1850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &820486964
@@ -1877,7 +1877,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1744511641, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
+  m_Sprite: {fileID: 1880374594, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1974,7 +1974,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 21, y: 301}
+  m_AnchoredPosition: {x: 21, y: 237}
   m_SizeDelta: {x: -215, y: -1773.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1107570261
@@ -2500,14 +2500,14 @@ RectTransform:
   m_GameObject: {fileID: 1777607177}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1.1375, z: 1}
+  m_LocalScale: {x: 1, y: 1.4792051, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1951802720}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 680}
+  m_AnchoredPosition: {x: 0, y: 613}
   m_SizeDelta: {x: 850, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1777607179
@@ -2530,7 +2530,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -174800945, guid: a15ab3236188e8842bcb2996c841cce5, type: 3}
+  m_Sprite: {fileID: -1140559536, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2584,7 +2584,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 237, y: 0}
+  m_AnchoredPosition: {x: 237, y: -17}
   m_SizeDelta: {x: 760, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1905280812
@@ -2607,7 +2607,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 553252066, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
+  m_Sprite: {fileID: -189217882, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2970,9 +2970,9 @@ MonoBehaviour:
   fondoCalle: {fileID: -1546046591, guid: 22de2085e83b0064184539af611f76c7, type: 3}
   fondoColegio: {fileID: -1949062963, guid: 22de2085e83b0064184539af611f76c7, type: 3}
   imagenTitulo: {fileID: 1777607179}
-  tituloPastel: {fileID: -174800945, guid: a15ab3236188e8842bcb2996c841cce5, type: 3}
-  tituloCalle: {fileID: -1487723081, guid: a15ab3236188e8842bcb2996c841cce5, type: 3}
-  tituloColegio: {fileID: 1297189361, guid: a15ab3236188e8842bcb2996c841cce5, type: 3}
+  tituloPastel: {fileID: -1140559536, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  tituloCalle: {fileID: 1853979154, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  tituloColegio: {fileID: 300698188, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   botonesPasos:
   - {fileID: 674365781}
   - {fileID: 1905280814}
@@ -2980,18 +2980,18 @@ MonoBehaviour:
   - {fileID: 61258652}
   btnComprobar: {fileID: 420261630}
   btnSiguiente: {fileID: 537320582}
-  sprPesarIngredientes: {fileID: 1321199663, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
-  sprMezclarIngredientes: {fileID: 553252066, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
-  sprComersePastelAntes: {fileID: 1744511641, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
-  sprHornear180Grados: {fileID: -1595308214, guid: 8b61445dcb082f949bc8281e930901c0, type: 3}
-  sprDetenerseEnVereda: {fileID: -1274992649, guid: 97652f11299ee04439d07a360ea476e5, type: 3}
-  sprMirarAmbosLados: {fileID: -1682671438, guid: 97652f11299ee04439d07a360ea476e5, type: 3}
-  sprCorrerSinMirar: {fileID: 1423492932, guid: 97652f11299ee04439d07a360ea476e5, type: 3}
-  sprCruzarPasoPeatonal: {fileID: 1615298862, guid: 97652f11299ee04439d07a360ea476e5, type: 3}
-  sprAbrirLaPuerta: {fileID: -271551303, guid: 295df94fc76a96c40852e0a3f5eb1dd0, type: 3}
-  sprPonerseZapatos: {fileID: -1109797047, guid: 295df94fc76a96c40852e0a3f5eb1dd0, type: 3}
-  sprGuardarUtilesMochila: {fileID: 2111661323, guid: 295df94fc76a96c40852e0a3f5eb1dd0, type: 3}
-  sprDesayunarDespuesVolver: {fileID: -1412424011, guid: 295df94fc76a96c40852e0a3f5eb1dd0, type: 3}
+  sprPesarIngredientes: {fileID: 468249462, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprMezclarIngredientes: {fileID: -189217882, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprComersePastelAntes: {fileID: 1880374594, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprHornear180Grados: {fileID: -1943380724, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprDetenerseEnVereda: {fileID: 334224302, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprMirarAmbosLados: {fileID: 1485479730, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprCorrerSinMirar: {fileID: 1356169995, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprCruzarPasoPeatonal: {fileID: -45637984, guid: 6360652ad2bf18a43a4435ad989e5eb9, type: 3}
+  sprAbrirLaPuerta: {fileID: 1266339059, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprPonerseZapatos: {fileID: 1503225444, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprGuardarUtilesMochila: {fileID: -2110513611, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
+  sprDesayunarDespuesVolver: {fileID: -1637646477, guid: 72716f978dfd2db48b3e1ff7093cf715, type: 3}
   panelProgreso: {fileID: 820486963}
   tamanoCirculo: 28
   separacionCirculos: 38

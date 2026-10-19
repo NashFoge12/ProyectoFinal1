@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 24d8bc2f5556f44459c9d30f89a130c7
+guid: c83e45322d4e37344a6339d79b006a45
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._0
+      name: "Patr\xF3n de robots espaciales-3_0"
       rect:
         serializedVersion: 2
-        x: 38
-        y: 416
-        width: 272
-        height: 308
+        x: 74
+        y: 734
+        width: 428
+        height: 420
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,20 +125,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3a5c8fdb61f75774c9792631342d3f24
-      internalID: -1912950962
+      spriteID: cc2148a7f32e5e141b1b6d340863d84a
+      internalID: 989489470
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._1
+      name: "Patr\xF3n de robots espaciales-3_1"
       rect:
         serializedVersion: 2
-        x: 334
-        y: 414
-        width: 276
-        height: 312
+        x: 525
+        y: 731
+        width: 429
+        height: 424
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,20 +147,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ad3f1aaa0484ddb429f6a090da68269d
-      internalID: -1891319051
+      spriteID: e51fce7635c89024ebf76788eb42ee1e
+      internalID: 1394053597
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._2
+      name: "Patr\xF3n de robots espaciales-3_2"
       rect:
         serializedVersion: 2
-        x: 632
-        y: 417
-        width: 277
-        height: 308
+        x: 74
+        y: 292
+        width: 429
+        height: 419
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -169,20 +169,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d733f736350af64f94e0b460207a829
-      internalID: -270135177
+      spriteID: 1af833e93f4b8e64780f031c348414ed
+      internalID: 763236750
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._3
+      name: "Patr\xF3n de robots espaciales-3_3"
       rect:
         serializedVersion: 2
-        x: 928
-        y: 416
-        width: 276
-        height: 308
+        x: 524
+        y: 291
+        width: 429
+        height: 419
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -191,130 +191,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1fd64f48b4806bf4c85f54d4b6d370e2
-      internalID: 900304929
+      spriteID: 1931576a90b0b5542b0591fa289355c1
+      internalID: 2006201212
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._4
+      name: "Patr\xF3n de robots espaciales-3_4"
       rect:
         serializedVersion: 2
-        x: 1223
-        y: 417
-        width: 279
-        height: 307
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fc26507c14da707418c8a292771e27f9
-      internalID: 911137512
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._5
-      rect:
-        serializedVersion: 2
-        x: 39
-        y: 273
-        width: 442
-        height: 110
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4b02e038d6ffa60408fc9767a1288303
-      internalID: -1550093141
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._6
-      rect:
-        serializedVersion: 2
-        x: 510
-        y: 267
-        width: 389
-        height: 116
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e5d769208ee95334b94f168d55857a74
-      internalID: 2098317500
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._7
-      rect:
-        serializedVersion: 2
-        x: 22
-        y: 33
-        width: 507
-        height: 218
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0912fa041bd659d4d8dddcfa37c45252
-      internalID: -280046445
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._8
-      rect:
-        serializedVersion: 2
-        x: 538
-        y: 31
-        width: 477
-        height: 220
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f7875c7d0d9d8d240a72bbecf063d789
-      internalID: -360071116
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ChatGPT Image 21 sept 2026, 11_28_05 a.m._9
-      rect:
-        serializedVersion: 2
-        x: 930
-        y: 269
-        width: 271
-        height: 114
+        x: 167
+        y: 23
+        width: 695
+        height: 254
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -323,8 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa7afcb4d4630014bafc19cadcf64cc3
-      internalID: 1394146981
+      spriteID: f9c4064e7d9c9be4784debe75d98f8e7
+      internalID: 348515586
       vertices: []
       indices: 
       edges: []
@@ -333,7 +223,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 70f94dab91a4b6744ab710f003b93dc3
+    spriteID: 26b8271346c25b849a149c8936a6e952
     internalID: 0
     vertices: []
     indices: 
@@ -343,16 +233,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._0: -1912950962
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._1: -1891319051
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._2: -270135177
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._3: 900304929
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._4: 911137512
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._5: -1550093141
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._6: 2098317500
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._7: -280046445
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._8: -360071116
-      ChatGPT Image 21 sept 2026, 11_28_05 a.m._9: 1394146981
+      "Patr\xF3n de robots espaciales-3_0": 989489470
+      "Patr\xF3n de robots espaciales-3_1": 1394053597
+      "Patr\xF3n de robots espaciales-3_2": 763236750
+      "Patr\xF3n de robots espaciales-3_3": 2006201212
+      "Patr\xF3n de robots espaciales-3_4": 348515586
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

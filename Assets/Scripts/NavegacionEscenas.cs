@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -67,5 +68,29 @@ public class NavegacionEscenas : MonoBehaviour
     public void IrAMision3Secuencias()
     {
         SceneManager.LoadScene("Mision3_Secuencias");
+    }
+
+    // =========================
+    // PATRONES
+    // =========================
+
+    public void IrAPatrones()
+    {
+        SceneManager.LoadScene("Patrones");
+    }
+
+    public void IrAMision1Patrones()
+    {
+        SceneManager.LoadScene("Mision1_Patrones");
+    }
+
+    public void IrAMision2Patrones()
+    {
+        SceneManager.LoadScene("Mision2_Patrones");
+    }
+
+    public void IrAMision3Patrones()
+    {
+        SceneManager.LoadScene("Mision3_Patrones");
     }
 }
