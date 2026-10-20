@@ -93,4 +93,28 @@ public class NavegacionEscenas : MonoBehaviour
     {
         SceneManager.LoadScene("Mision3_Patrones");
     }
+
+    // =========================
+    // PROGRAMACIÓN
+    // =========================
+
+    public void IrAProgramacion()
+    {
+        SceneManager.LoadScene("Programacion");
+    }
+
+    public void IrAMision1Programacion()
+    {
+        SceneManager.LoadScene("Mision1_Programacion");
+    }
+
+    public void IrAMision2Programacion()
+    {
+        SceneManager.LoadScene("Mision2_Programacion");
+    }
+
+    public void IrAMision3Programacion()
+    {
+        SceneManager.LoadScene("Mision3_Programacion");
+    }
 }

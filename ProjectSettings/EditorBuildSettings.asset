@@ -47,6 +47,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Mision3_Patrones.unity
     guid: 927c58c6cee51464dbdad5dd8f7df929
+  - enabled: 1
+    path: Assets/Scenes/Programacion.unity
+    guid: d476e2a0e3ed05c45a24d423fba336b3
+  - enabled: 1
+    path: Assets/Scenes/Mision1_Programacion.unity
+    guid: f451eab9e9771cd43ac28bc2aa6bc10f
+  - enabled: 1
+    path: Assets/Scenes/Mision2_Programacion.unity
+    guid: 2df4584245046e84388f950dbab24b36
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

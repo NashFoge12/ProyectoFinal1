@@ -204,7 +204,7 @@ public class JuegoCompletarSecuencia : MonoBehaviour
             "Ejercicio " + (ejercicioActual + 1) +
             " de " + totalEjercicios;
 
-        txtProgreso.enableWordWrapping = false;
+        txtProgreso.textWrappingMode = TextWrappingModes.NoWrap;
         txtProgreso.overflowMode =
             TextOverflowModes.Overflow;
 

@@ -315,7 +315,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
             " de " +
             ejercicios.Count;
 
-        txtProgreso.enableWordWrapping = false;
+        txtProgreso.textWrappingMode = TextWrappingModes.NoWrap;
 
         ActualizarIndicadorProgreso();
 

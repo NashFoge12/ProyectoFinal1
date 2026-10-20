@@ -381,7 +381,7 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
             " de " +
             ejercicios.Count;
 
-        txtProgreso.enableWordWrapping = false;
+        txtProgreso.textWrappingMode = TextWrappingModes.NoWrap;
 
         txtProgreso.overflowMode =
             TextOverflowModes.Overflow;
