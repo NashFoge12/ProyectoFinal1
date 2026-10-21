@@ -140,7 +140,7 @@ TextureImporter:
         width: 1312
         height: 297
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -149,6 +149,28 @@ TextureImporter:
       bones: []
       spriteID: b3c4c008cce2cc84db5ceae790014275
       internalID: -189578197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sprites de interfaz kawaii de fieltro-11 (1)_2
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 703
+        width: 926
+        height: 273
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22430f77da6fb994ca36fe6e56dfd1e6
+      internalID: 62955966
       vertices: []
       indices: 
       edges: []
@@ -169,6 +191,7 @@ TextureImporter:
     nameFileIdTable:
       Sprites de interfaz kawaii de fieltro-11 (1)_0: 1572464063
       Sprites de interfaz kawaii de fieltro-11 (1)_1: -189578197
+      Sprites de interfaz kawaii de fieltro-11 (1)_2: 62955966
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

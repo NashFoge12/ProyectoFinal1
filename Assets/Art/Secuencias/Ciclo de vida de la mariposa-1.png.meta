@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4f60060c13cf0124aaf55f9c199eae0a
+guid: 7753b708aef90ce4ab34a52aac9733cb
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,89 +110,199 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_0
+      name: Ciclo de vida de la mariposa-1_0
       rect:
         serializedVersion: 2
-        x: 41
-        y: 449
-        width: 911
-        height: 196
+        x: 18
+        y: 912
+        width: 1006
+        height: 502
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a6bded60d5f2a3f44a306a4aef36403c
-      internalID: 1757481557
+      spriteID: c2b8ef0a107c2fd45b2373d930d027ba
+      internalID: 1157585215
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_1
+      name: Ciclo de vida de la mariposa-1_1
       rect:
         serializedVersion: 2
-        x: 154
-        y: 262
-        width: 262
-        height: 171
+        x: 25
+        y: 146
+        width: 241
+        height: 321
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15e4cc7b2e04456428f8970484fed65d
-      internalID: 1603148917
+      spriteID: 8eb51dfc399749e48b3d466f645e87f8
+      internalID: -350233411
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_2
+      name: Ciclo de vida de la mariposa-1_2
       rect:
         serializedVersion: 2
-        x: 426
-        y: 261
-        width: 261
-        height: 173
+        x: 271
+        y: 146
+        width: 239
+        height: 321
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 05080f33522cbfa47ac4fb47da50b647
-      internalID: -1855682253
+      spriteID: 62d9c26cbf0d6cd4cb42a93e368795a8
+      internalID: -621407062
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Gemini_Generated_Image_fe832ofe832ofe83 (2)_3
+      name: Ciclo de vida de la mariposa-1_3
       rect:
         serializedVersion: 2
-        x: 699
-        y: 261
-        width: 262
-        height: 173
+        x: 515
+        y: 145
+        width: 239
+        height: 321
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b20d1b2d3d9762a4a95d5f5e6167b502
-      internalID: -1375646776
+      spriteID: 6d3ce49529f9f794b889f7c7bd8bab07
+      internalID: 1145457712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ciclo de vida de la mariposa-1_4
+      rect:
+        serializedVersion: 2
+        x: 761
+        y: 146
+        width: 239
+        height: 321
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11eb5ffa0ae94db48956466f56f5d51c
+      internalID: -451640024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ciclo de vida de la mariposa-1_5
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 572
+        width: 230
+        height: 247
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f58fd5113869bb441ac190b3f0ede8de
+      internalID: 1584314610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ciclo de vida de la mariposa-1_6
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 575
+        width: 229
+        height: 244
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bbf51e58eb436954795bd758c7652dbf
+      internalID: -1146896658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ciclo de vida de la mariposa-1_7
+      rect:
+        serializedVersion: 2
+        x: 522
+        y: 571
+        width: 229
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f23e576db244124c89a2070e03fec75
+      internalID: 1960955759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ciclo de vida de la mariposa-1_8
+      rect:
+        serializedVersion: 2
+        x: 772
+        y: 571
+        width: 228
+        height: 247
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a076fe8b58cf7c548a65e58b3ebe72bb
+      internalID: 2098222004
       vertices: []
       indices: 
       edges: []
@@ -201,7 +311,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: d03912ab85387f54f84b679ed2cafdbe
+    spriteID: 5e86c2fa70839524daa6081b0d875395
     internalID: 0
     vertices: []
     indices: 
@@ -211,10 +321,15 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gemini_Generated_Image_fe832ofe832ofe83 (2)_0: 1757481557
-      Gemini_Generated_Image_fe832ofe832ofe83 (2)_1: 1603148917
-      Gemini_Generated_Image_fe832ofe832ofe83 (2)_2: -1855682253
-      Gemini_Generated_Image_fe832ofe832ofe83 (2)_3: -1375646776
+      Ciclo de vida de la mariposa-1_0: 1157585215
+      Ciclo de vida de la mariposa-1_1: -350233411
+      Ciclo de vida de la mariposa-1_2: -621407062
+      Ciclo de vida de la mariposa-1_3: 1145457712
+      Ciclo de vida de la mariposa-1_4: -451640024
+      Ciclo de vida de la mariposa-1_5: 1584314610
+      Ciclo de vida de la mariposa-1_6: -1146896658
+      Ciclo de vida de la mariposa-1_7: 1960955759
+      Ciclo de vida de la mariposa-1_8: 2098222004
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

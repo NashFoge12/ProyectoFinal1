@@ -25,7 +25,7 @@ EditorBuildSettings:
     guid: a23c9114d4eda324e8ee6bf10a8bced2
   - enabled: 1
     path: Assets/Scenes/Secuencias.unity
-    guid: 5fad3d896e53b4b45bea0ca1186441f6
+    guid: 146f3ac8cf1570c419e9ec14aa431c58
   - enabled: 1
     path: Assets/Scenes/Mision1_Secuencias.unity
     guid: 934420d2f37a83744951eae0be2c232d
@@ -43,7 +43,7 @@ EditorBuildSettings:
     guid: b3ac802b01e3e2f40be1fbc0311c1192
   - enabled: 1
     path: Assets/Scenes/Mision2_Patrones.unity
-    guid: 19e7e3cabd33e9c4c96d9da64a6d6bf0
+    guid: b8243b2b68bc5f1479ba7e1a8e89d127
   - enabled: 1
     path: Assets/Scenes/Mision3_Patrones.unity
     guid: 927c58c6cee51464dbdad5dd8f7df929

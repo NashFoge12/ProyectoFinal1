@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: afad92edfad2342438688937b99f0d4f
+guid: c9ddbd7364d50b948a27eb5f0a5883f8
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: edited-photo (4)_0
+      name: Ejercicio 3_ tarjetas del ciclo del agua_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 11
-        width: 992
-        height: 229
+        x: 3
+        y: 862
+        width: 1021
+        height: 518
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb511e29ea485664cb821030b2c8f13e
-      internalID: -1294279697
+      spriteID: 3d3879c905693d848b48a2ade2d266c3
+      internalID: -613501303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ejercicio 3_ tarjetas del ciclo del agua_1
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 127
+        width: 249
+        height: 354
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f66a3240e82d4a641820a3e1f4efb180
+      internalID: -149091737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ejercicio 3_ tarjetas del ciclo del agua_2
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 127
+        width: 245
+        height: 354
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8cf2f53705e4e6c489f5e4d3c38a55b6
+      internalID: 1191301308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ejercicio 3_ tarjetas del ciclo del agua_3
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 127
+        width: 247
+        height: 354
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c360818cdf490bb448b14b5fc561f84e
+      internalID: 106723641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ejercicio 3_ tarjetas del ciclo del agua_4
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 127
+        width: 247
+        height: 354
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f87a9a981f25f14fb8372c5e73a4046
+      internalID: 1033919730
       vertices: []
       indices: 
       edges: []
@@ -135,7 +223,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ed3f8d1076aabfa49ac30457d2f5f05a
+    spriteID: 32ccf92e66b8c354f9d039efdbf05288
     internalID: 0
     vertices: []
     indices: 
@@ -145,7 +233,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      edited-photo (4)_0: -1294279697
+      Ejercicio 3_ tarjetas del ciclo del agua_0: -613501303
+      Ejercicio 3_ tarjetas del ciclo del agua_1: -149091737
+      Ejercicio 3_ tarjetas del ciclo del agua_2: 1191301308
+      Ejercicio 3_ tarjetas del ciclo del agua_3: 106723641
+      Ejercicio 3_ tarjetas del ciclo del agua_4: 1033919730
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
