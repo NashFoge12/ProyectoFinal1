@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8ad4009a9c19fcf4b8ff15cffdb9a26e
+guid: eca6c301f3d077544945e45fddf0c69c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: titulos_0
+      name: Baldosas nebulares de peluche-2_0
       rect:
         serializedVersion: 2
-        x: 109
-        y: 913
-        width: 661
-        height: 247
+        x: 181
+        y: 58
+        width: 697
+        height: 674
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,52 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38c1c953c0ead0645a095c5512e8584f
-      internalID: -1180224349
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: titulos_1
-      rect:
-        serializedVersion: 2
-        x: 109
-        y: 510
-        width: 661
-        height: 304
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 991e3a8c2342f2644b2aa6db52e550d5
-      internalID: -1590611050
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: titulos_2
-      rect:
-        serializedVersion: 2
-        x: 105
-        y: 117
-        width: 661
-        height: 304
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8e7a69b0b1b0d5a43ae3f9c26546145c
-      internalID: -2141389870
+      spriteID: ec62fbad9a70dfa4189994af8d22f00b
+      internalID: 477158386
       vertices: []
       indices: 
       edges: []
@@ -179,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e6fcea10a8284e4a9f07407114a0050
+    spriteID: 295b446a3eaefb9469ec71590c5ccacc
     internalID: 0
     vertices: []
     indices: 
@@ -189,9 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      titulos_0: -1180224349
-      titulos_1: -1590611050
-      titulos_2: -2141389870
+      Baldosas nebulares de peluche-2_0: 477158386
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

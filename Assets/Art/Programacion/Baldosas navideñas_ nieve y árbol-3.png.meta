@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a15ab3236188e8842bcb2996c841cce5
+guid: b5379b3d43f6f1449a6f9ae84906ef93
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Banners de Misiones Coloridas (1)_0
+      name: "Baldosas navide\xF1as_ nieve y \xE1rbol-3_0"
       rect:
         serializedVersion: 2
-        x: 444
-        y: 401
-        width: 1197
-        height: 353
+        x: 158
+        y: 56
+        width: 726
+        height: 679
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,52 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 80b4844f9f86bcd40954f6e66ae31f2e
-      internalID: -174800945
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Banners de Misiones Coloridas (1)_1
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 39
-        width: 1039
-        height: 362
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9c235362e92cebb41951c76d1990304e
-      internalID: -1487723081
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Banners de Misiones Coloridas (1)_2
-      rect:
-        serializedVersion: 2
-        x: 1066
-        y: 36
-        width: 1021
-        height: 362
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1baa9e7c1c079e445af5967c46e6a2a5
-      internalID: 1297189361
+      spriteID: 25d96502f3431dc4d8bc9ed74c08d977
+      internalID: -1083083096
       vertices: []
       indices: 
       edges: []
@@ -179,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 17ba5c5329f7f7948b911e0ccd12aeaf
+    spriteID: 8452416f428e9784d807febe43dd44b0
     internalID: 0
     vertices: []
     indices: 
@@ -189,9 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Banners de Misiones Coloridas (1)_0: -174800945
-      Banners de Misiones Coloridas (1)_1: -1487723081
-      Banners de Misiones Coloridas (1)_2: 1297189361
+      "Baldosas navide\xF1as_ nieve y \xE1rbol-3_0": -1083083096
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

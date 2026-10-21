@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 29605dab00202bf4f86b534bfe9e06c1
+guid: f039c9f3bc80ff246b782c0b77a047c4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: botones_0
+      name: "Cielo estelar profundo y juguet\xF3n-1_0"
       rect:
         serializedVersion: 2
-        x: 54
-        y: 827
-        width: 701
-        height: 191
+        x: 0
+        y: 0
+        width: 941
+        height: 1672
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,74 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f1cdbd54f5c3e464b89ae5972639913a
-      internalID: -610942583
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: botones_1
-      rect:
-        serializedVersion: 2
-        x: 779
-        y: 827
-        width: 707
-        height: 191
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: df1f5ee8b94321a41a441f5c41527620
-      internalID: 759866027
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: botones_2
-      rect:
-        serializedVersion: 2
-        x: 28
-        y: 668
-        width: 377
-        height: 148
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1b008fc67d857a04993babf46aba4710
-      internalID: -9427239
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: botones_3
-      rect:
-        serializedVersion: 2
-        x: 507
-        y: 512
-        width: 145
-        height: 134
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3c26f1778124e5540b65003c5e4dd484
-      internalID: 823968514
+      spriteID: 869023d6d046a684891769da26290573
+      internalID: 139162407
       vertices: []
       indices: 
       edges: []
@@ -201,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 1978207005ba7bb4cadb0b7d9e10b2ad
+    spriteID: bafeeb42ae73a19478dd0a2ae430bd4c
     internalID: 0
     vertices: []
     indices: 
@@ -211,10 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      botones_0: -610942583
-      botones_1: 759866027
-      botones_2: -9427239
-      botones_3: 823968514
+      "Cielo estelar profundo y juguet\xF3n-1_0": 139162407
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

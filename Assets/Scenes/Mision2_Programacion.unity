@@ -371,7 +371,7 @@ RectTransform:
   m_GameObject: {fileID: 165373692}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4251, y: 1, z: 1}
+  m_LocalScale: {x: 0.95380336, y: 0.5663438, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 768649665}
@@ -379,7 +379,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -30.1}
+  m_AnchoredPosition: {x: -5, y: -13.7}
   m_SizeDelta: {x: 750, y: 95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &165373694
@@ -1473,7 +1473,7 @@ RectTransform:
   m_GameObject: {fileID: 768649664}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.74993, y: 1, z: 1}
+  m_LocalScale: {x: 1.017955, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 165373693}
@@ -4810,23 +4810,28 @@ MonoBehaviour:
     estrella: {fileID: 621221553, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
     puntoEntrega: {fileID: -1556672651, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
   disenoEjercicio2:
-    fondo: {fileID: 0}
-    casilla: {fileID: 0}
-    obstaculos: []
-    estrella: {fileID: 0}
-    puntoEntrega: {fileID: 0}
+    fondo: {fileID: 139162407, guid: f039c9f3bc80ff246b782c0b77a047c4, type: 3}
+    casilla: {fileID: -1534610539, guid: 0114841fce4565f41ac9819827729cba, type: 3}
+    obstaculos:
+    - {fileID: 0}
+    estrella: {fileID: 621221553, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
+    puntoEntrega: {fileID: -1556672651, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
   disenoEjercicio3:
-    fondo: {fileID: 0}
-    casilla: {fileID: 0}
-    obstaculos: []
-    estrella: {fileID: 0}
-    puntoEntrega: {fileID: 0}
+    fondo: {fileID: 25707865, guid: 2724c21165cbfbf409305c89c317e6c9, type: 3}
+    casilla: {fileID: -1083083096, guid: b5379b3d43f6f1449a6f9ae84906ef93, type: 3}
+    obstaculos:
+    - {fileID: 2022127996, guid: a78e6baae00257e429ce4e4f704c463a, type: 3}
+    - {fileID: -984620221, guid: a78e6baae00257e429ce4e4f704c463a, type: 3}
+    estrella: {fileID: 621221553, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
+    puntoEntrega: {fileID: -1556672651, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
   disenoEjercicio4:
-    fondo: {fileID: 0}
-    casilla: {fileID: 0}
-    obstaculos: []
-    estrella: {fileID: 0}
-    puntoEntrega: {fileID: 0}
+    fondo: {fileID: 887957279, guid: 8f2ab125744d81445a45afa0e44f6611, type: 3}
+    casilla: {fileID: 477158386, guid: eca6c301f3d077544945e45fddf0c69c, type: 3}
+    obstaculos:
+    - {fileID: 691496693, guid: 64625908147289e4f956b90ee631245e, type: 3}
+    - {fileID: 1293867845, guid: 64625908147289e4f956b90ee631245e, type: 3}
+    estrella: {fileID: 621221553, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
+    puntoEntrega: {fileID: -1556672651, guid: ad8d192bea09b1549a5a4f4cc1eecbc6, type: 3}
   panelTablero: {fileID: 186161906}
   panelObstaculos: {fileID: 1762496488}
   gridTablero: {fileID: 186161909}
@@ -4866,10 +4871,11 @@ MonoBehaviour:
   duracionPorCasilla: 0.45
   duracionGiro: 0.25
   separacionCasillas: 8
-  maximoComandos: 18
+  maximoComandos: 20
   anchoTarjeta: 65
   altoTarjeta: 65
   separacionTarjetas: 6
+  intervaloDobleClick: 0.32
   duracionAnimacionEstrella: 0.7
   escalaMaximaEstrella: 1.45
   escenaAlTerminar: 

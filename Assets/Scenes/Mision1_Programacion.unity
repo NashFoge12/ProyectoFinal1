@@ -371,7 +371,7 @@ RectTransform:
   m_GameObject: {fileID: 165373692}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4251, y: 1, z: 1}
+  m_LocalScale: {x: 1.3775889, y: 0.82491, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 768649665}
@@ -379,7 +379,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -30.1}
+  m_AnchoredPosition: {x: -8, y: -46.9}
   m_SizeDelta: {x: 750, y: 95}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &165373694
@@ -1398,7 +1398,7 @@ RectTransform:
   m_GameObject: {fileID: 768649664}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.74993, y: 1, z: 1}
+  m_LocalScale: {x: 1.0370783, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 165373693}
@@ -4696,10 +4696,16 @@ MonoBehaviour:
   duracionPorCasilla: 0.45
   duracionGiro: 0.25
   separacionCasillas: 8
-  maximoComandos: 12
+  maximoComandos: 20
   duracionAnimacionEstrella: 0.8
   escalaMaximaEstrella: 1.632
   escenaAlTerminar: 
+  anchoTarjeta: 45
+  altoTarjeta: 45
+  separacionTarjetas: 5
+  intervaloDobleClick: 0.32
+  colorBordeProgreso: {r: 1, g: 0.83, b: 0.24, a: 1}
+  grosorBordeProgreso: 2
 --- !u!1 &2125343646
 GameObject:
   m_ObjectHideFlags: 0

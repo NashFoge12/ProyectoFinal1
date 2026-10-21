@@ -94,9 +94,15 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     public int maximoComandos = 30;
 
     [Header("TARJETAS DE PROGRAMACION")]
-    public float anchoTarjeta = 65f;
-    public float altoTarjeta = 65f;
-    public float separacionTarjetas = 6f;
+    public float anchoTarjeta = 45f;
+    public float altoTarjeta = 45f;
+    public float separacionTarjetas = 5f;
+
+    [Header("BORRADO DE INSTRUCCIONES")]
+    [Range(0.15f, 0.6f)]
+    public float intervaloDobleClick = 0.32f;
+
+    private float ultimoClickBorrar = -100f;
 
     [Header("ANIMACION ESTRELLAS")]
     public float duracionAnimacionEstrella = 0.7f;
@@ -299,6 +305,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         victoria = false;
 
         comandos.Clear();
+        ultimoClickBorrar = -100f;
         LimpiarObjetos(objetosComandos);
 
         switch (ejercicioActual)
@@ -1003,22 +1010,66 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     private void ConfigurarListaComandos()
     {
-        HorizontalLayoutGroup layout =
+        // Unity no permite colocar un HorizontalLayoutGroup y un
+        // GridLayoutGroup en el mismo objeto durante el mismo fotograma:
+        // Destroy() elimina el componente al final del fotograma.
+        // Por eso usamos un hijo exclusivo para la cuadrícula.
+        HorizontalLayoutGroup horizontal =
             contenedorComandos.GetComponent<HorizontalLayoutGroup>();
 
-        if (layout == null)
+        if (horizontal != null)
+            horizontal.enabled = false;
+
+        GridLayoutGroup cuadricula =
+            contenedorComandos.GetComponent<GridLayoutGroup>();
+
+        if (cuadricula == null)
         {
-            layout = contenedorComandos.gameObject
-                .AddComponent<HorizontalLayoutGroup>();
+            Transform existente =
+                contenedorComandos.Find("Cuadricula_10_Instrucciones");
+
+            RectTransform rectCuadricula;
+            if (existente != null)
+            {
+                rectCuadricula = existente as RectTransform;
+            }
+            else
+            {
+                GameObject hijo = new GameObject(
+                    "Cuadricula_10_Instrucciones",
+                    typeof(RectTransform));
+                hijo.transform.SetParent(contenedorComandos, false);
+                rectCuadricula = hijo.GetComponent<RectTransform>();
+                rectCuadricula.anchorMin = Vector2.zero;
+                rectCuadricula.anchorMax = Vector2.one;
+                rectCuadricula.offsetMin = Vector2.zero;
+                rectCuadricula.offsetMax = Vector2.zero;
+                rectCuadricula.pivot = new Vector2(0.5f, 0.5f);
+            }
+
+            cuadricula = rectCuadricula.GetComponent<GridLayoutGroup>();
+            if (cuadricula == null)
+                cuadricula = rectCuadricula.gameObject.AddComponent<GridLayoutGroup>();
+
+            // Desde ahora las tarjetas se crean en este hijo.
+            contenedorComandos = rectCuadricula;
         }
 
-        layout.spacing = separacionTarjetas;
-        layout.childAlignment = TextAnchor.MiddleCenter;
+        if (cuadricula == null)
+        {
+            Debug.LogError("No se pudo configurar la cuadrícula de instrucciones.");
+            return;
+        }
 
-        layout.childControlWidth = false;
-        layout.childControlHeight = false;
-        layout.childForceExpandWidth = false;
-        layout.childForceExpandHeight = false;
+        cuadricula.cellSize = new Vector2(
+            Mathf.Max(20f, anchoTarjeta), Mathf.Max(20f, altoTarjeta));
+        cuadricula.spacing = new Vector2(separacionTarjetas, separacionTarjetas);
+        cuadricula.padding = new RectOffset(0, 0, 0, 0);
+        cuadricula.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        cuadricula.startAxis = GridLayoutGroup.Axis.Horizontal;
+        cuadricula.childAlignment = TextAnchor.UpperCenter;
+        cuadricula.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        cuadricula.constraintCount = 10;
     }
 
     private bool PuedeProgramar()
@@ -1053,9 +1104,15 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         LimpiarObjetos(objetosComandos);
 
-        // Tamaño fijo: no aumenta al agregar comandos.
+        // Tamaño fijo: 10 tarjetas por fila, sin agrandarlas.
         float ancho = Mathf.Max(20f, anchoTarjeta);
         float alto = Mathf.Max(20f, altoTarjeta);
+        GridLayoutGroup cuadricula = contenedorComandos.GetComponent<GridLayoutGroup>();
+        if (cuadricula != null)
+        {
+            cuadricula.cellSize = new Vector2(ancho, alto);
+            cuadricula.spacing = new Vector2(separacionTarjetas, separacionTarjetas);
+        }
 
         for (int i = 0; i < comandos.Count; i++)
         {
@@ -1134,10 +1191,33 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     public void BorrarComando()
     {
-        if (!PuedeProgramar() || comandos.Count == 0)
+        if (!PuedeProgramar())
             return;
 
-        comandos.RemoveAt(comandos.Count - 1);
+        float ahora = Time.unscaledTime;
+        bool dobleClick = ahora - ultimoClickBorrar <= intervaloDobleClick;
+        ultimoClickBorrar = dobleClick ? -100f : ahora;
+
+        if (dobleClick)
+        {
+            // Dos clics rápidos: borrar todas las instrucciones.
+            comandos.Clear();
+            DetenerPrograma();
+            ReiniciarPosiciones();
+            MostrarMensaje("¡Programación borrada! Robot en el inicio.");
+        }
+        else if (comandos.Count > 0)
+        {
+            // Un clic: borrar únicamente la última instrucción.
+            comandos.RemoveAt(comandos.Count - 1);
+
+            if (comandos.Count == 0)
+            {
+                DetenerPrograma();
+                ReiniciarPosiciones();
+                MostrarMensaje("¡Robot de vuelta al inicio!");
+            }
+        }
 
         ActualizarListaComandos();
         ActualizarBotones();
@@ -1162,6 +1242,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         DetenerPrograma();
         ReiniciarPosiciones();
+        ultimoClickBorrar = -100f;
 
         ejecutando = true;
         pausado = false;
@@ -1700,6 +1781,15 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             numero.fontStyle = FontStyles.Bold;
             numero.alignment = TextAlignmentOptions.Center;
             numero.raycastTarget = false;
+
+            // Contorno amarillo alrededor de cada bolita de progreso.
+            // El componente Outline sigue el borde circular del sprite.
+            Outline marco = objeto.GetComponent<Outline>();
+            if (marco == null)
+                marco = objeto.AddComponent<Outline>();
+            marco.effectColor = new Color(1f, 0.80f, 0.12f, 1f);
+            marco.effectDistance = new Vector2(2.5f, 2.5f);
+            marco.useGraphicAlpha = false;
 
             circulosProgreso.Add(
                 objeto.GetComponent<Image>()

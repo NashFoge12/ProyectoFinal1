@@ -163,6 +163,22 @@ public class JuegoProgramaCamino : MonoBehaviour
     private Vector3 escalaOriginalEstrella;
     private Color colorOriginalEstrella;
 
+    [Header("TARJETAS DE PROGRAMACION")]
+    public float anchoTarjeta = 45f;
+    public float altoTarjeta = 45f;
+    public float separacionTarjetas = 5f;
+
+    [Header("BORRADO DE INSTRUCCIONES")]
+    [Range(0.15f, 0.6f)]
+    public float intervaloDobleClick = 0.32f;
+
+    private float ultimoClickBorrar = -100f;
+    private RectTransform cuadriculaComandos;
+
+    [Header("BORDE DEL PROGRESO")]
+    public Color colorBordeProgreso = new Color(1f, 0.83f, 0.24f, 1f);
+    public float grosorBordeProgreso = 2f;
+
     private Sprite spriteCirculo;
 
     // =====================================================
@@ -298,6 +314,7 @@ public class JuegoProgramaCamino : MonoBehaviour
         animandoEstrella = false;
 
         comandos.Clear();
+        ultimoClickBorrar = -100f;
 
         LimpiarLista(comandosCreados);
 
@@ -1148,24 +1165,62 @@ public class JuegoProgramaCamino : MonoBehaviour
 
     private void PrepararContenedorComandos()
     {
-        HorizontalLayoutGroup layout =
-            contenedorComandos
-            .GetComponent<HorizontalLayoutGroup>();
-
-        if (layout == null)
+        // Mantener el layout existente en el contenedor padre.
+        // La cuadricula vive en un hijo para evitar el conflicto
+        // HorizontalLayoutGroup + GridLayoutGroup en el mismo objeto.
+        Transform existente = contenedorComandos.Find("Cuadricula_Instrucciones");
+        GameObject objeto;
+        if (existente != null)
+            objeto = existente.gameObject;
+        else
         {
-            layout = contenedorComandos.gameObject
-                .AddComponent<HorizontalLayoutGroup>();
+            objeto = new GameObject(
+                "Cuadricula_Instrucciones",
+                typeof(RectTransform),
+                typeof(GridLayoutGroup),
+                typeof(LayoutElement));
+            objeto.transform.SetParent(contenedorComandos, false);
         }
 
-        layout.spacing = 5f;
-        layout.childAlignment = TextAnchor.MiddleCenter;
+        cuadriculaComandos = objeto.GetComponent<RectTransform>();
+        GridLayoutGroup grid = objeto.GetComponent<GridLayoutGroup>();
+        if (grid == null)
+            grid = objeto.AddComponent<GridLayoutGroup>();
 
-        layout.childControlWidth = false;
-        layout.childControlHeight = false;
+        float ancho = Mathf.Max(20f, anchoTarjeta);
+        float alto = Mathf.Max(20f, altoTarjeta);
+        float espacio = Mathf.Max(0f, separacionTarjetas);
+        float anchoTotal = ancho * 10f + espacio * 9f;
+        float altoTotal = alto * 3f + espacio * 2f;
 
-        layout.childForceExpandWidth = false;
-        layout.childForceExpandHeight = false;
+        grid.cellSize = new Vector2(ancho, alto);
+        grid.spacing = new Vector2(espacio, espacio);
+        grid.padding = new RectOffset(0, 0, 0, 0);
+        grid.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        grid.startAxis = GridLayoutGroup.Axis.Horizontal;
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = 10;
+        grid.childAlignment = TextAnchor.UpperLeft;
+
+        cuadriculaComandos.sizeDelta = new Vector2(anchoTotal, altoTotal);
+        LayoutElement elemento = objeto.GetComponent<LayoutElement>();
+        if (elemento == null)
+            elemento = objeto.AddComponent<LayoutElement>();
+        elemento.preferredWidth = anchoTotal;
+        elemento.preferredHeight = altoTotal;
+        elemento.minWidth = anchoTotal;
+        elemento.minHeight = altoTotal;
+
+        HorizontalLayoutGroup horizontal =
+            contenedorComandos.GetComponent<HorizontalLayoutGroup>();
+        if (horizontal != null)
+        {
+            horizontal.childAlignment = TextAnchor.MiddleCenter;
+            horizontal.childControlWidth = false;
+            horizontal.childControlHeight = false;
+            horizontal.childForceExpandWidth = false;
+            horizontal.childForceExpandHeight = false;
+        }
     }
 
     private bool PuedeProgramar()
@@ -1202,29 +1257,11 @@ public class JuegoProgramaCamino : MonoBehaviour
     private void ActualizarComandosVisuales()
     {
         LimpiarLista(comandosCreados);
+        if (cuadriculaComandos == null)
+            PrepararContenedorComandos();
 
-        float anchoContenedor =
-            contenedorComandos.rect.width;
-
-        float espacio = 5f;
-        int cantidad = comandos.Count;
-
-        float anchoTarjeta = 70f;
-
-        if (cantidad > 0)
-        {
-            anchoTarjeta = Mathf.Min(
-                70f,
-                (anchoContenedor -
-                 espacio * (cantidad - 1)) /
-                cantidad
-            );
-        }
-
-        anchoTarjeta = Mathf.Max(
-            15f,
-            anchoTarjeta
-        );
+        float ancho = Mathf.Max(20f, anchoTarjeta);
+        float alto = Mathf.Max(20f, altoTarjeta);
 
         for (int i = 0; i < comandos.Count; i++)
         {
@@ -1232,81 +1269,44 @@ public class JuegoProgramaCamino : MonoBehaviour
                 "Comando_" + (i + 1),
                 typeof(RectTransform),
                 typeof(Image),
-                typeof(LayoutElement)
-            );
+                typeof(LayoutElement));
 
-            tarjeta.transform.SetParent(
-                contenedorComandos, false
-            );
+            tarjeta.transform.SetParent(cuadriculaComandos, false);
+            RectTransform rect = tarjeta.GetComponent<RectTransform>();
+            rect.sizeDelta = new Vector2(ancho, alto);
 
-            RectTransform rect =
-                tarjeta.GetComponent<RectTransform>();
+            LayoutElement elemento = tarjeta.GetComponent<LayoutElement>();
+            elemento.preferredWidth = ancho;
+            elemento.preferredHeight = alto;
+            elemento.flexibleWidth = 0f;
+            elemento.flexibleHeight = 0f;
 
-            rect.sizeDelta = new Vector2(
-                anchoTarjeta,
-                Mathf.Min(76f, anchoTarjeta)
-            );
-
-            LayoutElement elemento =
-                tarjeta.GetComponent<LayoutElement>();
-
-            elemento.preferredWidth = anchoTarjeta;
-            elemento.preferredHeight =
-                Mathf.Min(76f, anchoTarjeta);
-
-            Image fondo =
-                tarjeta.GetComponent<Image>();
-
+            Image fondo = tarjeta.GetComponent<Image>();
             fondo.sprite = tarjetaComando;
             fondo.color = Color.white;
             fondo.preserveAspect = true;
             fondo.raycastTarget = false;
 
             GameObject flecha = new GameObject(
-                "Image_Flecha",
-                typeof(RectTransform),
-                typeof(Image)
-            );
-
-            flecha.transform.SetParent(
-                tarjeta.transform, false
-            );
-
-            RectTransform rectFlecha =
-                flecha.GetComponent<RectTransform>();
-
+                "Image_Flecha", typeof(RectTransform), typeof(Image));
+            flecha.transform.SetParent(tarjeta.transform, false);
+            RectTransform rectFlecha = flecha.GetComponent<RectTransform>();
             rectFlecha.anchorMin = Vector2.zero;
             rectFlecha.anchorMax = Vector2.one;
-
-            rectFlecha.offsetMin =
-                new Vector2(2f, 2f);
-
-            rectFlecha.offsetMax =
-                new Vector2(-2f, -2f);
-
-            Image imagen =
-                flecha.GetComponent<Image>();
-
-            imagen.sprite =
-                SpriteDireccion(comandos[i]);
-
+            rectFlecha.offsetMin = new Vector2(4f, 4f);
+            rectFlecha.offsetMax = new Vector2(-4f, -4f);
+            Image imagen = flecha.GetComponent<Image>();
+            imagen.sprite = SpriteDireccion(comandos[i]);
             imagen.preserveAspect = true;
             imagen.raycastTarget = false;
-
             comandosCreados.Add(tarjeta);
         }
 
         if (txtTituloInstrucciones != null)
-        {
             txtTituloInstrucciones.text =
-                "MIS INSTRUCCIONES (" +
-                comandos.Count + "/" +
-                maximoComandos + ")";
-        }
+                "MIS INSTRUCCIONES (" + comandos.Count + "/" + maximoComandos + ")";
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(
-            contenedorComandos
-        );
+        LayoutRebuilder.ForceRebuildLayoutImmediate(cuadriculaComandos);
     }
 
     private Sprite SpriteDireccion(Direccion direccion)
@@ -1334,13 +1334,38 @@ public class JuegoProgramaCamino : MonoBehaviour
         if (!PuedeProgramar())
             return;
 
-        if (comandos.Count == 0)
-            return;
+        float ahora = Time.unscaledTime;
+        bool dobleClick = ahora - ultimoClickBorrar <= intervaloDobleClick;
+        ultimoClickBorrar = dobleClick ? -100f : ahora;
 
-        comandos.RemoveAt(comandos.Count - 1);
+        if (dobleClick)
+        {
+            comandos.Clear();
+            RestaurarRobotAlInicio();
+            MostrarMensaje("¡Programación borrada! Robot en el inicio.");
+        }
+        else if (comandos.Count > 0)
+        {
+            comandos.RemoveAt(comandos.Count - 1);
+            if (comandos.Count == 0)
+            {
+                RestaurarRobotAlInicio();
+                MostrarMensaje("¡Robot de vuelta al inicio!");
+            }
+        }
 
         ActualizarComandosVisuales();
         ActualizarBotones();
+    }
+
+    private void RestaurarRobotAlInicio()
+    {
+        DetenerMovimiento();
+        DetenerAnimacionEstrella();
+        posicionRobot = inicio;
+        orientacionRobot = orientacionInicial;
+        CambiarSpriteRobot(orientacionRobot);
+        ActualizarRobotYMeta();
     }
 
     // =====================================================
@@ -1362,11 +1387,8 @@ public class JuegoProgramaCamino : MonoBehaviour
 
         DetenerMovimiento();
 
-        posicionRobot = inicio;
-        orientacionRobot = orientacionInicial;
-
-        CambiarSpriteRobot(orientacionRobot);
-        ActualizarRobotYMeta();
+        RestaurarRobotAlInicio();
+        ultimoClickBorrar = -100f;
 
         ejecutando = true;
         pausado = false;
@@ -1831,6 +1853,12 @@ public class JuegoProgramaCamino : MonoBehaviour
             imagen.sprite = ObtenerSpriteCircular();
             imagen.raycastTarget = false;
 
+            Outline borde = objeto.AddComponent<Outline>();
+            borde.effectColor = colorBordeProgreso;
+            borde.effectDistance = new Vector2(
+                grosorBordeProgreso, grosorBordeProgreso);
+            borde.useGraphicAlpha = false;
+
             GameObject texto = new GameObject(
                 "Txt_Numero",
                 typeof(RectTransform),
@@ -1977,7 +2005,8 @@ public class JuegoProgramaCamino : MonoBehaviour
         if (btnBorrar != null)
         {
             btnBorrar.interactable =
-                puede && comandos.Count > 0;
+                puede && (comandos.Count > 0 ||
+                Time.unscaledTime - ultimoClickBorrar <= intervaloDobleClick);
         }
 
         // El botón Pausa siempre permanece visible

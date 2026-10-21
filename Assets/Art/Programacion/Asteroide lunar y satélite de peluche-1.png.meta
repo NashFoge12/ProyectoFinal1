@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 167bb7730d9bb9b47b18ced0b80458f1
+guid: 64625908147289e4f956b90ee631245e
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -108,12 +108,56 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: "Asteroide lunar y sat\xE9lite de peluche-1_0"
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 48
+        width: 739
+        height: 694
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96d8d372f96e0b84b8e468430c40d7d1
+      internalID: 691496693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: "Asteroide lunar y sat\xE9lite de peluche-1_1"
+      rect:
+        serializedVersion: 2
+        x: 868
+        y: 68
+        width: 1064
+        height: 611
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47455aff0a25660448f4798557ee97de
+      internalID: 1293867845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: dff49be0378aaa445b5c3170cf6bba0c
     internalID: 0
     vertices: []
     indices: 
@@ -122,7 +166,9 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "Asteroide lunar y sat\xE9lite de peluche-1_0": 691496693
+      "Asteroide lunar y sat\xE9lite de peluche-1_1": 1293867845
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
