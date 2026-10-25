@@ -116,6 +116,10 @@ public class JuegoDescubrirPatron : MonoBehaviour
     public Color colorPendiente =
         new Color(0.78f, 0.76f, 0.72f, 1f);
 
+    [Header("BORDE DE LOS CIRCULOS")]
+    public Color colorBorde = new Color(0.43f, 0.29f, 0.17f, 1f);
+    public float grosorBorde = 2f;
+
     // =====================================================
     // COLORES
     // =====================================================
@@ -722,8 +726,7 @@ public class JuegoDescubrirPatron : MonoBehaviour
     void FinalizarMision()
     {
         MostrarMensaje(
-            "¡MISIÓN COMPLETADA!\n" +
-            "¡Felicidades! Descubriste los 3 patrones."
+            "¡MISIÓN COMPLETADA!"
         );
 
         txtProgreso.text = "";
@@ -747,7 +750,7 @@ public class JuegoDescubrirPatron : MonoBehaviour
             {
                 if (circulo != null)
                 {
-                    circulo.gameObject.SetActive(false);
+                    circulo.transform.parent.gameObject.SetActive(false);
                 }
             }
         }
@@ -861,12 +864,33 @@ public class JuegoDescubrirPatron : MonoBehaviour
                 posicionVerticalCirculos
             );
 
-            Image imagen = objeto.GetComponent<Image>();
+            // Circulo exterior: borde configurable.
+            Image imagenBorde = objeto.GetComponent<Image>();
+            imagenBorde.sprite = spriteCirculo;
+            imagenBorde.color = colorBorde;
+            imagenBorde.raycastTarget = false;
 
-            imagen.sprite = spriteCirculo;
-            imagen.raycastTarget = false;
+            // Circulo interior: cambia de color con el progreso.
+            GameObject objetoInterior = new GameObject(
+                "Interior",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+            objetoInterior.transform.SetParent(objeto.transform, false);
 
-            circulosProgreso[i] = imagen;
+            RectTransform rectInterior = objetoInterior.GetComponent<RectTransform>();
+            rectInterior.anchorMin = Vector2.zero;
+            rectInterior.anchorMax = Vector2.one;
+            float borde = Mathf.Clamp(grosorBorde, 0f, tamanoCirculo * 0.45f);
+            rectInterior.offsetMin = new Vector2(borde, borde);
+            rectInterior.offsetMax = new Vector2(-borde, -borde);
+
+            Image imagenInterior = objetoInterior.GetComponent<Image>();
+            imagenInterior.sprite = spriteCirculo;
+            imagenInterior.color = colorPendiente;
+            imagenInterior.raycastTarget = false;
+            circulosProgreso[i] = imagenInterior;
 
             GameObject objetoNumero = new GameObject(
                 "Numero_" + (i + 1),

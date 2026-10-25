@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections;
+
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -14,7 +15,6 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     [Header("TEXTOS DE INTERFAZ")]
     public TMP_Text txtPregunta;
     public TMP_Text txtProgreso;
-    public TMP_Text txtResultado;
 
     // =====================================================
     // FONDOS Y TITULOS
@@ -113,6 +113,14 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     private int ejercicioActual = 0;
     private bool ejercicioCompletado = false;
 
+    // Conserva la pregunta original mientras muestra los mensajes.
+    private string preguntaBase = "";
+    private bool misionFinalizada = false;
+
+    [Header("DURACION DE LA PREGUNTA INICIAL")]
+    [Range(1f, 5f)] public float tiempoPregunta = 2f;
+    private Coroutine rutinaPregunta;
+
     // Cada ficha guarda el paso que representa.
     private int[] ordenFichas = new int[4];
 
@@ -130,6 +138,36 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     private Image imagenArrastrada;
 
     private const int totalEjercicios = 3;
+
+    // =====================================================
+    // MENSAJES EN RESULTADO Y PREGUNTA
+    // =====================================================
+
+    void MostrarMensaje(string mensaje)
+    {
+        DetenerPreguntaTemporal();
+        if (txtPregunta != null)
+            txtPregunta.text = mensaje;
+    }
+
+    void DetenerPreguntaTemporal()
+    {
+        if (rutinaPregunta != null)
+        {
+            StopCoroutine(rutinaPregunta);
+            rutinaPregunta = null;
+        }
+    }
+
+    IEnumerator MostrarPreguntaInicial()
+    {
+        if (txtPregunta != null)
+            txtPregunta.text = preguntaBase;
+
+        yield return new WaitForSeconds(tiempoPregunta);
+        rutinaPregunta = null;
+        MostrarMensaje("¡Arrastra las fichas a los espacios numerados!");
+    }
 
     // =====================================================
     // START
@@ -193,10 +231,19 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
                 boton = espacios[i].gameObject.AddComponent<Button>();
 
             boton.transition = Selectable.Transition.None;
+            espacios[i].raycastTarget = true;
 
+            // Clic solamente devuelve una ficha YA colocada.
             boton.onClick.AddListener(
                 () => QuitarFicha(indice)
             );
+
+            // Permite arrastrar una ficha YA COLOCADA para corregirla.
+            ArrastrarEspacioSecuencia arrastreEspacio =
+                espacios[i].GetComponent<ArrastrarEspacioSecuencia>();
+            if (arrastreEspacio == null)
+                arrastreEspacio = espacios[i].gameObject.AddComponent<ArrastrarEspacioSecuencia>();
+            arrastreEspacio.Configurar(this, i);
         }
 
         btnComprobar.onClick.AddListener(Comprobar);
@@ -214,7 +261,6 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
     {
         if (txtPregunta == null ||
             txtProgreso == null ||
-            txtResultado == null ||
             btnComprobar == null ||
             btnSiguiente == null)
         {
@@ -292,11 +338,13 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
 
     void CargarEjercicio()
     {
+        DetenerPreguntaTemporal();
         ejercicioCompletado = false;
+        misionFinalizada = false;
 
         if (ejercicioActual == 0)
         {
-            txtPregunta.text =
+            preguntaBase =
                 "Ordena las etapas del ciclo de la mariposa.";
 
             CambiarImagen(imagenFondo, fondoMariposa);
@@ -304,7 +352,7 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         }
         else if (ejercicioActual == 1)
         {
-            txtPregunta.text =
+            preguntaBase =
                 "Ordena las etapas del crecimiento de una planta.";
 
             CambiarImagen(imagenFondo, fondoPlanta);
@@ -312,15 +360,14 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         }
         else
         {
-            txtPregunta.text =
+            preguntaBase =
                 "Ordena las etapas del ciclo del agua.";
 
             CambiarImagen(imagenFondo, fondoAgua);
             CambiarImagen(imagenTitulo, tituloAgua);
         }
 
-        txtResultado.text =
-            "¡Arrastra las fichas a los espacios numerados!";
+        rutinaPregunta = StartCoroutine(MostrarPreguntaInicial());
 
         txtProgreso.text =
             "Ejercicio " + (ejercicioActual + 1) +
@@ -478,9 +525,11 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         int indiceFicha,
         PointerEventData evento)
     {
-        if (ejercicioCompletado ||
-            !fichas[indiceFicha].gameObject.activeInHierarchy)
+        if (ejercicioCompletado || indiceFicha < 0 || indiceFicha >= fichas.Length)
             return;
+
+        // La ficha original puede estar oculta porque ya fue colocada
+        // en una casilla. También debe poder arrastrarse desde allí.
 
         if (imagenArrastrada != null)
             Destroy(imagenArrastrada.gameObject);
@@ -576,8 +625,7 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
             }
         }
 
-        txtResultado.text =
-            "¡Arrastra la ficha dentro de un espacio!";
+        MostrarMensaje("¡Arrastra la ficha dentro de un espacio!");
     }
 
     Camera ObtenerCamaraCanvas()
@@ -620,8 +668,7 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
 
         fichas[indiceFicha].gameObject.SetActive(false);
 
-        txtResultado.text =
-            "¡Bien! Sigue colocando las demás fichas.";
+        MostrarMensaje("¡Bien! Sigue colocando las demás fichas.");
     }
 
     // =====================================================
@@ -648,8 +695,72 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         imagenesColocadas[indiceEspacio]
             .gameObject.SetActive(false);
 
-        txtResultado.text =
-            "¡Puedes colocar nuevamente esa ficha!";
+        MostrarMensaje("¡Puedes colocar nuevamente esa ficha!");
+    }
+
+    // =====================================================
+    // ARRASTRAR DESDE UN ESPACIO YA OCUPADO
+    // =====================================================
+
+    public void ComenzarArrastreDesdeEspacio(int indiceEspacio, PointerEventData evento)
+    {
+        if (ejercicioCompletado || contenidoEspacios[indiceEspacio] == -1)
+            return;
+
+        int indiceFicha = contenidoEspacios[indiceEspacio];
+        ComenzarArrastre(indiceFicha, evento);
+    }
+
+    public void TerminarArrastreDesdeEspacio(int origen, PointerEventData evento)
+    {
+        if (imagenArrastrada != null)
+        {
+            Destroy(imagenArrastrada.gameObject);
+            imagenArrastrada = null;
+        }
+
+        if (ejercicioCompletado || contenidoEspacios[origen] == -1)
+            return;
+
+        // Soltar sobre otra casilla: mover o intercambiar las dos fichas.
+        for (int destino = 0; destino < 4; destino++)
+        {
+            if (!RectTransformUtility.RectangleContainsScreenPoint(
+                espacios[destino].rectTransform, evento.position, ObtenerCamaraCanvas()))
+                continue;
+
+            if (destino == origen)
+                return;
+
+            int fichaOrigen = contenidoEspacios[origen];
+            int fichaDestino = contenidoEspacios[destino];
+            contenidoEspacios[destino] = fichaOrigen;
+            contenidoEspacios[origen] = fichaDestino;
+            ActualizarImagenEspacio(origen);
+            ActualizarImagenEspacio(destino);
+            MostrarMensaje("¡Bien! Puedes seguir cambiando el orden de las fichas.");
+            return;
+        }
+
+        // Si se suelta fuera de las casillas, vuelve a las fichas disponibles.
+        QuitarFicha(origen);
+    }
+
+    void ActualizarImagenEspacio(int indiceEspacio)
+    {
+        int indiceFicha = contenidoEspacios[indiceEspacio];
+        Image imagen = imagenesColocadas[indiceEspacio];
+        if (indiceFicha == -1)
+        {
+            imagen.sprite = null;
+            imagen.gameObject.SetActive(false);
+        }
+        else
+        {
+            imagen.sprite = fichas[indiceFicha].image.sprite;
+            imagen.gameObject.SetActive(true);
+            fichas[indiceFicha].gameObject.SetActive(false);
+        }
     }
 
     // =====================================================
@@ -667,8 +778,7 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         {
             if (contenidoEspacios[i] == -1)
             {
-                txtResultado.text =
-                    "¡Primero llena los cuatro espacios!";
+                MostrarMensaje("¡Primero llena los cuatro espacios!");
                 return;
             }
         }
@@ -683,8 +793,7 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
 
             if (pasoReal != i)
             {
-                txtResultado.text =
-                    "¡Casi! Revisa el orden e inténtalo otra vez.";
+                MostrarMensaje("¡Casi! Revisa el orden e inténtalo otra vez.");
                 return;
             }
         }
@@ -703,8 +812,10 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
             ejercicioActual + 1
         );
 
-        txtResultado.text =
-            "¡Excelente! Ordenaste correctamente la secuencia.";
+        Debug.Log("Mision 1 - Secuencias - Estrella guardada: " +
+                  (ejercicioActual + 1));
+
+        MostrarMensaje("¡Excelente! Ordenaste correctamente la secuencia.");
 
         for (int i = 0; i < 4; i++)
         {
@@ -739,10 +850,11 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
 
     void FinalizarMision()
     {
-        txtPregunta.text = "¡MISIÓN COMPLETADA!";
+        DetenerPreguntaTemporal();
+        misionFinalizada = true;
+        preguntaBase = "";
 
-        txtResultado.text =
-            "¡Felicidades! Ordenaste las 3 secuencias.";
+        MostrarMensaje("¡MISIÓN COMPLETADA!\n¡Felicidades! Ordenaste las 3 secuencias.");
 
         txtProgreso.text = "";
 
@@ -993,5 +1105,38 @@ public class ArrastrarFichaSecuencia :
     {
         if (juego != null)
             juego.TerminarArrastre(indiceFicha, evento);
+    }
+}
+
+// Permite corregir arrastrando desde las casillas de destino.
+// Esta clase permanece en el mismo archivo JuegoOrdenarSecuencia.cs.
+public class ArrastrarEspacioSecuencia : MonoBehaviour,
+    IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    private JuegoOrdenarSecuencia juego;
+    private int indiceEspacio;
+
+    public void Configurar(JuegoOrdenarSecuencia controlador, int indice)
+    {
+        juego = controlador;
+        indiceEspacio = indice;
+    }
+
+    public void OnBeginDrag(PointerEventData evento)
+    {
+        if (juego != null)
+            juego.ComenzarArrastreDesdeEspacio(indiceEspacio, evento);
+    }
+
+    public void OnDrag(PointerEventData evento)
+    {
+        if (juego != null)
+            juego.MoverArrastre(evento);
+    }
+
+    public void OnEndDrag(PointerEventData evento)
+    {
+        if (juego != null)
+            juego.TerminarArrastreDesdeEspacio(indiceEspacio, evento);
     }
 }

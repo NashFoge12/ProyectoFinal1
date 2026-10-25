@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections;
+
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -143,6 +144,40 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
     private Sprite spriteCirculo;
 
     private int[] indicesTarjetas = new int[4];
+
+    [Header("TIEMPO DE PREGUNTA INICIAL")]
+    [Range(0.5f, 5f)]
+    public float tiempoPregunta = 2f;
+
+    private Coroutine rutinaPregunta;
+
+    private void MostrarMensaje(string mensaje)
+    {
+        if (txtPregunta != null) txtPregunta.text = mensaje;
+        if (txtResultado != null) txtResultado.text = mensaje;
+    }
+
+    private void DetenerPreguntaTemporal()
+    {
+        if (rutinaPregunta != null)
+        {
+            StopCoroutine(rutinaPregunta);
+            rutinaPregunta = null;
+        }
+    }
+
+    private IEnumerator MostrarPreguntaTemporal(string pregunta)
+    {
+        // Primero aparece únicamente la pregunta, durante dos segundos.
+        if (txtPregunta != null) txtPregunta.text = pregunta;
+        if (txtResultado != null) txtResultado.text = "";
+
+        yield return new WaitForSeconds(tiempoPregunta);
+
+        MostrarMensaje("¡Observa las tarjetas y encuentra el paso sobrante!");
+        rutinaPregunta = null;
+    }
+
 
     // =====================================================
     // INICIO
@@ -299,15 +334,13 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
 
     void CargarEjercicio()
     {
+        DetenerPreguntaTemporal();
         tarjetaSeleccionada = -1;
         ejercicioCompletado = false;
 
         Ejercicio ejercicio = ejercicios[ejercicioActual];
 
-        txtPregunta.text = ejercicio.pregunta;
-
-        txtResultado.text =
-            "¡Observa las tarjetas y encuentra el paso sobrante!";
+        rutinaPregunta = StartCoroutine(MostrarPreguntaTemporal(ejercicio.pregunta));
 
         txtProgreso.text =
             "Ejercicio " +
@@ -433,6 +466,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
         if (ejercicioCompletado)
             return;
 
+        DetenerPreguntaTemporal();
         tarjetaSeleccionada = indice;
 
         // Restaurar colores.
@@ -447,8 +481,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
         botonesPasos[indice].image.color =
             colorSeleccionado;
 
-        txtResultado.text =
-            "¡Tarjeta seleccionada! Presiona COMPROBAR.";
+        MostrarMensaje("¡Tarjeta seleccionada! Presiona COMPROBAR.");
     }
 
     // =====================================================
@@ -457,13 +490,13 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
 
     void Comprobar()
     {
+        DetenerPreguntaTemporal();
         if (ejercicioCompletado)
             return;
 
         if (tarjetaSeleccionada == -1)
         {
-            txtResultado.text =
-                "¡Primero selecciona una tarjeta!";
+            MostrarMensaje("¡Primero selecciona una tarjeta!");
 
             return;
         }
@@ -495,8 +528,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
             // RESPUESTA CORRECTA
             // =============================================
 
-            txtResultado.text =
-                ejercicios[ejercicioActual].mensajeCorrecto;
+            MostrarMensaje(ejercicios[ejercicioActual].mensajeCorrecto);
 
             botonesPasos[tarjetaSeleccionada]
                 .image.color = colorCorrecto;
@@ -516,8 +548,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
 
         else
         {
-            txtResultado.text =
-                "¡Casi! Observa los pasos e inténtalo otra vez.";
+            MostrarMensaje("¡Casi! Observa los pasos e inténtalo otra vez.");
 
             botonesPasos[tarjetaSeleccionada]
                 .image.color = colorNormal;
@@ -532,6 +563,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
 
     void SiguienteEjercicio()
     {
+        DetenerPreguntaTemporal();
         if (!ejercicioCompletado)
             return;
 
@@ -553,11 +585,7 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
 
     void FinalizarMision()
     {
-        txtPregunta.text =
-            "¡MISIÓN COMPLETADA!";
-
-        txtResultado.text =
-            "¡Felicidades! Encontraste los 3 pasos incorrectos.";
+        MostrarMensaje("¡MISIÓN COMPLETADA!\n¡Felicidades! Encontraste los 3 pasos incorrectos.");
 
         txtProgreso.text = "";
 
@@ -752,4 +780,10 @@ public class JuegoEncuentraAlgoritmo : MonoBehaviour
                 : colorPendiente;
         }
     }
+
+    private void OnDisable()
+    {
+        DetenerPreguntaTemporal();
+    }
+
 }

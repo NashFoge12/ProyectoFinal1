@@ -13,7 +13,6 @@ public class JuegoErrorPatron : MonoBehaviour
 
     [Header("TEXTOS")]
     public TMP_Text txtPregunta;
-    public TMP_Text txtProgreso;
 
     [Header("TIEMPO DE INSTRUCCION")]
     [Range(1f, 5f)]
@@ -102,6 +101,10 @@ public class JuegoErrorPatron : MonoBehaviour
     public Color colorPendiente =
         new Color(0.78f, 0.76f, 0.72f, 1f);
 
+    [Header("BORDE DE LOS CIRCULOS")]
+    public Color colorBorde = new Color(0.43f, 0.29f, 0.17f, 1f);
+    [Range(1f, 10f)] public float grosorBorde = 2f;
+
     // =====================================================
     // COLORES DE TARJETAS
     // =====================================================
@@ -188,7 +191,6 @@ public class JuegoErrorPatron : MonoBehaviour
     bool ValidarReferencias()
     {
         if (txtPregunta == null ||
-            txtProgreso == null ||
             btnComprobar == null ||
             btnSiguiente == null)
         {
@@ -482,14 +484,6 @@ public class JuegoErrorPatron : MonoBehaviour
 
         IniciarPregunta(ejercicio.pregunta);
 
-        txtProgreso.text =
-            "Ejercicio " +
-            (ejercicioActual + 1) +
-            " de " +
-            ejercicios.Count;
-
-        txtProgreso.textWrappingMode = TextWrappingModes.NoWrap;
-
         ActualizarIndicadorProgreso();
 
         if (imagenFondo != null &&
@@ -647,11 +641,9 @@ public class JuegoErrorPatron : MonoBehaviour
     void FinalizarMision()
     {
         MostrarMensaje(
-            "¡MISIÓN COMPLETADA!\n" +
-            "¡Felicidades! Encontraste los 3 errores."
+            "¡MISIÓN COMPLETADA!"
         );
 
-        txtProgreso.text = "";
 
         foreach (Button boton in botonesSecuencia)
         {
@@ -667,7 +659,7 @@ public class JuegoErrorPatron : MonoBehaviour
             {
                 if (circulo != null)
                 {
-                    circulo.gameObject.SetActive(false);
+                    circulo.transform.parent.gameObject.SetActive(false);
                 }
             }
         }
@@ -731,12 +723,6 @@ public class JuegoErrorPatron : MonoBehaviour
 
     void CrearIndicadorProgreso()
     {
-        if (panelProgreso == null && txtProgreso != null)
-        {
-            panelProgreso =
-                txtProgreso.transform.parent as RectTransform;
-        }
-
         if (panelProgreso == null)
         {
             Debug.LogWarning(
@@ -784,9 +770,23 @@ public class JuegoErrorPatron : MonoBehaviour
             Image imagen = objeto.GetComponent<Image>();
 
             imagen.sprite = spriteCirculo;
+            imagen.color = colorBorde;
             imagen.raycastTarget = false;
 
-            circulosProgreso[i] = imagen;
+            GameObject interior = new GameObject(
+                "Interior", typeof(RectTransform),
+                typeof(CanvasRenderer), typeof(Image));
+            interior.transform.SetParent(objeto.transform, false);
+            RectTransform rectInterior = interior.GetComponent<RectTransform>();
+            rectInterior.anchorMin = Vector2.zero;
+            rectInterior.anchorMax = Vector2.one;
+            float borde = Mathf.Clamp(grosorBorde, 1f, tamanoCirculo * 0.45f);
+            rectInterior.offsetMin = new Vector2(borde, borde);
+            rectInterior.offsetMax = new Vector2(-borde, -borde);
+            Image imagenInterior = interior.GetComponent<Image>();
+            imagenInterior.sprite = spriteCirculo;
+            imagenInterior.raycastTarget = false;
+            circulosProgreso[i] = imagenInterior;
 
             GameObject objetoNumero = new GameObject(
                 "Numero_" + (i + 1),

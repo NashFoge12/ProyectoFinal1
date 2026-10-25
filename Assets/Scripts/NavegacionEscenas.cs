@@ -14,6 +14,15 @@ public class NavegacionEscenas : MonoBehaviour
     }
 
     // =========================
+    // PERFIL DEL JUGADOR
+    // =========================
+
+    public void IrAPerfilJugador()
+    {
+        SceneManager.LoadScene("PerfilJugador");
+    }
+
+    // =========================
     // PENSAMIENTO COMPUTACIONAL
     // =========================
 
@@ -92,6 +101,30 @@ public class NavegacionEscenas : MonoBehaviour
     public void IrAMision3Patrones()
     {
         SceneManager.LoadScene("Mision3_Patrones");
+    }
+
+    // =========================
+    // DETECTAR ERRORES
+    // =========================
+
+    public void IrADetectarErrores()
+    {
+        SceneManager.LoadScene("Detectar Errores");
+    }
+
+    public void IrAMision1DetectarErrores()
+    {
+        SceneManager.LoadScene("Mision1_DetectarErrores");
+    }
+
+    public void IrAMision2DetectarErrores()
+    {
+        SceneManager.LoadScene("Mision2_DetectarErrores");
+    }
+
+    public void IrAMision3DetectarErrores()
+    {
+        SceneManager.LoadScene("Mision3_DetectarErrores");
     }
 
     // =========================

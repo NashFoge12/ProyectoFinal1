@@ -43,6 +43,14 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
     public Sprite tituloLluvia;
     public Sprite tituloColegio;
 
+    // Fondo del recuadro donde aparece Txt_Pregunta.
+    // Es independiente del fondo general de la escena.
+    [Header("FONDOS DE PREGUNTA - POR EJERCICIO")]
+    public Image imagenFondoPregunta;
+    public Sprite fondoPreguntaLeche;
+    public Sprite fondoPreguntaLluvia;
+    public Sprite fondoPreguntaColegio;
+
     // =====================================================
     // LAS CUATRO TARJETAS
     // =====================================================
@@ -148,6 +156,16 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
 
     private int[] ordenTarjetas = new int[4];
 
+    [Header("NUMEROS FIJOS DE LAS 4 TARJETAS")]
+    [Tooltip("Tamano de los circulitos numerados en las tarjetas")]
+    public float tamanoNumeroTarjeta = 32f;
+
+    [Tooltip("Separacion respecto a la esquina superior izquierda")]
+    public Vector2 margenNumeroTarjeta = new Vector2(5f, -5f);
+
+    [Tooltip("Color de los circulitos; no indica respuestas correctas")]
+    public Color colorNumeroTarjeta = new Color(1f, 0.78f, 0.24f, 1f);
+
     private Image[] circulosProgreso;
     private Sprite spriteCirculo;
 
@@ -184,7 +202,104 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
         );
 
         CrearIndicadorProgreso();
+        CrearNumerosFijosTarjetas();
         CargarEjercicio();
+    }
+
+    // =====================================================
+    // NUMEROS FIJOS: POSICIONES 1, 2, 3 Y 4
+    // No se mezclan con las imagenes ni revelan errores.
+    // =====================================================
+
+    void CrearNumerosFijosTarjetas()
+    {
+        if (spriteCirculo == null)
+            spriteCirculo = CrearSpriteCircular();
+
+        for (int i = 0; i < botonesPasos.Length; i++)
+        {
+            Button boton = botonesPasos[i];
+            if (boton == null) continue;
+
+            Transform anterior = boton.transform.Find("NumeroFijo_Posicion");
+            GameObject circulo;
+
+            if (anterior != null)
+            {
+                circulo = anterior.gameObject;
+            }
+            else
+            {
+                circulo = new GameObject(
+                    "NumeroFijo_Posicion",
+                    typeof(RectTransform),
+                    typeof(CanvasRenderer),
+                    typeof(Image)
+                );
+                circulo.transform.SetParent(boton.transform, false);
+            }
+
+            circulo.transform.SetAsLastSibling();
+            RectTransform rect = circulo.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.sizeDelta = Vector2.one * tamanoNumeroTarjeta;
+            rect.anchoredPosition = margenNumeroTarjeta;
+
+            Image imagen = circulo.GetComponent<Image>();
+            imagen.sprite = spriteCirculo;
+            imagen.color = colorBorde;
+            imagen.raycastTarget = false;
+
+            Transform interiorAnterior = circulo.transform.Find("InteriorNumero");
+            GameObject interior;
+            if (interiorAnterior != null)
+                interior = interiorAnterior.gameObject;
+            else
+            {
+                interior = new GameObject("InteriorNumero",
+                    typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                interior.transform.SetParent(circulo.transform, false);
+            }
+
+            RectTransform rectInterior = interior.GetComponent<RectTransform>();
+            rectInterior.anchorMin = Vector2.zero;
+            rectInterior.anchorMax = Vector2.one;
+            rectInterior.offsetMin = new Vector2(2f, 2f);
+            rectInterior.offsetMax = new Vector2(-2f, -2f);
+
+            Image imagenInterior = interior.GetComponent<Image>();
+            imagenInterior.sprite = spriteCirculo;
+            imagenInterior.color = colorNumeroTarjeta;
+            imagenInterior.raycastTarget = false;
+
+            Transform textoAnterior = circulo.transform.Find("Numero");
+            GameObject texto;
+            if (textoAnterior != null)
+                texto = textoAnterior.gameObject;
+            else
+            {
+                texto = new GameObject("Numero",
+                    typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+                texto.transform.SetParent(circulo.transform, false);
+            }
+
+            RectTransform rectTexto = texto.GetComponent<RectTransform>();
+            rectTexto.anchorMin = Vector2.zero;
+            rectTexto.anchorMax = Vector2.one;
+            rectTexto.offsetMin = Vector2.zero;
+            rectTexto.offsetMax = Vector2.zero;
+
+            TextMeshProUGUI numero = texto.GetComponent<TextMeshProUGUI>();
+            numero.text = (i + 1).ToString();
+            numero.fontSize = tamanoNumeroTarjeta * 0.53f;
+            numero.fontStyle = FontStyles.Bold;
+            numero.alignment = TextAlignmentOptions.Center;
+            numero.color = Color.white;
+            numero.raycastTarget = false;
+            numero.enableAutoSizing = false;
+        }
     }
 
     // =====================================================
@@ -397,6 +512,50 @@ public class JuegoEncuentraErrorSecuencia : MonoBehaviour
             imagenTitulo,
             ejercicio.titulo
         );
+
+        // Cambiar solo el fondo del panel de pregunta.
+        // El texto Txt_Pregunta sigue funcionando como antes.
+        Sprite fondoPreguntaActual = null;
+        if (ejercicioActual == 0)
+            fondoPreguntaActual = fondoPreguntaLeche;
+        else if (ejercicioActual == 1)
+            fondoPreguntaActual = fondoPreguntaLluvia;
+        else
+            fondoPreguntaActual = fondoPreguntaColegio;
+
+        // Buscar el Image del Panel_Pregunta si no fue asignado.
+        if (imagenFondoPregunta == null && txtPregunta != null)
+        {
+            Transform padre = txtPregunta.transform.parent;
+            while (padre != null)
+            {
+                if (padre.name == "Panel_Pregunta")
+                {
+                    imagenFondoPregunta = padre.GetComponent<Image>();
+                    break;
+                }
+                padre = padre.parent;
+            }
+        }
+
+        if (imagenFondoPregunta == null)
+        {
+            Debug.LogWarning("FONDO PREGUNTA: Asigna el componente Image de Panel_Pregunta en GameManager.");
+        }
+        else if (fondoPreguntaActual == null)
+        {
+            Debug.LogWarning("FONDO PREGUNTA: Falta asignar el sprite del ejercicio " + (ejercicioActual + 1) + " en GameManager.");
+        }
+        else
+        {
+            imagenFondoPregunta.sprite = fondoPreguntaActual;
+            imagenFondoPregunta.type = Image.Type.Simple;
+            imagenFondoPregunta.preserveAspect = false;
+            imagenFondoPregunta.enabled = true;
+            Debug.Log("FONDO PREGUNTA: Ejercicio " + (ejercicioActual + 1) +
+                      " -> " + fondoPreguntaActual.name +
+                      " en " + imagenFondoPregunta.gameObject.name);
+        }
 
         CrearSecuenciaConError();
 
