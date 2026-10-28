@@ -5,12 +5,45 @@ using UnityEngine.SceneManagement;
 public class NavegacionEscenas : MonoBehaviour
 {
     // =========================
+    // MODO DE JUEGO
+    // =========================
+
+    // false = Jugar normalmente
+    // true = Repasar sin guardar estrellas
+    public static bool EsModoRepaso = false;
+
+    // =========================
     // MENÚ PRINCIPAL
     // =========================
 
     public void IrAMenuPrincipal()
     {
+        // Al volver al menú, salimos del modo Repasar.
+        EsModoRepaso = false;
+
         SceneManager.LoadScene("MenuPrincipal");
+    }
+
+    // =========================
+    // BOTÓN JUGAR
+    // =========================
+
+    public void IrAJugar()
+    {
+        EsModoRepaso = false;
+
+        SceneManager.LoadScene("PensamientoComputacional");
+    }
+
+    // =========================
+    // BOTÓN REPASAR
+    // =========================
+
+    public void IrARepasar()
+    {
+        EsModoRepaso = true;
+
+        SceneManager.LoadScene("PensamientoComputacional");
     }
 
     // =========================
@@ -20,6 +53,15 @@ public class NavegacionEscenas : MonoBehaviour
     public void IrAPerfilJugador()
     {
         SceneManager.LoadScene("PerfilJugador");
+    }
+
+    // =========================
+    // LOGROS
+    // =========================
+
+    public void IrALogros()
+    {
+        SceneManager.LoadScene("Logros");
     }
 
     // =========================
@@ -149,5 +191,20 @@ public class NavegacionEscenas : MonoBehaviour
     public void IrAMision3Programacion()
     {
         SceneManager.LoadScene("Mision3_Programacion");
+    }
+
+    // =========================
+    // BOTÓN SALIR DEL JUEGO
+    // =========================
+
+    public void SalirDelJuego()
+    {
+        Debug.Log("Saliendo de Mundo Pujllay...");
+
+        Application.Quit();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
     }
 }

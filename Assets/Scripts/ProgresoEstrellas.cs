@@ -6,6 +6,10 @@ public static class ProgresoEstrellas
     // Cada misión tiene 3 ejercicios.
     private const int MAX_ESTRELLAS = 3;
 
+    // =========================
+    // OBTENER ESTRELLAS
+    // =========================
+
     public static int ObtenerEstrellas(
         string categoria,
         int mision)
@@ -19,11 +23,22 @@ public static class ProgresoEstrellas
         );
     }
 
+    // =========================
+    // GUARDAR EJERCICIO
+    // =========================
+
     public static void GuardarEjercicio(
         string categoria,
         int mision,
         int ejercicioCompletado)
     {
+        // IMPORTANTE:
+        // En modo Repasar no se guardan estrellas.
+        if (NavegacionEscenas.EsModoRepaso)
+        {
+            return;
+        }
+
         string clave = CrearClave(categoria, mision);
 
         int progresoAnterior =
@@ -42,6 +57,10 @@ public static class ProgresoEstrellas
         PlayerPrefs.SetInt(clave, nuevoProgreso);
         PlayerPrefs.Save();
     }
+
+    // =========================
+    // CREAR CLAVE DE GUARDADO
+    // =========================
 
     private static string CrearClave(
         string categoria,

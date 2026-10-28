@@ -218,31 +218,30 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
             arrastre.Configurar(this, i);
         }
 
-        // Permitir quitar una ficha tocando su espacio.
-
+        // Permitir retirar una ficha con un toque y moverla con arrastre.
+        // La retirada se gestiona en ArrastrarEspacioSecuencia mediante
+        // IPointerClickHandler para evitar que el Button y el toque
+        // intenten retirar la misma ficha dos veces.
         for (int i = 0; i < 4; i++)
         {
-            int indice = i;
-
-            Button boton =
-                espacios[i].GetComponent<Button>();
+            Button boton = espacios[i].GetComponent<Button>();
 
             if (boton == null)
                 boton = espacios[i].gameObject.AddComponent<Button>();
 
             boton.transition = Selectable.Transition.None;
+            boton.targetGraphic = espacios[i];
+            boton.interactable = true;
+            boton.onClick.RemoveAllListeners();
             espacios[i].raycastTarget = true;
 
-            // Clic solamente devuelve una ficha YA colocada.
-            boton.onClick.AddListener(
-                () => QuitarFicha(indice)
-            );
-
-            // Permite arrastrar una ficha YA COLOCADA para corregirla.
             ArrastrarEspacioSecuencia arrastreEspacio =
                 espacios[i].GetComponent<ArrastrarEspacioSecuencia>();
+
             if (arrastreEspacio == null)
-                arrastreEspacio = espacios[i].gameObject.AddComponent<ArrastrarEspacioSecuencia>();
+                arrastreEspacio =
+                    espacios[i].gameObject.AddComponent<ArrastrarEspacioSecuencia>();
+
             arrastreEspacio.Configurar(this, i);
         }
 
@@ -680,6 +679,9 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         if (ejercicioCompletado)
             return;
 
+        if (indiceEspacio < 0 || indiceEspacio >= contenidoEspacios.Length)
+            return;
+
         int ficha = contenidoEspacios[indiceEspacio];
 
         if (ficha == -1)
@@ -691,11 +693,16 @@ public class JuegoOrdenarSecuencia : MonoBehaviour
         contenidoEspacios[indiceEspacio] = -1;
 
         imagenesColocadas[indiceEspacio].sprite = null;
-
-        imagenesColocadas[indiceEspacio]
-            .gameObject.SetActive(false);
+        imagenesColocadas[indiceEspacio].gameObject.SetActive(false);
 
         MostrarMensaje("¡Puedes colocar nuevamente esa ficha!");
+    }
+
+    // Método público para retirar una ficha mediante un toque en Android
+    // o un clic con el ratón en la computadora.
+    public void TocarEspacioParaQuitar(int indiceEspacio)
+    {
+        QuitarFicha(indiceEspacio);
     }
 
     // =====================================================
@@ -1111,21 +1118,29 @@ public class ArrastrarFichaSecuencia :
 // Permite corregir arrastrando desde las casillas de destino.
 // Esta clase permanece en el mismo archivo JuegoOrdenarSecuencia.cs.
 public class ArrastrarEspacioSecuencia : MonoBehaviour,
-    IBeginDragHandler, IDragHandler, IEndDragHandler
+    IBeginDragHandler,
+    IDragHandler,
+    IEndDragHandler,
+    IPointerClickHandler
 {
     private JuegoOrdenarSecuencia juego;
     private int indiceEspacio;
+    private bool seInicioArrastre;
 
     public void Configurar(JuegoOrdenarSecuencia controlador, int indice)
     {
         juego = controlador;
         indiceEspacio = indice;
+        seInicioArrastre = false;
     }
 
     public void OnBeginDrag(PointerEventData evento)
     {
-        if (juego != null)
-            juego.ComenzarArrastreDesdeEspacio(indiceEspacio, evento);
+        if (juego == null)
+            return;
+
+        seInicioArrastre = true;
+        juego.ComenzarArrastreDesdeEspacio(indiceEspacio, evento);
     }
 
     public void OnDrag(PointerEventData evento)
@@ -1136,7 +1151,20 @@ public class ArrastrarEspacioSecuencia : MonoBehaviour,
 
     public void OnEndDrag(PointerEventData evento)
     {
-        if (juego != null)
+        if (juego != null && seInicioArrastre)
             juego.TerminarArrastreDesdeEspacio(indiceEspacio, evento);
+
+        // Evita conservar el estado de arrastre para el siguiente toque.
+        seInicioArrastre = false;
+    }
+
+    public void OnPointerClick(PointerEventData evento)
+    {
+        // Si fue un toque/clic sin arrastre, retirar la ficha.
+        // El EventSystem no llama normalmente a OnPointerClick tras un arrastre.
+        if (juego != null && !seInicioArrastre)
+            juego.TocarEspacioParaQuitar(indiceEspacio);
+
+        seInicioArrastre = false;
     }
 }

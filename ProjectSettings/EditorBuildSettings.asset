@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/PerfilJugador.unity
     guid: 8722a32fdd6169e459ea00840ee05593
   - enabled: 1
+    path: Assets/Scenes/Logros.unity
+    guid: bb9f4da8fd762fe47b330880cdf3f689
+  - enabled: 1
     path: Assets/Scenes/PensamientoComputacional.unity
     guid: 098d016db58b6a14493faa46c86dbd45
   - enabled: 1
@@ -59,6 +62,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Mision2_Programacion.unity
     guid: 2df4584245046e84388f950dbab24b36
+  - enabled: 1
+    path: Assets/Scenes/Detectar Errores.unity
+    guid: d1a0e350f67ee354ea338b0a487e78db
+  - enabled: 1
+    path: Assets/Scenes/Mision1_DetectarErrores.unity
+    guid: e4d6f63d2c8298a44ad54ea6ccc8665b
+  - enabled: 1
+    path: Assets/Scenes/Mision2_DetectarErrores.unity
+    guid: b1afa42f795037c4fbd64013d31f1cb5
+  - enabled: 1
+    path: Assets/Scenes/Mision3_DetectarErrores.unity
+    guid: da4d3640b65739f499026d82a9ac4f3d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

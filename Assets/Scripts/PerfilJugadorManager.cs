@@ -1,5 +1,5 @@
+
 using System;
-using System.Collections;
 using System.IO;
 using TMPro;
 using UnityEngine;
@@ -7,237 +7,415 @@ using UnityEngine.UI;
 
 public class PerfilJugadorManager : MonoBehaviour
 {
-    [Header("DATOS DEL JUGADOR")]
-    [SerializeField] private TMP_InputField inputNombre;
-    [SerializeField] private TMP_Text txtNombreJugador;
-    [SerializeField] private TMP_Text txtMensaje;
+    [Header("Nombre")]
+    public TMP_InputField inputNombre;
+    public TMP_Text txtNombreJugador;
+    public TMP_Text txtMensaje;
 
-    [Header("AVATARES PREDEFINIDOS (ORDEN: ROBOT, ZORRO, PANDA, RANA, MARIPOSA, UNICORNIO)")]
-    [SerializeField] private Button[] botonesAvatares = new Button[6];
-    [SerializeField] private Sprite[] spritesAvatares = new Sprite[6];
-    [SerializeField] private Image imgAvatarSeleccionado;
-    [SerializeField] private Image[] bordesSeleccion = new Image[6];
-    [SerializeField] private Color colorBordeSeleccionado = new Color(0.42f, 0.46f, 1f);
-    [SerializeField] private Color colorBordeNormal = new Color(1f, 1f, 1f, 0f);
+    [Header("Imagenes principales")]
+    public Image imgAvatarSeleccionado;
+    public Image imgFotoPersonal;
+    public Image imgMarcoFoto;
 
-    [Header("BOTONES")]
-    [SerializeField] private Button btnSubirFoto;
-    [SerializeField] private Button btnGuardarPerfil;
+    [Header("Avatares")]
+    public Button[] botonesAvatares = new Button[6];
+    public Sprite[] spritesAvatares = new Sprite[6];
 
-    [Header("ESTADISTICAS")]
-    [SerializeField] private TMP_Text txtXP;
-    [SerializeField] private TMP_Text txtMisiones;
-    [SerializeField, Min(1)] private int totalMisiones = 12;
+    [Header("Botones")]
+    public Button btnSubirFoto;
+    public Button btnGuardarPerfil;
 
-    [Header("FOTO PERSONALIZADA")]
-    [Tooltip("Para abrir galeria Android o explorador PC instala un selector de imagenes y conecta su resultado a CargarFotoDesdeRuta.")]
-    [SerializeField] private bool mostrarAvisoSiNoHaySelector = true;
+    [Header("Texto del pie")]
+    public TMP_Text txtPie;
 
-    private const string ClaveNombre = "Perfil_Nombre";
-    private const string ClaveAvatar = "Perfil_Avatar";
-    private const string ClaveXP = "Perfil_XP";
-    private const string ClaveMisiones = "Perfil_MisionesCompletadas";
-    private const string NombreFoto = "avatar_personalizado.png";
-    private const int AvatarFoto = -1;
+    [Header("Estadisticas")]
+    public TMP_Text txtXP;
+    public TMP_Text txtMisiones;
+    public int totalMisiones = 12;
 
-    private int avatarActual;
-    private Texture2D texturaFoto;
-    private Sprite spriteFoto;
-    private Coroutine rutinaMensaje;
+    private const string KEY_NOMBRE = "Perfil_Nombre";
+    private const string KEY_TIPO = "Perfil_TipoVisual";
+    private const string KEY_AVATAR = "Perfil_Avatar";
+    private const string KEY_XP = "Perfil_XP";
+    private const string KEY_MISIONES = "Perfil_MisionesCompletadas";
+    private const string ARCHIVO_FOTO = "avatar_personalizado.png";
 
-    private string RutaFoto => Path.Combine(Application.persistentDataPath, NombreFoto);
+    // 0 = foto personal; 1 = avatar predisenado.
+    // Por defecto, se muestra la foto con su marco.
+    private int tipoVisual = 0;
+    private int avatarActual = 2;
+
+    private Sprite spriteFotoPersonal;
+    private bool fotoCargada = false;
+
+    private string RutaFoto =>
+        Path.Combine(Application.persistentDataPath, ARCHIVO_FOTO);
 
     private void Awake()
     {
-        for (int i = 0; i < botonesAvatares.Length; i++)
-        {
-            int indice = i;
-            if (botonesAvatares[i] != null)
-                botonesAvatares[i].onClick.AddListener(() => SeleccionarAvatar(indice));
-        }
-
-        if (btnGuardarPerfil != null) btnGuardarPerfil.onClick.AddListener(GuardarPerfil);
-        if (btnSubirFoto != null) btnSubirFoto.onClick.AddListener(SolicitarFoto);
+        ConectarBotones();
     }
 
     private void Start()
     {
+        // Texto fijo del pie.
+        if (txtPie != null)
+            txtPie.text = "¡Sigue explorando y aprendiendo!";
+
         CargarPerfil();
         ActualizarEstadisticas();
     }
 
+    private void OnDestroy()
+    {
+        if (spriteFotoPersonal != null)
+            Destroy(spriteFotoPersonal);
+    }
+
+    // ------------------------------------------------
+    // CONECTAR BOTONES
+    // ------------------------------------------------
+
+    private void ConectarBotones()
+    {
+        if (botonesAvatares != null)
+        {
+            for (int i = 0; i < botonesAvatares.Length; i++)
+            {
+                int indice = i;
+
+                if (botonesAvatares[i] != null)
+                {
+                    botonesAvatares[i].onClick.AddListener(
+                        () => SeleccionarAvatar(indice));
+                }
+            }
+        }
+
+        if (btnSubirFoto != null)
+        {
+            btnSubirFoto.onClick.RemoveListener(AbrirGaleria);
+            btnSubirFoto.onClick.AddListener(AbrirGaleria);
+        }
+
+        if (btnGuardarPerfil != null)
+        {
+            btnGuardarPerfil.onClick.RemoveListener(GuardarPerfil);
+            btnGuardarPerfil.onClick.AddListener(GuardarPerfil);
+        }
+    }
+
+    // ------------------------------------------------
+    // SELECCIONAR AVATAR
+    // ------------------------------------------------
+
     public void SeleccionarAvatar(int indice)
     {
-        if (indice < 0 || indice >= spritesAvatares.Length || spritesAvatares[indice] == null)
+        if (spritesAvatares == null ||
+            indice < 0 ||
+            indice >= spritesAvatares.Length ||
+            spritesAvatares[indice] == null)
         {
-            MostrarMensaje("Este avatar aun no tiene imagen asignada.");
+            MostrarMensaje("No se encontro la imagen del avatar.");
             return;
         }
 
         avatarActual = indice;
-        ActualizarAvatar();
-    }
+        tipoVisual = 1;
 
-    private void ActualizarAvatar()
-    {
-        if (imgAvatarSeleccionado != null)
-        {
-            Sprite sprite = avatarActual == AvatarFoto ? spriteFoto :
-                (avatarActual >= 0 && avatarActual < spritesAvatares.Length ? spritesAvatares[avatarActual] : null);
-            imgAvatarSeleccionado.sprite = sprite;
-            imgAvatarSeleccionado.enabled = sprite != null;
-            imgAvatarSeleccionado.preserveAspect = true;
-        }
+        ActualizarVisual();
 
-        for (int i = 0; i < bordesSeleccion.Length; i++)
-            if (bordesSeleccion[i] != null)
-                bordesSeleccion[i].color = i == avatarActual ? colorBordeSeleccionado : colorBordeNormal;
-    }
-
-    public void GuardarPerfil()
-    {
-        string nombre = inputNombre != null ? inputNombre.text.Trim() : PlayerPrefs.GetString(ClaveNombre, "Explorador");
-        if (string.IsNullOrWhiteSpace(nombre)) nombre = "Explorador";
-        if (nombre.Length > 20) nombre = nombre.Substring(0, 20);
-
-        PlayerPrefs.SetString(ClaveNombre, nombre);
-        PlayerPrefs.SetInt(ClaveAvatar, avatarActual);
+        // Guardar la seleccion inmediatamente.
+        PlayerPrefs.SetInt(KEY_TIPO, 1);
+        PlayerPrefs.SetInt(KEY_AVATAR, avatarActual);
         PlayerPrefs.Save();
 
-        if (inputNombre != null) inputNombre.text = nombre;
-        if (txtNombreJugador != null) txtNombreJugador.text = nombre;
-        MostrarMensaje("¡Perfil guardado!");
+        MostrarMensaje("¡Avatar seleccionado!");
     }
+
+    // ------------------------------------------------
+    // ABRIR GALERIA
+    // ------------------------------------------------
+
+    public void AbrirGaleria()
+    {
+        NativeGallery.GetImageFromGallery(
+            (ruta) =>
+            {
+                if (string.IsNullOrEmpty(ruta))
+                    return;
+
+                CargarFotoDesdeRuta(ruta);
+            },
+            "Elige tu foto de perfil",
+            "image/*"
+        );
+    }
+
+    // ------------------------------------------------
+    // CARGAR FOTO PERSONAL
+    // ------------------------------------------------
+
+    public void CargarFotoDesdeRuta(string ruta)
+    {
+        if (string.IsNullOrEmpty(ruta) || !File.Exists(ruta))
+        {
+            MostrarMensaje("No se encontro la fotografia.");
+            return;
+        }
+
+        try
+        {
+            byte[] datos = File.ReadAllBytes(ruta);
+
+            if (CargarFotoDesdeBytes(datos))
+            {
+                try
+                {
+                    File.WriteAllBytes(RutaFoto, datos);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning(
+                        "No se pudo guardar la copia de la foto: " +
+                        e.Message);
+                }
+
+                tipoVisual = 0;
+
+                PlayerPrefs.SetInt(KEY_TIPO, 0);
+                PlayerPrefs.Save();
+
+                ActualizarVisual();
+                MostrarMensaje("¡Fotografia actualizada!");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error al cargar la fotografia: " + e.Message);
+            MostrarMensaje("No se pudo cargar la fotografia.");
+        }
+    }
+
+    // Carga la imagen sin cambiar el avatar o modo guardado.
+    private bool CargarFotoDesdeBytes(byte[] datos)
+    {
+        Texture2D textura = new Texture2D(
+            2, 2, TextureFormat.RGBA32, false);
+
+        if (!textura.LoadImage(datos))
+        {
+            Destroy(textura);
+            return false;
+        }
+
+        Sprite nuevoSprite = Sprite.Create(
+            textura,
+            new Rect(0, 0, textura.width, textura.height),
+            new Vector2(0.5f, 0.5f),
+            100f
+        );
+
+        if (spriteFotoPersonal != null)
+            Destroy(spriteFotoPersonal);
+
+        spriteFotoPersonal = nuevoSprite;
+        fotoCargada = true;
+
+        return true;
+    }
+
+    // ------------------------------------------------
+    // ACTUALIZAR INTERFAZ
+    // ------------------------------------------------
+
+    private void ActualizarVisual()
+    {
+        bool mostrarFoto = (tipoVisual == 0);
+
+        // FOTO PERSONAL
+        if (imgFotoPersonal != null)
+        {
+            imgFotoPersonal.gameObject.SetActive(mostrarFoto);
+            imgFotoPersonal.enabled = mostrarFoto;
+            imgFotoPersonal.raycastTarget = false;
+
+            if (mostrarFoto && fotoCargada &&
+                spriteFotoPersonal != null)
+            {
+                imgFotoPersonal.sprite = spriteFotoPersonal;
+                imgFotoPersonal.preserveAspect = false;
+                imgFotoPersonal.color = Color.white;
+            }
+        }
+
+        // MARCO: visible con la foto, oculto con los avatares.
+        if (imgMarcoFoto != null)
+        {
+            imgMarcoFoto.gameObject.SetActive(mostrarFoto);
+            imgMarcoFoto.enabled = mostrarFoto;
+            imgMarcoFoto.raycastTarget = false;
+        }
+
+        // AVATAR PREDEFINIDO
+        if (imgAvatarSeleccionado != null)
+        {
+            imgAvatarSeleccionado.gameObject.SetActive(!mostrarFoto);
+            imgAvatarSeleccionado.enabled = !mostrarFoto;
+            imgAvatarSeleccionado.raycastTarget = false;
+
+            if (!mostrarFoto &&
+                spritesAvatares != null &&
+                avatarActual >= 0 &&
+                avatarActual < spritesAvatares.Length &&
+                spritesAvatares[avatarActual] != null)
+            {
+                imgAvatarSeleccionado.sprite =
+                    spritesAvatares[avatarActual];
+
+                imgAvatarSeleccionado.preserveAspect = true;
+                imgAvatarSeleccionado.color = Color.white;
+            }
+        }
+
+        // Orden de dibujo para la foto y el marco.
+        // Se aplica cuando ambos comparten el mismo padre.
+        if (mostrarFoto &&
+            imgFotoPersonal != null &&
+            imgMarcoFoto != null &&
+            imgFotoPersonal.transform.parent ==
+            imgMarcoFoto.transform.parent)
+        {
+            imgFotoPersonal.transform.SetAsFirstSibling();
+            imgMarcoFoto.transform.SetAsLastSibling();
+        }
+    }
+
+    // ------------------------------------------------
+    // CARGAR PERFIL GUARDADO
+    // ------------------------------------------------
 
     public void CargarPerfil()
     {
-        string nombre = PlayerPrefs.GetString(ClaveNombre, "Explorador");
-        avatarActual = PlayerPrefs.GetInt(ClaveAvatar, 0);
+        string nombre = PlayerPrefs.GetString(KEY_NOMBRE, "");
 
-        if (inputNombre != null) inputNombre.text = nombre;
-        if (txtNombreJugador != null) txtNombreJugador.text = nombre;
-        if (txtMensaje != null) txtMensaje.text = "";
+        if (inputNombre != null)
+            inputNombre.text = nombre;
 
-        if (avatarActual == AvatarFoto && !CargarFotoGuardada()) avatarActual = 0;
-        ActualizarAvatar();
+        if (txtNombreJugador != null)
+        {
+            txtNombreJugador.text =
+                string.IsNullOrEmpty(nombre) ? "Jugador" : nombre;
+        }
+
+        // Leer la seleccion guardada ANTES de cargar la foto.
+        tipoVisual = PlayerPrefs.GetInt(KEY_TIPO, 0);
+        avatarActual = PlayerPrefs.GetInt(KEY_AVATAR, 2);
+
+        // Recuperar la foto sin modificar tipoVisual.
+        if (File.Exists(RutaFoto))
+        {
+            try
+            {
+                byte[] datos = File.ReadAllBytes(RutaFoto);
+                CargarFotoDesdeBytes(datos);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(
+                    "No se pudo recuperar la foto: " + e.Message);
+            }
+        }
+
+        // Validar el avatar guardado.
+        if (tipoVisual == 1)
+        {
+            if (spritesAvatares == null ||
+                avatarActual < 0 ||
+                avatarActual >= spritesAvatares.Length ||
+                spritesAvatares[avatarActual] == null)
+            {
+                tipoVisual = 0;
+                PlayerPrefs.SetInt(KEY_TIPO, 0);
+                PlayerPrefs.Save();
+            }
+        }
+
+        ActualizarVisual();
     }
+
+    // ------------------------------------------------
+    // BOTON GUARDAR
+    // ------------------------------------------------
+
+    public void GuardarPerfil()
+    {
+        string nombre = inputNombre != null
+            ? inputNombre.text.Trim()
+            : "";
+
+        if (string.IsNullOrEmpty(nombre))
+            nombre = "Jugador";
+
+        // Guardar todos los datos del perfil.
+        PlayerPrefs.SetString(KEY_NOMBRE, nombre);
+        PlayerPrefs.SetInt(KEY_TIPO, tipoVisual);
+        PlayerPrefs.SetInt(KEY_AVATAR, avatarActual);
+        PlayerPrefs.Save();
+
+        if (txtNombreJugador != null)
+            txtNombreJugador.text = nombre;
+
+        // Confirmar en consola y en pantalla.
+        Debug.Log(
+            "Perfil guardado. Nombre: " + nombre +
+            ", tipo visual: " + tipoVisual +
+            ", avatar: " + avatarActual);
+
+        MostrarMensaje("¡Perfil guardado correctamente!");
+    }
+
+    // ------------------------------------------------
+    // ESTADISTICAS
+    // ------------------------------------------------
 
     public void ActualizarEstadisticas()
     {
-        // Estas claves son provisionales: integraremos la lectura real de ProgresoEstrellas
-        // cuando dispongamos de su codigo. No se suman misiones inventadas.
-        int xp = Mathf.Max(0, PlayerPrefs.GetInt(ClaveXP, 0));
-        int misiones = Mathf.Clamp(PlayerPrefs.GetInt(ClaveMisiones, 0), 0, totalMisiones);
-        if (txtXP != null) txtXP.text = xp + " XP";
-        if (txtMisiones != null) txtMisiones.text = misiones + " / " + totalMisiones;
+        int xp = PlayerPrefs.GetInt(KEY_XP, 0);
+        int misiones = PlayerPrefs.GetInt(KEY_MISIONES, 0);
+
+        if (txtXP != null)
+            txtXP.text = Mathf.Max(0, xp) + " XP";
+
+        if (txtMisiones != null)
+        {
+            txtMisiones.text =
+                Mathf.Clamp(misiones, 0, totalMisiones) +
+                " / " + totalMisiones;
+        }
     }
 
-    // Otros scripts pueden llamar a estos metodos al completar ejercicios o misiones.
-    // Se debe evitar otorgar XP repetido: la comprobacion de primera vez se hara
-    // desde el sistema de progreso existente.
-    public static void EstablecerXP(int xp)
+    public void EstablecerEstadisticas(int xp, int misiones)
     {
-        PlayerPrefs.SetInt(ClaveXP, Mathf.Max(0, xp));
+        PlayerPrefs.SetInt(KEY_XP, Mathf.Max(0, xp));
+
+        PlayerPrefs.SetInt(
+            KEY_MISIONES,
+            Mathf.Clamp(misiones, 0, totalMisiones));
+
         PlayerPrefs.Save();
+        ActualizarEstadisticas();
     }
 
-    public static void EstablecerMisionesCompletadas(int misiones)
-    {
-        PlayerPrefs.SetInt(ClaveMisiones, Mathf.Max(0, misiones));
-        PlayerPrefs.Save();
-    }
-
-    public void SolicitarFoto()
-    {
-        if (mostrarAvisoSiNoHaySelector)
-            MostrarMensaje("Falta conectar el selector de fotos del dispositivo.");
-    }
-
-    // Llamar desde el complemento de galeria una vez obtenida una ruta local valida.
-    public void CargarFotoDesdeRuta(string ruta)
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(ruta) || !File.Exists(ruta))
-            {
-                MostrarMensaje("No se pudo encontrar la imagen.");
-                return;
-            }
-
-            byte[] bytes = File.ReadAllBytes(ruta);
-            Texture2D nuevaTextura = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            if (!nuevaTextura.LoadImage(bytes))
-            {
-                Destroy(nuevaTextura);
-                MostrarMensaje("No se pudo abrir la imagen.");
-                return;
-            }
-
-            // Se guarda una copia PNG local para que el avatar no dependa de la galeria.
-            byte[] png = nuevaTextura.EncodeToPNG();
-            File.WriteAllBytes(RutaFoto, png);
-            ReemplazarFoto(nuevaTextura);
-            avatarActual = AvatarFoto;
-            ActualizarAvatar();
-            MostrarMensaje("Foto seleccionada. Pulsa Guardar perfil.");
-        }
-        catch (Exception ex)
-        {
-            Debug.LogWarning("No se pudo cargar la foto: " + ex.Message);
-            MostrarMensaje("No se pudo cargar la foto.");
-        }
-    }
-
-    private bool CargarFotoGuardada()
-    {
-        try
-        {
-            if (!File.Exists(RutaFoto)) return false;
-            byte[] bytes = File.ReadAllBytes(RutaFoto);
-            Texture2D nuevaTextura = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-            if (!nuevaTextura.LoadImage(bytes))
-            {
-                Destroy(nuevaTextura);
-                return false;
-            }
-            ReemplazarFoto(nuevaTextura);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogWarning("No se pudo recuperar la foto: " + ex.Message);
-            return false;
-        }
-    }
-
-    private void ReemplazarFoto(Texture2D nuevaTextura)
-    {
-        if (spriteFoto != null) Destroy(spriteFoto);
-        if (texturaFoto != null) Destroy(texturaFoto);
-        texturaFoto = nuevaTextura;
-        spriteFoto = Sprite.Create(texturaFoto,
-            new Rect(0, 0, texturaFoto.width, texturaFoto.height),
-            new Vector2(0.5f, 0.5f), 100f);
-    }
+    // ------------------------------------------------
+    // MENSAJES
+    // ------------------------------------------------
 
     private void MostrarMensaje(string mensaje)
     {
-        if (txtMensaje == null) return;
-        if (rutinaMensaje != null) StopCoroutine(rutinaMensaje);
-        txtMensaje.text = mensaje;
-        rutinaMensaje = StartCoroutine(LimpiarMensaje());
-    }
+        if (txtMensaje != null)
+            txtMensaje.text = mensaje;
 
-    private IEnumerator LimpiarMensaje()
-    {
-        yield return new WaitForSeconds(3f);
-        if (txtMensaje != null) txtMensaje.text = "";
-        rutinaMensaje = null;
-    }
-
-    private void OnDestroy()
-    {
-        if (spriteFoto != null) Destroy(spriteFoto);
-        if (texturaFoto != null) Destroy(texturaFoto);
+        Debug.Log("[PerfilJugador] " + mensaje);
     }
 }
