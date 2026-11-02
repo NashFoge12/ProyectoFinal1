@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,6 +99,14 @@ public class JuegoProgramaCamino : MonoBehaviour
 
     [Header("NAVEGACION FINAL")]
     public string escenaAlTerminar = "";
+
+    [Header("EFECTOS DE ERROR")]
+    public Color colorParpadeoError = new Color(1f, 0.75f, 0.78f, 1f);
+    public float duracionParpadeoError = 0.35f;
+    public int cantidadParpadeosError = 3;
+
+    // Lista para almacenar las casillas del borde exterior para hacerlas parpadear
+    private readonly List<Image> casillasBordeExteriores = new List<Image>();
 
     private const int TOTAL_EJERCICIOS = 4;
 
@@ -211,6 +218,21 @@ public class JuegoProgramaCamino : MonoBehaviour
             {
                 colorOriginalEstrella =
                     imagenEstrellaUI.color;
+            }
+        }
+
+        // Eliminamos cualquier fondo o Outline indeseado del panel del tablero para que sea transparente
+        if (panelTablero != null)
+        {
+            Image imgPanel = panelTablero.GetComponent<Image>();
+            if (imgPanel != null)
+            {
+                Destroy(imgPanel);
+            }
+            Outline outline = panelTablero.GetComponent<Outline>();
+            if (outline != null)
+            {
+                Destroy(outline);
             }
         }
 
@@ -392,6 +414,7 @@ public class JuegoProgramaCamino : MonoBehaviour
     {
         LimpiarLista(casillasCreadas);
         LimpiarLista(obstaculosCreados);
+        casillasBordeExteriores.Clear();
 
         for (int i = panelTablero.childCount - 1; i >= 0; i--)
         {
@@ -465,6 +488,12 @@ public class JuegoProgramaCamino : MonoBehaviour
                 imagen.raycastTarget = false;
 
                 casillasCreadas.Add(objeto);
+
+                // Identificamos las casillas del borde exterior para el efecto de error
+                if (columna == 0 || columna == tamanoTablero - 1 || fila == 0 || fila == tamanoTablero - 1)
+                {
+                    casillasBordeExteriores.Add(imagen);
+                }
             }
         }
 
@@ -626,11 +655,9 @@ public class JuegoProgramaCamino : MonoBehaviour
         Vector2Int posicion
     )
     {
-        // Parte superior: mira hacia abajo (carita).
         if (posicion.y == 0)
             return Direccion.Abajo;
 
-        // Parte inferior: mira hacia arriba (espalda).
         return Direccion.Arriba;
     }
 
@@ -824,8 +851,6 @@ public class JuegoProgramaCamino : MonoBehaviour
         orientacionInicial =
             ObtenerOrientacionInicial(inicio);
 
-        // Ruta libre por la columna izquierda
-        // y la fila superior.
         for (int y = 1; y < tamanoTablero; y++)
         {
             for (int x = 1; x < tamanoTablero; x++)
@@ -1022,12 +1047,10 @@ public class JuegoProgramaCamino : MonoBehaviour
         switch (direccion)
         {
             case Direccion.Arriba:
-                // Mira hacia arriba: se ve la espalda.
                 nuevo = robotAbajo;
                 break;
 
             case Direccion.Abajo:
-                // Mira hacia abajo: se ve la carita.
                 nuevo = robotArriba;
                 break;
 
@@ -1165,9 +1188,6 @@ public class JuegoProgramaCamino : MonoBehaviour
 
     private void PrepararContenedorComandos()
     {
-        // Mantener el layout existente en el contenedor padre.
-        // La cuadricula vive en un hijo para evitar el conflicto
-        // HorizontalLayoutGroup + GridLayoutGroup en el mismo objeto.
         Transform existente = contenedorComandos.Find("Cuadricula_Instrucciones");
         GameObject objeto;
         if (existente != null)
@@ -1366,6 +1386,14 @@ public class JuegoProgramaCamino : MonoBehaviour
         orientacionRobot = orientacionInicial;
         CambiarSpriteRobot(orientacionRobot);
         ActualizarRobotYMeta();
+
+        foreach (Image img in casillasBordeExteriores)
+        {
+            if (img != null) img.color = Color.white;
+        }
+
+        if (imagenRobotUI != null)
+            imagenRobotUI.color = Color.white;
     }
 
     // =====================================================
@@ -1410,7 +1438,6 @@ public class JuegoProgramaCamino : MonoBehaviour
 
             Direccion comando = comandos[i];
 
-            // IZQUIERDA = GIRAR 90°
             if (comando == Direccion.Izquierda)
             {
                 orientacionRobot =
@@ -1422,7 +1449,6 @@ public class JuegoProgramaCamino : MonoBehaviour
                 continue;
             }
 
-            // DERECHA = GIRAR 90°
             if (comando == Direccion.Derecha)
             {
                 orientacionRobot =
@@ -1434,8 +1460,6 @@ public class JuegoProgramaCamino : MonoBehaviour
                 continue;
             }
 
-            // ARRIBA = AVANZAR
-            // ABAJO = RETROCEDER
             Vector2Int desplazamiento =
                 ObtenerDireccionFrontal(orientacionRobot);
 
@@ -1445,8 +1469,10 @@ public class JuegoProgramaCamino : MonoBehaviour
             Vector2Int siguiente =
                 posicionRobot + desplazamiento;
 
+            // Validación de límites: parpadean las casillas del borde exterior
             if (!DentroTablero(siguiente))
             {
+                yield return StartCoroutine(ParpadearBordeErrorRoutine());
                 FinalizarIntento(
                     "¡Cuidado! El robot no puede salir del tablero."
                 );
@@ -1456,6 +1482,7 @@ public class JuegoProgramaCamino : MonoBehaviour
 
             if (obstaculos.Contains(siguiente))
             {
+                yield return StartCoroutine(ParpadearRobotObstaculoRoutine(siguiente));
                 FinalizarIntento(
                     "¡Cuidado! Hay un obstáculo en el camino."
                 );
@@ -1505,9 +1532,6 @@ public class JuegoProgramaCamino : MonoBehaviour
             {
                 movimiento = null;
 
-                // NUEVO:
-                // La estrella se anima antes
-                // de mostrar el panel de victoria.
                 animacionEstrella = StartCoroutine(
                     AnimarEstrellaVictoria()
                 );
@@ -1526,6 +1550,65 @@ public class JuegoProgramaCamino : MonoBehaviour
         );
 
         ActualizarBotones();
+    }
+
+    private IEnumerator ParpadearBordeErrorRoutine()
+    {
+        if (casillasBordeExteriores.Count == 0) yield break;
+
+        float intervalo = duracionParpadeoError / (cantidadParpadeosError * 2f);
+
+        for (int p = 0; p < cantidadParpadeosError; p++)
+        {
+            foreach (Image img in casillasBordeExteriores)
+            {
+                if (img != null) img.color = colorParpadeoError;
+            }
+            yield return new WaitForSeconds(intervalo);
+
+            foreach (Image img in casillasBordeExteriores)
+            {
+                if (img != null) img.color = Color.white;
+            }
+            yield return new WaitForSeconds(intervalo);
+        }
+    }
+
+    private IEnumerator ParpadearRobotObstaculoRoutine(Vector2Int posObstaculo)
+    {
+        if (imagenRobotUI == null) yield break;
+
+        Color originalRobot = imagenRobotUI.color;
+        float intervalo = duracionParpadeoError / (cantidadParpadeosError * 2f);
+
+        Image imgObstaculo = null;
+        foreach (GameObject obj in obstaculosCreados)
+        {
+            if (obj != null)
+            {
+                RectTransform rt = obj.GetComponent<RectTransform>();
+                if (rt != null && Vector3.Distance(rt.position, CentroMundo(posObstaculo)) < 5f)
+                {
+                    imgObstaculo = obj.GetComponent<Image>();
+                    break;
+                }
+            }
+        }
+
+        Color originalObstaculo = imgObstaculo != null ? imgObstaculo.color : Color.white;
+
+        for (int p = 0; p < cantidadParpadeosError; p++)
+        {
+            imagenRobotUI.color = colorParpadeoError;
+            if (imgObstaculo != null) imgObstaculo.color = colorParpadeoError;
+
+            yield return new WaitForSeconds(intervalo);
+
+            imagenRobotUI.color = originalRobot;
+            if (imgObstaculo != null) imgObstaculo.color = originalObstaculo;
+
+            yield return new WaitForSeconds(intervalo);
+        }
     }
 
     private IEnumerator EsperarConPausa(float duracion)
@@ -1563,8 +1646,6 @@ public class JuegoProgramaCamino : MonoBehaviour
 
         ActualizarBotones();
 
-        // Asegurarnos de que la estrella
-        // empieza visible y con su escala normal.
         RestaurarEstrella();
 
         float duracion = Mathf.Max(
@@ -1584,8 +1665,6 @@ public class JuegoProgramaCamino : MonoBehaviour
 
             float escala;
 
-            // Primera parte:
-            // la estrella crece suavemente.
             if (t < 0.45f)
             {
                 float progreso = t / 0.45f;
@@ -1602,9 +1681,6 @@ public class JuegoProgramaCamino : MonoBehaviour
             }
             else
             {
-                // Segunda parte:
-                // la estrella se encoge
-                // hasta desaparecer.
                 float progreso =
                     (t - 0.45f) / 0.55f;
 
@@ -1622,7 +1698,6 @@ public class JuegoProgramaCamino : MonoBehaviour
             imagenEstrella.localScale =
                 escalaOriginalEstrella * escala;
 
-            // Brillo suave durante el zoom.
             Color color = colorOriginalEstrella;
 
             if (t < 0.45f)
@@ -1641,7 +1716,6 @@ public class JuegoProgramaCamino : MonoBehaviour
             }
             else
             {
-                // Desaparición gradual.
                 float progreso =
                     (t - 0.45f) / 0.55f;
 
@@ -1659,8 +1733,6 @@ public class JuegoProgramaCamino : MonoBehaviour
 
         imagenEstrella.gameObject.SetActive(false);
 
-        // Dejamos preparados sus valores originales
-        // para el siguiente ejercicio.
         imagenEstrella.localScale =
             escalaOriginalEstrella;
 
@@ -1956,8 +2028,6 @@ public class JuegoProgramaCamino : MonoBehaviour
 
             if (numero <= ejercicioActual)
             {
-                // Amarillo acumulativo:
-                // ejercicio actual y anteriores.
                 circulos[i].color =
                     new Color(1f, 0.78f, 0.2f);
 
@@ -1966,7 +2036,6 @@ public class JuegoProgramaCamino : MonoBehaviour
             }
             else
             {
-                // Gris: ejercicios que faltan.
                 circulos[i].color =
                     new Color(0.7f, 0.75f, 0.82f);
 
@@ -2009,8 +2078,6 @@ public class JuegoProgramaCamino : MonoBehaviour
                 Time.unscaledTime - ultimoClickBorrar <= intervaloDobleClick);
         }
 
-        // El botón Pausa siempre permanece visible
-        // y no se desactiva visualmente.
         if (btnPausa != null)
             btnPausa.interactable = true;
     }

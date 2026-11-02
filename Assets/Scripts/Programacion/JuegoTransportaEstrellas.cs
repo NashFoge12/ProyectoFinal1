@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -111,6 +110,14 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     [Header("NAVEGACION")]
     public string escenaAlTerminar = "";
 
+    [Header("EFECTOS DE ERROR")]
+    public Color colorParpadeoError = new Color(1f, 0.75f, 0.78f, 1f);
+    public float duracionParpadeoError = 0.35f;
+    public int cantidadParpadeosError = 3;
+
+    // Lista para almacenar las imágenes de las casillas exteriores para hacerlas parpadear como borde
+    private readonly List<Image> casillasBordeExteriores = new List<Image>();
+
     private const int TOTAL_EJERCICIOS = 4;
 
     private enum Direccion
@@ -121,38 +128,17 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         Izquierda = 3
     }
 
-    private readonly List<Direccion> comandos =
-        new List<Direccion>();
-
-    private readonly List<GameObject> casillas =
-        new List<GameObject>();
-
-    private readonly List<GameObject> objetosObstaculos =
-        new List<GameObject>();
-
-    private readonly List<GameObject> objetosEstrellas =
-        new List<GameObject>();
-
-    private readonly List<GameObject> objetosComandos =
-        new List<GameObject>();
-
-    private readonly List<RectTransform> estrellasSuelo =
-        new List<RectTransform>();
-
-    private readonly List<RectTransform> estrellasEntregadas =
-        new List<RectTransform>();
-
-    private readonly List<Vector2Int> posicionesEstrellas =
-        new List<Vector2Int>();
-
-    private readonly HashSet<Vector2Int> obstaculos =
-        new HashSet<Vector2Int>();
-
-    private readonly List<Image> circulosProgreso =
-        new List<Image>();
-
-    private readonly List<TMP_Text> numerosProgreso =
-        new List<TMP_Text>();
+    private readonly List<Direccion> comandos = new List<Direccion>();
+    private readonly List<GameObject> casillas = new List<GameObject>();
+    private readonly List<GameObject> objetosObstaculos = new List<GameObject>();
+    private readonly List<GameObject> objetosEstrellas = new List<GameObject>();
+    private readonly List<GameObject> objetosComandos = new List<GameObject>();
+    private readonly List<RectTransform> estrellasSuelo = new List<RectTransform>();
+    private readonly List<RectTransform> estrellasEntregadas = new List<RectTransform>();
+    private readonly List<Vector2Int> posicionesEstrellas = new List<Vector2Int>();
+    private readonly HashSet<Vector2Int> obstaculos = new HashSet<Vector2Int>();
+    private readonly List<Image> circulosProgreso = new List<Image>();
+    private readonly List<TMP_Text> numerosProgreso = new List<TMP_Text>();
 
     private int ejercicioActual = 1;
     private int tamanoTablero = 4;
@@ -183,7 +169,6 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     private Image componenteEstrellaCargada;
 
     private DisenoEjercicio disenoActual;
-
     private Sprite spriteCirculo;
 
     // =====================================================
@@ -194,26 +179,37 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         if (panelTablero != null && gridTablero == null)
         {
-            gridTablero =
-                panelTablero.GetComponent<GridLayoutGroup>();
+            gridTablero = panelTablero.GetComponent<GridLayoutGroup>();
         }
 
         if (imagenRobot != null)
         {
-            componenteRobot =
-                imagenRobot.GetComponent<Image>();
+            componenteRobot = imagenRobot.GetComponent<Image>();
         }
 
         if (imagenPuntoEntrega != null)
         {
-            componenteEntrega =
-                imagenPuntoEntrega.GetComponent<Image>();
+            componenteEntrega = imagenPuntoEntrega.GetComponent<Image>();
         }
 
         if (imagenEstrellaCargada != null)
         {
-            componenteEstrellaCargada =
-                imagenEstrellaCargada.GetComponent<Image>();
+            componenteEstrellaCargada = imagenEstrellaCargada.GetComponent<Image>();
+        }
+
+        // Nos aseguramos de limpiar cualquier componente Image con color de fondo en el panel del tablero
+        if (panelTablero != null)
+        {
+            Image imgPanel = panelTablero.GetComponent<Image>();
+            if (imgPanel != null)
+            {
+                Destroy(imgPanel); // Eliminamos la imagen de fondo del panel para que sea 100% transparente
+            }
+            Outline outline = panelTablero.GetComponent<Outline>();
+            if (outline != null)
+            {
+                Destroy(outline); // Eliminamos el Outline que causaba el bloque blanco/plomo
+            }
         }
 
         ConectarBotones();
@@ -223,10 +219,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         if (!ValidarReferencias())
         {
-            Debug.LogError(
-                "MISION 2: Faltan referencias en el Inspector."
-            );
-
+            Debug.LogError("MISION 2: Faltan referencias en el Inspector.");
             enabled = false;
             return;
         }
@@ -257,17 +250,10 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     private void ConectarBotones()
     {
-        Registrar(btnArriba, () =>
-            AgregarComando(Direccion.Arriba));
-
-        Registrar(btnAbajo, () =>
-            AgregarComando(Direccion.Abajo));
-
-        Registrar(btnIzquierda, () =>
-            AgregarComando(Direccion.Izquierda));
-
-        Registrar(btnDerecha, () =>
-            AgregarComando(Direccion.Derecha));
+        Registrar(btnArriba, () => AgregarComando(Direccion.Arriba));
+        Registrar(btnAbajo, () => AgregarComando(Direccion.Abajo));
+        Registrar(btnIzquierda, () => AgregarComando(Direccion.Izquierda));
+        Registrar(btnDerecha, () => AgregarComando(Direccion.Derecha));
 
         Registrar(btnGO, EjecutarPrograma);
         Registrar(btnBorrar, BorrarComando);
@@ -276,13 +262,9 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         Registrar(btnSiguiente, SiguienteEjercicio);
     }
 
-    private void Registrar(
-        Button boton,
-        UnityEngine.Events.UnityAction accion)
+    private void Registrar(Button boton, UnityEngine.Events.UnityAction accion)
     {
-        if (boton == null)
-            return;
-
+        if (boton == null) return;
         boton.onClick.RemoveAllListeners();
         boton.onClick.AddListener(accion);
     }
@@ -295,9 +277,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         DetenerPrograma();
 
-        ejercicioActual = Mathf.Clamp(
-            numero, 1, TOTAL_EJERCICIOS
-        );
+        ejercicioActual = Mathf.Clamp(numero, 1, TOTAL_EJERCICIOS);
 
         juegoIniciado = false;
         ejecutando = false;
@@ -358,24 +338,21 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     private void AplicarDiseno()
     {
-        if (imagenFondo != null &&
-            disenoActual.fondo != null)
+        if (imagenFondo != null && disenoActual.fondo != null)
         {
             imagenFondo.sprite = disenoActual.fondo;
         }
 
         if (disenoActual.puntoEntrega != null)
         {
-            componenteEntrega.sprite =
-                disenoActual.puntoEntrega;
+            componenteEntrega.sprite = disenoActual.puntoEntrega;
         }
 
         componenteEntrega.preserveAspect = true;
 
         if (disenoActual.estrella != null)
         {
-            componenteEstrellaCargada.sprite =
-                disenoActual.estrella;
+            componenteEstrellaCargada.sprite = disenoActual.estrella;
         }
 
         componenteEstrellaCargada.preserveAspect = true;
@@ -390,50 +367,27 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         LimpiarObjetos(casillas);
         LimpiarObjetos(objetosObstaculos);
         LimpiarObjetos(objetosEstrellas);
+        casillasBordeExteriores.Clear();
 
         for (int i = panelTablero.childCount - 1; i >= 0; i--)
         {
-            GameObject hijo =
-                panelTablero.GetChild(i).gameObject;
-
+            GameObject hijo = panelTablero.GetChild(i).gameObject;
             hijo.SetActive(false);
             Destroy(hijo);
         }
 
-        float lado = Mathf.Min(
-            panelTablero.rect.width,
-            panelTablero.rect.height
-        );
+        float lado = Mathf.Min(panelTablero.rect.width, panelTablero.rect.height);
 
-        tamanoCasilla =
-            (lado - separacionCasillas * (tamanoTablero - 1))
-            / tamanoTablero;
+        tamanoCasilla = (lado - separacionCasillas * (tamanoTablero - 1)) / tamanoTablero;
 
-        gridTablero.padding =
-            new RectOffset(0, 0, 0, 0);
-
-        gridTablero.spacing =
-            new Vector2(
-                separacionCasillas,
-                separacionCasillas
-            );
-
-        gridTablero.cellSize =
-            Vector2.one * tamanoCasilla;
-
-        gridTablero.startCorner =
-            GridLayoutGroup.Corner.UpperLeft;
-
-        gridTablero.startAxis =
-            GridLayoutGroup.Axis.Horizontal;
-
-        gridTablero.constraint =
-            GridLayoutGroup.Constraint.FixedColumnCount;
-
+        gridTablero.padding = new RectOffset(0, 0, 0, 0);
+        gridTablero.spacing = new Vector2(separacionCasillas, separacionCasillas);
+        gridTablero.cellSize = Vector2.one * tamanoCasilla;
+        gridTablero.startCorner = GridLayoutGroup.Corner.UpperLeft;
+        gridTablero.startAxis = GridLayoutGroup.Axis.Horizontal;
+        gridTablero.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
         gridTablero.constraintCount = tamanoTablero;
-
-        gridTablero.childAlignment =
-            TextAnchor.MiddleCenter;
+        gridTablero.childAlignment = TextAnchor.MiddleCenter;
 
         for (int y = 0; y < tamanoTablero; y++)
         {
@@ -446,48 +400,42 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 );
 
                 casillas.Add(objeto);
+
+                // Identificamos si la casilla está en el borde exterior del tablero
+                if (x == 0 || x == tamanoTablero - 1 || y == 0 || y == tamanoTablero - 1)
+                {
+                    Image imgCasilla = objeto.GetComponent<Image>();
+                    if (imgCasilla != null)
+                    {
+                        casillasBordeExteriores.Add(imgCasilla);
+                    }
+                }
             }
         }
 
         Canvas.ForceUpdateCanvases();
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(
-            panelTablero
-        );
+        LayoutRebuilder.ForceRebuildLayoutImmediate(panelTablero);
     }
 
     private Vector3 CentroMundo(Vector2Int posicion)
     {
-        int indice =
-            posicion.y * tamanoTablero + posicion.x;
+        int indice = posicion.y * tamanoTablero + posicion.x;
 
         if (indice < 0 || indice >= casillas.Count)
             return panelTablero.position;
 
-        RectTransform rect =
-            casillas[indice].GetComponent<RectTransform>();
-
+        RectTransform rect = casillas[indice].GetComponent<RectTransform>();
         return rect.TransformPoint(rect.rect.center);
     }
 
-    private void ColocarEnCasilla(
-        RectTransform objeto,
-        Vector2Int posicion,
-        float factor)
+    private void ColocarEnCasilla(RectTransform objeto, Vector2Int posicion, float factor)
     {
-        if (objeto == null)
-            return;
-
+        if (objeto == null) return;
         objeto.position = CentroMundo(posicion);
-
-        objeto.sizeDelta =
-            Vector2.one * tamanoCasilla * factor;
+        objeto.sizeDelta = Vector2.one * tamanoCasilla * factor;
     }
 
-    private GameObject CrearImagen(
-        string nombre,
-        Transform padre,
-        Sprite sprite)
+    private GameObject CrearImagen(string nombre, Transform padre, Sprite sprite)
     {
         GameObject objeto = new GameObject(
             nombre,
@@ -497,15 +445,12 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         objeto.transform.SetParent(padre, false);
 
-        RectTransform rect =
-            objeto.GetComponent<RectTransform>();
-
+        RectTransform rect = objeto.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0.5f, 0.5f);
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
 
         Image imagen = objeto.GetComponent<Image>();
-
         imagen.sprite = sprite;
         imagen.color = Color.white;
         imagen.preserveAspect = true;
@@ -536,8 +481,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     private bool Libre(Vector2Int posicion)
     {
-        return DentroDelTablero(posicion) &&
-               !obstaculos.Contains(posicion);
+        return DentroDelTablero(posicion) && !obstaculos.Contains(posicion);
     }
 
     private void GenerarDistribucion()
@@ -549,71 +493,42 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             obstaculos.Clear();
             posicionesEstrellas.Clear();
 
-            int columna =
-                UnityEngine.Random.Range(0, tamanoTablero);
+            int columna = UnityEngine.Random.Range(0, tamanoTablero);
+            bool desdeArriba = UnityEngine.Random.value < 0.5f;
 
-            bool desdeArriba =
-                UnityEngine.Random.value < 0.5f;
-
-            posicionInicial = new Vector2Int(
-                columna,
-                desdeArriba ? 0 : tamanoTablero - 1
-            );
-
-            orientacionInicial =
-                desdeArriba
-                    ? Direccion.Abajo
-                    : Direccion.Arriba;
+            posicionInicial = new Vector2Int(columna, desdeArriba ? 0 : tamanoTablero - 1);
+            orientacionInicial = desdeArriba ? Direccion.Abajo : Direccion.Arriba;
 
             puntoEntrega = Aleatorio();
-
-            if (puntoEntrega == posicionInicial)
-                continue;
+            if (puntoEntrega == posicionInicial) continue;
 
             int seguridad = 0;
-
-            while (obstaculos.Count < cantidadObstaculos &&
-                   seguridad < 500)
+            while (obstaculos.Count < cantidadObstaculos && seguridad < 500)
             {
                 seguridad++;
-
                 Vector2Int posicion = Aleatorio();
-
-                if (posicion == posicionInicial ||
-                    posicion == puntoEntrega)
-                    continue;
-
+                if (posicion == posicionInicial || posicion == puntoEntrega) continue;
                 obstaculos.Add(posicion);
             }
 
-            if (obstaculos.Count != cantidadObstaculos)
-                continue;
+            if (obstaculos.Count != cantidadObstaculos) continue;
 
             seguridad = 0;
-
-            while (posicionesEstrellas.Count < cantidadEstrellas &&
-                   seguridad < 500)
+            while (posicionesEstrellas.Count < cantidadEstrellas && seguridad < 500)
             {
                 seguridad++;
-
                 Vector2Int posicion = Aleatorio();
-
-                if (posicion == posicionInicial ||
-                    posicion == puntoEntrega ||
-                    obstaculos.Contains(posicion) ||
-                    posicionesEstrellas.Contains(posicion))
+                if (posicion == posicionInicial || posicion == puntoEntrega ||
+                    obstaculos.Contains(posicion) || posicionesEstrellas.Contains(posicion))
                 {
                     continue;
                 }
-
                 posicionesEstrellas.Add(posicion);
             }
 
-            if (posicionesEstrellas.Count != cantidadEstrellas)
-                continue;
+            if (posicionesEstrellas.Count != cantidadEstrellas) continue;
 
             int minimo = CalcularComandosMinimos();
-
             if (minimo >= 0 && minimo <= maximoComandos)
             {
                 encontrada = true;
@@ -638,11 +553,8 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     private int CalcularComandosMinimos()
     {
-        Queue<EstadoRuta> cola =
-            new Queue<EstadoRuta>();
-
-        HashSet<string> visitados =
-            new HashSet<string>();
+        Queue<EstadoRuta> cola = new Queue<EstadoRuta>();
+        HashSet<string> visitados = new HashSet<string>();
 
         cola.Enqueue(new EstadoRuta
         {
@@ -653,8 +565,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             pasos = 0
         });
 
-        int mascaraFinal =
-            (1 << cantidadEstrellas) - 1;
+        int mascaraFinal = (1 << cantidadEstrellas) - 1;
 
         while (cola.Count > 0)
         {
@@ -664,11 +575,8 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             {
                 for (int i = 0; i < posicionesEstrellas.Count; i++)
                 {
-                    bool entregada =
-                        (actual.entregadas & (1 << i)) != 0;
-
-                    if (!entregada &&
-                        actual.posicion == posicionesEstrellas[i])
+                    bool entregada = (actual.entregadas & (1 << i)) != 0;
+                    if (!entregada && actual.posicion == posicionesEstrellas[i])
                     {
                         actual.cargando = i;
                         break;
@@ -676,77 +584,51 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 }
             }
 
-            if (actual.cargando >= 0 &&
-                actual.posicion == puntoEntrega)
+            if (actual.cargando >= 0 && actual.posicion == puntoEntrega)
             {
-                actual.entregadas |=
-                    1 << actual.cargando;
-
+                actual.entregadas |= 1 << actual.cargando;
                 actual.cargando = -1;
             }
 
-            if (actual.entregadas == mascaraFinal &&
-                actual.cargando == -1)
+            if (actual.entregadas == mascaraFinal && actual.cargando == -1)
             {
                 return actual.pasos;
             }
 
-            if (actual.pasos >= maximoComandos)
-                continue;
+            if (actual.pasos >= maximoComandos) continue;
 
-            string clave =
-                actual.posicion.x + "_" +
-                actual.posicion.y + "_" +
-                (int)actual.orientacion + "_" +
-                actual.entregadas + "_" +
-                actual.cargando;
+            string clave = actual.posicion.x + "_" + actual.posicion.y + "_" +
+                           (int)actual.orientacion + "_" + actual.entregadas + "_" + actual.cargando;
 
-            if (!visitados.Add(clave))
-                continue;
+            if (!visitados.Add(clave)) continue;
 
             EstadoRuta izquierda = actual;
-
-            izquierda.orientacion =
-                GirarIzquierda(actual.orientacion);
-
+            izquierda.orientacion = GirarIzquierda(actual.orientacion);
             izquierda.pasos++;
-
             cola.Enqueue(izquierda);
 
             EstadoRuta derecha = actual;
-
-            derecha.orientacion =
-                GirarDerecha(actual.orientacion);
-
+            derecha.orientacion = GirarDerecha(actual.orientacion);
             derecha.pasos++;
-
             cola.Enqueue(derecha);
 
-            Vector2Int frente =
-                DireccionFrontal(actual.orientacion);
-
-            Vector2Int siguiente =
-                actual.posicion + frente;
+            Vector2Int frente = DireccionFrontal(actual.orientacion);
+            Vector2Int siguiente = actual.posicion + frente;
 
             if (Libre(siguiente))
             {
                 EstadoRuta avanzar = actual;
-
                 avanzar.posicion = siguiente;
                 avanzar.pasos++;
-
                 cola.Enqueue(avanzar);
             }
 
             siguiente = actual.posicion - frente;
-
             if (Libre(siguiente))
             {
                 EstadoRuta retroceder = actual;
-
                 retroceder.posicion = siguiente;
                 retroceder.pasos++;
-
                 cola.Enqueue(retroceder);
             }
         }
@@ -759,24 +641,16 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         obstaculos.Clear();
         posicionesEstrellas.Clear();
 
-        posicionInicial =
-            new Vector2Int(0, tamanoTablero - 1);
-
+        posicionInicial = new Vector2Int(0, tamanoTablero - 1);
         orientacionInicial = Direccion.Arriba;
-
-        puntoEntrega =
-            new Vector2Int(tamanoTablero - 1, 0);
+        puntoEntrega = new Vector2Int(tamanoTablero - 1, 0);
 
         for (int i = 0; i < cantidadEstrellas; i++)
         {
-            posicionesEstrellas.Add(
-                new Vector2Int(i + 1, tamanoTablero - 1)
-            );
+            posicionesEstrellas.Add(new Vector2Int(i + 1, tamanoTablero - 1));
         }
 
-        List<Vector2Int> candidatos =
-            new List<Vector2Int>();
-
+        List<Vector2Int> candidatos = new List<Vector2Int>();
         for (int y = 1; y < tamanoTablero - 1; y++)
         {
             for (int x = 1; x < tamanoTablero - 1; x++)
@@ -787,13 +661,10 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         foreach (Vector2Int candidato in candidatos)
         {
-            if (obstaculos.Count >= cantidadObstaculos)
-                break;
-
+            if (obstaculos.Count >= cantidadObstaculos) break;
             obstaculos.Add(candidato);
 
             int minimo = CalcularComandosMinimos();
-
             if (minimo < 0 || minimo > maximoComandos)
                 obstaculos.Remove(candidato);
         }
@@ -815,45 +686,29 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 ObtenerObstaculoAleatorio()
             );
 
-            ColocarEnCasilla(
-                objeto.GetComponent<RectTransform>(),
-                posicion,
-                0.80f
-            );
-
+            ColocarEnCasilla(objeto.GetComponent<RectTransform>(), posicion, 0.80f);
             objetosObstaculos.Add(objeto);
         }
     }
 
     private Sprite ObtenerObstaculoAleatorio()
     {
-        if (disenoActual.obstaculos == null ||
-            disenoActual.obstaculos.Length == 0)
-        {
+        if (disenoActual.obstaculos == null || disenoActual.obstaculos.Length == 0)
             return null;
-        }
 
-        List<Sprite> disponibles =
-            new List<Sprite>();
-
+        List<Sprite> disponibles = new List<Sprite>();
         foreach (Sprite sprite in disenoActual.obstaculos)
         {
-            if (sprite != null)
-                disponibles.Add(sprite);
+            if (sprite != null) disponibles.Add(sprite);
         }
 
-        if (disponibles.Count == 0)
-            return null;
-
-        return disponibles[
-            UnityEngine.Random.Range(0, disponibles.Count)
-        ];
+        if (disponibles.Count == 0) return null;
+        return disponibles[UnityEngine.Random.Range(0, disponibles.Count)];
     }
 
     private void CrearEstrellas()
     {
         LimpiarObjetos(objetosEstrellas);
-
         estrellasSuelo.Clear();
         estrellasEntregadas.Clear();
 
@@ -865,14 +720,8 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 disenoActual.estrella
             );
 
-            RectTransform rect =
-                objeto.GetComponent<RectTransform>();
-
-            ColocarEnCasilla(
-                rect,
-                posicionesEstrellas[i],
-                0.70f
-            );
+            RectTransform rect = objeto.GetComponent<RectTransform>();
+            ColocarEnCasilla(rect, posicionesEstrellas[i], 0.70f);
 
             estrellasSuelo.Add(rect);
             objetosEstrellas.Add(objeto);
@@ -895,60 +744,47 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 Destroy(rect.gameObject);
             }
         }
-
         estrellasEntregadas.Clear();
 
         for (int i = 0; i < estrellasSuelo.Count; i++)
         {
             RectTransform rect = estrellasSuelo[i];
-
-            if (rect == null)
-                continue;
+            if (rect == null) continue;
 
             rect.gameObject.SetActive(true);
-
-            ColocarEnCasilla(
-                rect,
-                posicionesEstrellas[i],
-                0.70f
-            );
+            ColocarEnCasilla(rect, posicionesEstrellas[i], 0.70f);
         }
 
         imagenEstrellaCargada.gameObject.SetActive(false);
 
-        ColocarEnCasilla(
-            imagenRobot,
-            posicionRobot,
-            0.85f
-        );
-
+        ColocarEnCasilla(imagenRobot, posicionRobot, 0.85f);
         imagenRobot.gameObject.SetActive(true);
-
         CambiarSpriteRobot(orientacionRobot);
 
-        ColocarEnCasilla(
-            imagenPuntoEntrega,
-            puntoEntrega,
-            0.90f
-        );
-
+        ColocarEnCasilla(imagenPuntoEntrega, puntoEntrega, 0.90f);
         imagenPuntoEntrega.gameObject.SetActive(true);
+
+        // Restaurar color normal en las casillas exteriores del borde
+        foreach (Image img in casillasBordeExteriores)
+        {
+            if (img != null) img.color = Color.white;
+        }
+
+        if (componenteRobot != null)
+            componenteRobot.color = Color.white;
     }
 
     // =====================================================
-    // GIROS INVERTIDOS SEGUN TU OBSERVACION
+    // GIROS
     // =====================================================
 
     private Direccion GirarDerecha(Direccion direccion)
     {
-        // Misma lógica de orientación que la Misión 1.
-        // Arriba -> Derecha -> Abajo -> Izquierda.
         return (Direccion)(((int)direccion + 1) % 4);
     }
 
     private Direccion GirarIzquierda(Direccion direccion)
     {
-        // Arriba -> Izquierda -> Abajo -> Derecha.
         return (Direccion)(((int)direccion + 3) % 4);
     }
 
@@ -956,19 +792,11 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         switch (direccion)
         {
-            case Direccion.Arriba:
-                return new Vector2Int(0, -1);
-
-            case Direccion.Derecha:
-                return new Vector2Int(1, 0);
-
-            case Direccion.Abajo:
-                return new Vector2Int(0, 1);
-
-            case Direccion.Izquierda:
-                return new Vector2Int(-1, 0);
+            case Direccion.Arriba: return new Vector2Int(0, -1);
+            case Direccion.Derecha: return new Vector2Int(1, 0);
+            case Direccion.Abajo: return new Vector2Int(0, 1);
+            case Direccion.Izquierda: return new Vector2Int(-1, 0);
         }
-
         return Vector2Int.zero;
     }
 
@@ -978,24 +806,10 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         switch (direccion)
         {
-            case Direccion.Arriba:
-                sprite = robotAbajo;
-                break;
-
-            case Direccion.Abajo:
-                sprite = robotArriba;
-                break;
-
-            case Direccion.Izquierda:
-                // Conserva el aspecto visual de los giros que aprobaste.
-                // En tu configuración actual, los sprites laterales están
-                // asignados en sentido opuesto a la orientación lógica.
-                sprite = robotDerecha;
-                break;
-
-            case Direccion.Derecha:
-                sprite = robotIzquierda;
-                break;
+            case Direccion.Arriba: sprite = robotAbajo; break;
+            case Direccion.Abajo: sprite = robotArriba; break;
+            case Direccion.Izquierda: sprite = robotDerecha; break;
+            case Direccion.Derecha: sprite = robotIzquierda; break;
         }
 
         if (sprite != null)
@@ -1005,28 +819,19 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     }
 
     // =====================================================
-    // TARJETAS DE PROGRAMACION PEQUEÑAS
+    // TARJETAS DE PROGRAMACION
     // =====================================================
 
     private void ConfigurarListaComandos()
     {
-        // Unity no permite colocar un HorizontalLayoutGroup y un
-        // GridLayoutGroup en el mismo objeto durante el mismo fotograma:
-        // Destroy() elimina el componente al final del fotograma.
-        // Por eso usamos un hijo exclusivo para la cuadrícula.
-        HorizontalLayoutGroup horizontal =
-            contenedorComandos.GetComponent<HorizontalLayoutGroup>();
+        HorizontalLayoutGroup horizontal = contenedorComandos.GetComponent<HorizontalLayoutGroup>();
+        if (horizontal != null) horizontal.enabled = false;
 
-        if (horizontal != null)
-            horizontal.enabled = false;
-
-        GridLayoutGroup cuadricula =
-            contenedorComandos.GetComponent<GridLayoutGroup>();
+        GridLayoutGroup cuadricula = contenedorComandos.GetComponent<GridLayoutGroup>();
 
         if (cuadricula == null)
         {
-            Transform existente =
-                contenedorComandos.Find("Cuadricula_10_Instrucciones");
+            Transform existente = contenedorComandos.Find("Cuadricula_10_Instrucciones");
 
             RectTransform rectCuadricula;
             if (existente != null)
@@ -1035,9 +840,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             }
             else
             {
-                GameObject hijo = new GameObject(
-                    "Cuadricula_10_Instrucciones",
-                    typeof(RectTransform));
+                GameObject hijo = new GameObject("Cuadricula_10_Instrucciones", typeof(RectTransform));
                 hijo.transform.SetParent(contenedorComandos, false);
                 rectCuadricula = hijo.GetComponent<RectTransform>();
                 rectCuadricula.anchorMin = Vector2.zero;
@@ -1051,18 +854,10 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             if (cuadricula == null)
                 cuadricula = rectCuadricula.gameObject.AddComponent<GridLayoutGroup>();
 
-            // Desde ahora las tarjetas se crean en este hijo.
             contenedorComandos = rectCuadricula;
         }
 
-        if (cuadricula == null)
-        {
-            Debug.LogError("No se pudo configurar la cuadrícula de instrucciones.");
-            return;
-        }
-
-        cuadricula.cellSize = new Vector2(
-            Mathf.Max(20f, anchoTarjeta), Mathf.Max(20f, altoTarjeta));
+        cuadricula.cellSize = new Vector2(Mathf.Max(20f, anchoTarjeta), Mathf.Max(20f, altoTarjeta));
         cuadricula.spacing = new Vector2(separacionTarjetas, separacionTarjetas);
         cuadricula.padding = new RectOffset(0, 0, 0, 0);
         cuadricula.startCorner = GridLayoutGroup.Corner.UpperLeft;
@@ -1074,28 +869,21 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
     private bool PuedeProgramar()
     {
-        return juegoIniciado &&
-               !ejecutando &&
-               !victoria &&
-               !panelPresentacion.activeSelf &&
-               !panelVictoria.activeSelf;
+        return juegoIniciado && !ejecutando && !victoria &&
+               !panelPresentacion.activeSelf && !panelVictoria.activeSelf;
     }
 
     private void AgregarComando(Direccion direccion)
     {
-        if (!PuedeProgramar())
-            return;
+        if (!PuedeProgramar()) return;
 
         if (comandos.Count >= maximoComandos)
         {
-            MostrarMensaje(
-                "¡Alcanzaste el máximo de instrucciones!"
-            );
+            MostrarMensaje("¡Alcanzaste el máximo de instrucciones!");
             return;
         }
 
         comandos.Add(direccion);
-
         ActualizarListaComandos();
         ActualizarBotones();
     }
@@ -1104,7 +892,6 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         LimpiarObjetos(objetosComandos);
 
-        // Tamaño fijo: 10 tarjetas por fila, sin agrandarlas.
         float ancho = Mathf.Max(20f, anchoTarjeta);
         float alto = Mathf.Max(20f, altoTarjeta);
         GridLayoutGroup cuadricula = contenedorComandos.GetComponent<GridLayoutGroup>();
@@ -1116,21 +903,12 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         for (int i = 0; i < comandos.Count; i++)
         {
-            GameObject tarjeta = CrearImagen(
-                "Comando_" + (i + 1),
-                contenedorComandos,
-                tarjetaComando
-            );
+            GameObject tarjeta = CrearImagen("Comando_" + (i + 1), contenedorComandos, tarjetaComando);
 
-            RectTransform rectTarjeta =
-                tarjeta.GetComponent<RectTransform>();
+            RectTransform rectTarjeta = tarjeta.GetComponent<RectTransform>();
+            rectTarjeta.sizeDelta = new Vector2(ancho, alto);
 
-            rectTarjeta.sizeDelta =
-                new Vector2(ancho, alto);
-
-            LayoutElement elemento =
-                tarjeta.AddComponent<LayoutElement>();
-
+            LayoutElement elemento = tarjeta.AddComponent<LayoutElement>();
             elemento.minWidth = ancho;
             elemento.minHeight = alto;
             elemento.preferredWidth = ancho;
@@ -1138,18 +916,11 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             elemento.flexibleWidth = 0f;
             elemento.flexibleHeight = 0f;
 
-            GameObject flecha = CrearImagen(
-                "Flecha",
-                tarjeta.transform,
-                SpriteComando(comandos[i])
-            );
+            GameObject flecha = CrearImagen("Flecha", tarjeta.transform, SpriteComando(comandos[i]));
 
-            RectTransform rectFlecha =
-                flecha.GetComponent<RectTransform>();
-
+            RectTransform rectFlecha = flecha.GetComponent<RectTransform>();
             rectFlecha.anchorMin = Vector2.zero;
             rectFlecha.anchorMax = Vector2.one;
-
             rectFlecha.offsetMin = new Vector2(4f, 4f);
             rectFlecha.offsetMax = new Vector2(-4f, -4f);
 
@@ -1158,41 +929,27 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         if (txtTituloInstrucciones != null)
         {
-            txtTituloInstrucciones.text =
-                "MIS INSTRUCCIONES (" +
-                comandos.Count + "/" +
-                maximoComandos + ")";
+            txtTituloInstrucciones.text = "MIS INSTRUCCIONES (" + comandos.Count + "/" + maximoComandos + ")";
         }
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(
-            contenedorComandos
-        );
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contenedorComandos);
     }
 
     private Sprite SpriteComando(Direccion direccion)
     {
         switch (direccion)
         {
-            case Direccion.Arriba:
-                return spriteArriba;
-
-            case Direccion.Abajo:
-                return spriteAbajo;
-
-            case Direccion.Izquierda:
-                return spriteIzquierda;
-
-            case Direccion.Derecha:
-                return spriteDerecha;
+            case Direccion.Arriba: return spriteArriba;
+            case Direccion.Abajo: return spriteAbajo;
+            case Direccion.Izquierda: return spriteIzquierda;
+            case Direccion.Derecha: return spriteDerecha;
         }
-
         return null;
     }
 
     public void BorrarComando()
     {
-        if (!PuedeProgramar())
-            return;
+        if (!PuedeProgramar()) return;
 
         float ahora = Time.unscaledTime;
         bool dobleClick = ahora - ultimoClickBorrar <= intervaloDobleClick;
@@ -1200,7 +957,6 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         if (dobleClick)
         {
-            // Dos clics rápidos: borrar todas las instrucciones.
             comandos.Clear();
             DetenerPrograma();
             ReiniciarPosiciones();
@@ -1208,9 +964,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         }
         else if (comandos.Count > 0)
         {
-            // Un clic: borrar únicamente la última instrucción.
             comandos.RemoveAt(comandos.Count - 1);
-
             if (comandos.Count == 0)
             {
                 DetenerPrograma();
@@ -1224,19 +978,16 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     }
 
     // =====================================================
-    // EJECUCION COMPLETA DE INSTRUCCIONES
+    // EJECUCION DE INSTRUCCIONES
     // =====================================================
 
     public void EjecutarPrograma()
     {
-        if (!PuedeProgramar())
-            return;
+        if (!PuedeProgramar()) return;
 
         if (comandos.Count == 0)
         {
-            MostrarMensaje(
-                "¡Primero programa los movimientos del robot!"
-            );
+            MostrarMensaje("¡Primero programa los movimientos del robot!");
             return;
         }
 
@@ -1250,83 +1001,58 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         MostrarMensaje("");
         ActualizarBotones();
 
-        rutinaPrograma =
-            StartCoroutine(RecorrerInstrucciones());
+        rutinaPrograma = StartCoroutine(RecorrerInstrucciones());
     }
 
     private IEnumerator RecorrerInstrucciones()
     {
         for (int i = 0; i < comandos.Count; i++)
         {
-            while (pausado)
-                yield return null;
+            while (pausado) yield return null;
 
             Direccion comando = comandos[i];
 
-            // Los giros cambian la orientación en la MISMA casilla.
-            // El siguiente comando Arriba mueve una casilla hacia el frente.
             if (comando == Direccion.Izquierda)
             {
-                orientacionRobot =
-                    GirarIzquierda(orientacionRobot);
-
+                orientacionRobot = GirarIzquierda(orientacionRobot);
                 CambiarSpriteRobot(orientacionRobot);
-
                 yield return EsperarConPausa(duracionGiro);
                 continue;
             }
 
             if (comando == Direccion.Derecha)
             {
-                orientacionRobot =
-                    GirarDerecha(orientacionRobot);
-
+                orientacionRobot = GirarDerecha(orientacionRobot);
                 CambiarSpriteRobot(orientacionRobot);
-
                 yield return EsperarConPausa(duracionGiro);
                 continue;
             }
 
-            Vector2Int frente =
-                DireccionFrontal(orientacionRobot);
+            Vector2Int frente = DireccionFrontal(orientacionRobot);
+            Vector2Int desplazamiento = comando == Direccion.Arriba ? frente : -frente;
+            Vector2Int siguiente = posicionRobot + desplazamiento;
 
-            Vector2Int desplazamiento =
-                comando == Direccion.Arriba
-                    ? frente
-                    : -frente;
-
-            Vector2Int siguiente =
-                posicionRobot + desplazamiento;
-
+            // Validación de límites del tablero: parpadean las casillas del borde exterior
             if (!DentroDelTablero(siguiente))
             {
-                FinalizarProgramaConError(
-                    "El robot intentó avanzar fuera del tablero. La ejecución se detuvo.",
-                    i
-                );
-
+                yield return StartCoroutine(ParpadearBordeErrorRoutine());
+                FinalizarProgramaConError("El robot intentó avanzar fuera del tablero. La ejecución se detuvo.", i);
                 yield break;
             }
 
+            // Validación de obstáculos
             if (obstaculos.Contains(siguiente))
             {
-                FinalizarProgramaConError(
-                    "El robot encontró un obstáculo y se detuvo. Revisa el siguiente paso.",
-                    i
-                );
-
+                yield return StartCoroutine(ParpadearRobotObstaculoRoutine(siguiente));
+                FinalizarProgramaConError("El robot encontró un obstáculo y se detuvo. Revisa el siguiente paso.", i);
                 yield break;
             }
 
-            Vector3 origenMundo =
-                CentroMundo(posicionRobot);
-
-            Vector3 destinoMundo =
-                CentroMundo(siguiente);
+            Vector3 origenMundo = CentroMundo(posicionRobot);
+            Vector3 destinoMundo = CentroMundo(siguiente);
 
             float tiempo = 0f;
-            float duracion =
-                Mathf.Max(0.01f, duracionPorCasilla);
+            float duracion = Mathf.Max(0.01f, duracionPorCasilla);
 
             while (tiempo < duracion)
             {
@@ -1337,30 +1063,16 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 }
 
                 tiempo += Time.deltaTime;
+                float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(tiempo / duracion));
 
-                float t = Mathf.SmoothStep(
-                    0f,
-                    1f,
-                    Mathf.Clamp01(tiempo / duracion)
-                );
-
-                imagenRobot.position =
-                    Vector3.Lerp(
-                        origenMundo,
-                        destinoMundo,
-                        t
-                    );
-
+                imagenRobot.position = Vector3.Lerp(origenMundo, destinoMundo, t);
                 ActualizarEstrellaTransportada();
 
                 yield return null;
             }
 
             posicionRobot = siguiente;
-
-            imagenRobot.position =
-                CentroMundo(posicionRobot);
-
+            imagenRobot.position = CentroMundo(posicionRobot);
             ActualizarEstrellaTransportada();
 
             if (estrellaCargada == -1)
@@ -1368,8 +1080,7 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 RecogerEstrella();
             }
 
-            if (estrellaCargada >= 0 &&
-                posicionRobot == puntoEntrega)
+            if (estrellaCargada >= 0 && posicionRobot == puntoEntrega)
             {
                 yield return AnimarEntrega();
             }
@@ -1385,76 +1096,110 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         }
         else
         {
-            MostrarMensaje(
-                "¡Buen intento! Entregaste " +
-                estrellasDepositadas + " de " +
-                cantidadEstrellas +
-                " estrellas. Revisa tu programa."
-            );
+            MostrarMensaje("¡Buen intento! Entregaste " + estrellasDepositadas + " de " + cantidadEstrellas + " estrellas. Revisa tu programa.");
         }
 
         ActualizarBotones();
+    }
+
+    private IEnumerator ParpadearBordeErrorRoutine()
+    {
+        if (casillasBordeExteriores.Count == 0) yield break;
+
+        float intervalo = duracionParpadeoError / (cantidadParpadeosError * 2f);
+
+        for (int p = 0; p < cantidadParpadeosError; p++)
+        {
+            foreach (Image img in casillasBordeExteriores)
+            {
+                if (img != null) img.color = colorParpadeoError;
+            }
+            yield return new WaitForSeconds(intervalo);
+
+            foreach (Image img in casillasBordeExteriores)
+            {
+                if (img != null) img.color = Color.white;
+            }
+            yield return new WaitForSeconds(intervalo);
+        }
+    }
+
+    private IEnumerator ParpadearRobotObstaculoRoutine(Vector2Int posObstaculo)
+    {
+        if (componenteRobot == null) yield break;
+
+        Color originalRobot = componenteRobot.color;
+        float intervalo = duracionParpadeoError / (cantidadParpadeosError * 2f);
+
+        Image imgObstaculo = null;
+        foreach (GameObject obj in objetosObstaculos)
+        {
+            if (obj != null)
+            {
+                RectTransform rt = obj.GetComponent<RectTransform>();
+                if (rt != null && Vector3.Distance(rt.position, CentroMundo(posObstaculo)) < 5f)
+                {
+                    imgObstaculo = obj.GetComponent<Image>();
+                    break;
+                }
+            }
+        }
+
+        Color originalObstaculo = imgObstaculo != null ? imgObstaculo.color : Color.white;
+
+        for (int p = 0; p < cantidadParpadeosError; p++)
+        {
+            componenteRobot.color = colorParpadeoError;
+            if (imgObstaculo != null) imgObstaculo.color = colorParpadeoError;
+
+            yield return new WaitForSeconds(intervalo);
+
+            componenteRobot.color = originalRobot;
+            if (imgObstaculo != null) imgObstaculo.color = originalObstaculo;
+
+            yield return new WaitForSeconds(intervalo);
+        }
     }
 
     private IEnumerator EsperarConPausa(float segundos)
     {
         float tiempo = 0f;
-
         while (tiempo < segundos)
         {
-            if (!pausado)
-                tiempo += Time.deltaTime;
-
+            if (!pausado) tiempo += Time.deltaTime;
             yield return null;
         }
     }
 
-    private void FinalizarProgramaConError(
-        string mensaje,
-        int indiceComando)
+    private void FinalizarProgramaConError(string mensaje, int indiceComando)
     {
         ejecutando = false;
         pausado = false;
         rutinaPrograma = null;
 
-        MostrarMensaje(
-            mensaje +
-            " (Instrucción " +
-            (indiceComando + 1) + ")"
-        );
-
+        MostrarMensaje(mensaje + " (Instrucción " + (indiceComando + 1) + ")");
         ActualizarBotones();
     }
 
     // =====================================================
-    // RECOGER ESTRELLAS
+    // RECOGER Y ENTREGAR ESTRELLAS
     // =====================================================
 
     private void RecogerEstrella()
     {
-        if (estrellaCargada >= 0)
-            return;
+        if (estrellaCargada >= 0) return;
 
         for (int i = 0; i < posicionesEstrellas.Count; i++)
         {
             RectTransform estrella = estrellasSuelo[i];
-
-            if (estrella == null ||
-                !estrella.gameObject.activeSelf)
-                continue;
+            if (estrella == null || !estrella.gameObject.activeSelf) continue;
 
             if (posicionRobot == posicionesEstrellas[i])
             {
                 estrellaCargada = i;
-
                 estrella.gameObject.SetActive(false);
-
                 ActualizarEstrellaTransportada();
-
-                MostrarMensaje(
-                    "¡Estrella recogida! Ahora llévala al destino."
-                );
-
+                MostrarMensaje("¡Estrella recogida! Ahora llévala al destino.");
                 return;
             }
         }
@@ -1469,41 +1214,21 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         }
 
         imagenEstrellaCargada.gameObject.SetActive(true);
-
-        imagenEstrellaCargada.position =
-            imagenRobot.position +
-            Vector3.up * (tamanoCasilla * 0.35f);
-
-        imagenEstrellaCargada.sizeDelta =
-            Vector2.one * tamanoCasilla * 0.40f;
+        imagenEstrellaCargada.position = imagenRobot.position + Vector3.up * (tamanoCasilla * 0.35f);
+        imagenEstrellaCargada.sizeDelta = Vector2.one * tamanoCasilla * 0.40f;
     }
-
-    // =====================================================
-    // ENTREGAR ESTRELLAS
-    // =====================================================
 
     private IEnumerator AnimarEntrega()
     {
-        if (estrellaCargada < 0 ||
-            posicionRobot != puntoEntrega)
-        {
-            yield break;
-        }
+        if (estrellaCargada < 0 || posicionRobot != puntoEntrega) yield break;
 
         estrellaCargada = -1;
         imagenEstrellaCargada.gameObject.SetActive(false);
 
         int indice = estrellasDepositadas;
+        GameObject objeto = CrearImagen("Estrella_Entregada_" + (indice + 1), panelEstrellas, disenoActual.estrella);
 
-        GameObject objeto = CrearImagen(
-            "Estrella_Entregada_" + (indice + 1),
-            panelEstrellas,
-            disenoActual.estrella
-        );
-
-        RectTransform rect =
-            objeto.GetComponent<RectTransform>();
-
+        RectTransform rect = objeto.GetComponent<RectTransform>();
         ColocarEnCasilla(rect, puntoEntrega, 0.40f);
 
         Vector3 desplazamiento = Vector3.zero;
@@ -1511,34 +1236,21 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         if (cantidadEstrellas == 2)
         {
-            desplazamiento = new Vector3(
-                indice == 0 ? -distancia : distancia,
-                0f,
-                0f
-            );
+            desplazamiento = new Vector3(indice == 0 ? -distancia : distancia, 0f, 0f);
         }
         else if (cantidadEstrellas == 3)
         {
-            float angulo =
-                (90f + indice * 120f) * Mathf.Deg2Rad;
-
-            desplazamiento = new Vector3(
-                Mathf.Cos(angulo) * distancia,
-                Mathf.Sin(angulo) * distancia,
-                0f
-            );
+            float angulo = (90f + indice * 120f) * Mathf.Deg2Rad;
+            desplazamiento = new Vector3(Mathf.Cos(angulo) * distancia, Mathf.Sin(angulo) * distancia, 0f);
         }
 
         rect.position += desplazamiento;
-
         objetosEstrellas.Add(objeto);
         estrellasEntregadas.Add(rect);
 
         Vector3 escalaOriginal = rect.localScale;
-
         float tiempo = 0f;
-        float duracion =
-            Mathf.Max(0.1f, duracionAnimacionEstrella);
+        float duracion = Mathf.Max(0.1f, duracionAnimacionEstrella);
 
         while (tiempo < duracion)
         {
@@ -1549,46 +1261,29 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             }
 
             tiempo += Time.deltaTime;
-
             float t = Mathf.Clamp01(tiempo / duracion);
+            float escala = 1f + (escalaMaximaEstrella - 1f) * Mathf.Sin(t * Mathf.PI);
 
-            float escala =
-                1f +
-                (escalaMaximaEstrella - 1f) *
-                Mathf.Sin(t * Mathf.PI);
-
-            rect.localScale =
-                escalaOriginal * escala;
-
+            rect.localScale = escalaOriginal * escala;
             yield return null;
         }
 
         rect.localScale = escalaOriginal;
-
         estrellasDepositadas++;
 
-        MostrarMensaje(
-            "¡Estrella entregada! " +
-            estrellasDepositadas + "/" +
-            cantidadEstrellas
-        );
+        MostrarMensaje("¡Estrella entregada! " + estrellasDepositadas + "/" + cantidadEstrellas);
     }
 
     // =====================================================
-    // PAUSA
+    // PAUSA Y CONTROL
     // =====================================================
 
     public void AlternarPausa()
     {
-        if (!ejecutando || victoria)
-            return;
+        if (!ejecutando || victoria) return;
 
         pausado = !pausado;
-
-        MostrarMensaje(
-            pausado ? "PAUSA" : ""
-        );
-
+        MostrarMensaje(pausado ? "PAUSA" : "");
         ActualizarBotones();
     }
 
@@ -1599,7 +1294,6 @@ public class JuegoTransportaEstrellas : MonoBehaviour
             StopCoroutine(rutinaPrograma);
             rutinaPrograma = null;
         }
-
         ejecutando = false;
         pausado = false;
     }
@@ -1615,33 +1309,17 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         if (txtEjercicio != null)
         {
-            txtEjercicio.text =
-                "EJERCICIO " + ejercicioActual;
+            txtEjercicio.text = "EJERCICIO " + ejercicioActual;
         }
 
         if (txtObjetivo != null)
         {
             switch (ejercicioActual)
             {
-                case 1:
-                    txtObjetivo.text =
-                        "¡Recoge una estrella y llévala al destino!";
-                    break;
-
-                case 2:
-                    txtObjetivo.text =
-                        "¡Transporta una estrella evitando los obstáculos!";
-                    break;
-
-                case 3:
-                    txtObjetivo.text =
-                        "¡Recoge y entrega las 2 estrellas!";
-                    break;
-
-                case 4:
-                    txtObjetivo.text =
-                        "¡Transporta las 3 estrellas hasta el destino!";
-                    break;
+                case 1: txtObjetivo.text = "¡Recoge una estrella y llévala al destino!"; break;
+                case 2: txtObjetivo.text = "¡Transporta una estrella evitando los obstáculos!"; break;
+                case 3: txtObjetivo.text = "¡Recoge y entrega las 2 estrellas!"; break;
+                case 4: txtObjetivo.text = "¡Transporta las 3 estrellas hasta el destino!"; break;
             }
         }
     }
@@ -1659,39 +1337,28 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         ejecutando = false;
         pausado = false;
 
-        string clave =
-            "MundoPujllay_TransportaEstrellas_Progreso";
-
+        string clave = "MundoPujllay_TransportaEstrellas_Progreso";
         int anterior = PlayerPrefs.GetInt(clave, 0);
 
-        PlayerPrefs.SetInt(
-            clave,
-            Mathf.Max(anterior, ejercicioActual)
-        );
-
+        PlayerPrefs.SetInt(clave, Mathf.Max(anterior, ejercicioActual));
         PlayerPrefs.Save();
 
-        if (txtExcelente != null)
-            txtExcelente.text = "¡Excelente!";
-
+        if (txtExcelente != null) txtExcelente.text = "¡Excelente!";
         if (txtLlegasteEstrella != null)
         {
-            txtLlegasteEstrella.text =
-                cantidadEstrellas == 1
-                    ? "¡Entregaste la estrella!"
-                    : "¡Entregaste todas las estrellas!";
+            txtLlegasteEstrella.text = cantidadEstrellas == 1
+                ? "¡Entregaste la estrella!"
+                : "¡Entregaste todas las estrellas!";
         }
 
         panelVictoria.SetActive(true);
-
         ActualizarProgreso();
         ActualizarBotones();
     }
 
     public void SiguienteEjercicio()
     {
-        if (!victoria)
-            return;
+        if (!victoria) return;
 
         if (ejercicioActual < TOTAL_EJERCICIOS)
         {
@@ -1718,20 +1385,15 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         for (int i = panelProgreso.childCount - 1; i >= 0; i--)
         {
-            GameObject hijo =
-                panelProgreso.GetChild(i).gameObject;
-
+            GameObject hijo = panelProgreso.GetChild(i).gameObject;
             hijo.SetActive(false);
             Destroy(hijo);
         }
 
-        HorizontalLayoutGroup layout =
-            panelProgreso.GetComponent<HorizontalLayoutGroup>();
-
+        HorizontalLayoutGroup layout = panelProgreso.GetComponent<HorizontalLayoutGroup>();
         if (layout == null)
         {
-            layout = panelProgreso.gameObject
-                .AddComponent<HorizontalLayoutGroup>();
+            layout = panelProgreso.gameObject.AddComponent<HorizontalLayoutGroup>();
         }
 
         layout.spacing = 18f;
@@ -1743,75 +1405,45 @@ public class JuegoTransportaEstrellas : MonoBehaviour
 
         for (int i = 0; i < TOTAL_EJERCICIOS; i++)
         {
-            GameObject objeto = CrearImagen(
-                "Progreso_" + (i + 1),
-                panelProgreso,
-                ObtenerSpriteCircular()
-            );
+            GameObject objeto = CrearImagen("Progreso_" + (i + 1), panelProgreso, ObtenerSpriteCircular());
 
-            LayoutElement elemento =
-                objeto.AddComponent<LayoutElement>();
-
+            LayoutElement elemento = objeto.AddComponent<LayoutElement>();
             elemento.preferredWidth = 65f;
             elemento.preferredHeight = 65f;
 
-            GameObject texto = new GameObject(
-                "Numero",
-                typeof(RectTransform),
-                typeof(TextMeshProUGUI)
-            );
+            GameObject texto = new GameObject("Numero", typeof(RectTransform), typeof(TextMeshProUGUI));
+            texto.transform.SetParent(objeto.transform, false);
 
-            texto.transform.SetParent(
-                objeto.transform, false
-            );
-
-            RectTransform rect =
-                texto.GetComponent<RectTransform>();
-
+            RectTransform rect = texto.GetComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
 
-            TextMeshProUGUI numero =
-                texto.GetComponent<TextMeshProUGUI>();
-
+            TextMeshProUGUI numero = texto.GetComponent<TextMeshProUGUI>();
             numero.text = (i + 1).ToString();
             numero.fontSize = 36f;
             numero.fontStyle = FontStyles.Bold;
             numero.alignment = TextAlignmentOptions.Center;
             numero.raycastTarget = false;
 
-            // Contorno amarillo alrededor de cada bolita de progreso.
-            // El componente Outline sigue el borde circular del sprite.
             Outline marco = objeto.GetComponent<Outline>();
-            if (marco == null)
-                marco = objeto.AddComponent<Outline>();
+            if (marco == null) marco = objeto.AddComponent<Outline>();
             marco.effectColor = new Color(1f, 0.80f, 0.12f, 1f);
             marco.effectDistance = new Vector2(2.5f, 2.5f);
             marco.useGraphicAlpha = false;
 
-            circulosProgreso.Add(
-                objeto.GetComponent<Image>()
-            );
-
+            circulosProgreso.Add(objeto.GetComponent<Image>());
             numerosProgreso.Add(numero);
         }
     }
 
     private Sprite ObtenerSpriteCircular()
     {
-        if (spriteCirculo != null)
-            return spriteCirculo;
+        if (spriteCirculo != null) return spriteCirculo;
 
         const int resolucion = 64;
-
-        Texture2D textura = new Texture2D(
-            resolucion,
-            resolucion,
-            TextureFormat.RGBA32,
-            false
-        );
+        Texture2D textura = new Texture2D(resolucion, resolucion, TextureFormat.RGBA32, false);
 
         Vector2 centro = new Vector2(31.5f, 31.5f);
         float radio = 30f;
@@ -1820,32 +1452,14 @@ public class JuegoTransportaEstrellas : MonoBehaviour
         {
             for (int x = 0; x < resolucion; x++)
             {
-                float distancia = Vector2.Distance(
-                    new Vector2(x, y),
-                    centro
-                );
-
-                float alpha = Mathf.Clamp01(
-                    radio - distancia + 0.5f
-                );
-
-                textura.SetPixel(
-                    x,
-                    y,
-                    new Color(1f, 1f, 1f, alpha)
-                );
+                float distancia = Vector2.Distance(new Vector2(x, y), centro);
+                float alpha = Mathf.Clamp01(radio - distancia + 0.5f);
+                textura.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
             }
         }
 
         textura.Apply();
-
-        spriteCirculo = Sprite.Create(
-            textura,
-            new Rect(0, 0, resolucion, resolucion),
-            new Vector2(0.5f, 0.5f),
-            100f
-        );
-
+        spriteCirculo = Sprite.Create(textura, new Rect(0, 0, resolucion, resolucion), new Vector2(0.5f, 0.5f), 100f);
         return spriteCirculo;
     }
 
@@ -1873,38 +1487,19 @@ public class JuegoTransportaEstrellas : MonoBehaviour
     {
         bool puede = PuedeProgramar();
 
-        if (btnArriba != null)
-            btnArriba.interactable = puede;
+        if (btnArriba != null) btnArriba.interactable = puede;
+        if (btnAbajo != null) btnAbajo.interactable = puede;
+        if (btnIzquierda != null) btnIzquierda.interactable = puede;
+        if (btnDerecha != null) btnDerecha.interactable = puede;
 
-        if (btnAbajo != null)
-            btnAbajo.interactable = puede;
-
-        if (btnIzquierda != null)
-            btnIzquierda.interactable = puede;
-
-        if (btnDerecha != null)
-            btnDerecha.interactable = puede;
-
-        if (btnGO != null)
-        {
-            btnGO.interactable =
-                puede && comandos.Count > 0;
-        }
-
-        if (btnBorrar != null)
-        {
-            btnBorrar.interactable =
-                puede && comandos.Count > 0;
-        }
-
-        if (btnPausa != null)
-            btnPausa.interactable = ejecutando;
+        if (btnGO != null) btnGO.interactable = puede && comandos.Count > 0;
+        if (btnBorrar != null) btnBorrar.interactable = puede && comandos.Count > 0;
+        if (btnPausa != null) btnPausa.interactable = ejecutando;
     }
 
     private void MostrarMensaje(string mensaje)
     {
-        if (txtMensaje != null)
-            txtMensaje.text = mensaje;
+        if (txtMensaje != null) txtMensaje.text = mensaje;
     }
 
     private void LimpiarObjetos(List<GameObject> lista)
@@ -1917,7 +1512,6 @@ public class JuegoTransportaEstrellas : MonoBehaviour
                 Destroy(objeto);
             }
         }
-
         lista.Clear();
     }
 

@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Pantalla de Carga.unity
+    guid: 2576a73076089f347b8ff8c692d17afb
+  - enabled: 1
     path: Assets/Scenes/MenuPrincipal.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
@@ -31,7 +34,7 @@ EditorBuildSettings:
     guid: a23c9114d4eda324e8ee6bf10a8bced2
   - enabled: 1
     path: Assets/Scenes/Secuencias.unity
-    guid: 146f3ac8cf1570c419e9ec14aa431c58
+    guid: 2322543136374ce45b4f02fe8a663adb
   - enabled: 1
     path: Assets/Scenes/Mision1_Secuencias.unity
     guid: 934420d2f37a83744951eae0be2c232d
@@ -64,7 +67,7 @@ EditorBuildSettings:
     guid: 2df4584245046e84388f950dbab24b36
   - enabled: 1
     path: Assets/Scenes/Detectar Errores.unity
-    guid: d1a0e350f67ee354ea338b0a487e78db
+    guid: 342e1fd10be741c459216c5a0a26c4d5
   - enabled: 1
     path: Assets/Scenes/Mision1_DetectarErrores.unity
     guid: e4d6f63d2c8298a44ad54ea6ccc8665b

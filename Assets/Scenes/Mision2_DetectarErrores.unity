@@ -2598,7 +2598,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 486}
+  m_AnchoredPosition: {x: 0, y: 516}
   m_SizeDelta: {x: 484, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &820486964
@@ -4518,6 +4518,8 @@ MonoBehaviour:
   restablecerVolumenesUnaVez: 0
   txtPiePagina: {fileID: 691229719}
   colorCorazon: {r: 0.66, g: 0.33, b: 0.97, a: 1}
+  txtPiePaginaSobreNosotros: {fileID: 0}
+  colorCorazonSobreNosotros: {r: 0.66, g: 0.33, b: 0.97, a: 1}
 --- !u!4 &1835404723
 Transform:
   m_ObjectHideFlags: 0
