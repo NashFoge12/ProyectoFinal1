@@ -67,17 +67,30 @@ public class AjustesManager : MonoBehaviour
     [SerializeField] private bool restablecerVolumenesUnaVez = false;
 
     // ========================================
-    // PIE DE PAGINA
+    // PIE DE PAGINA AJUSTES
     // ========================================
 
-    [Header("PIE DE PAGINA")]
+    [Header("PIE DE PAGINA AJUSTES")]
     [SerializeField] private TMP_Text txtPiePagina;
 
+    [Header("CORAZON AJUSTES")]
     [SerializeField]
-    private Color colorCorazon =
-        new Color(0.66f, 0.33f, 0.97f, 1f);
+    private Color colorCorazon = new Color(0.66f, 0.33f, 0.97f, 1f);
 
     private GameObject corazonPiePagina;
+
+    // ========================================
+    // PIE DE PAGINA SOBRE NOSOTROS
+    // ========================================
+
+    [Header("PIE DE PAGINA SOBRE NOSOTROS")]
+    [SerializeField] private TMP_Text txtPiePaginaSobreNosotros;
+
+    [Header("CORAZON SOBRE NOSOTROS")]
+    [SerializeField]
+    private Color colorCorazonSobreNosotros = new Color(0.66f, 0.33f, 0.97f, 1f);
+
+    private GameObject corazonPiePaginaSobreNosotros;
 
     // ========================================
     // GUARDADO
@@ -101,14 +114,10 @@ public class AjustesManager : MonoBehaviour
             btnCerrar.onClick.AddListener(CerrarAjustes);
 
         if (btnSobreNosotros != null)
-            btnSobreNosotros.onClick.AddListener(
-                AbrirSobreNosotros
-            );
+            btnSobreNosotros.onClick.AddListener(AbrirSobreNosotros);
 
         if (btnCerrarSobreNosotros != null)
-            btnCerrarSobreNosotros.onClick.AddListener(
-                CerrarSobreNosotros
-            );
+            btnCerrarSobreNosotros.onClick.AddListener(CerrarSobreNosotros);
 
         // Slider de musica
 
@@ -118,12 +127,9 @@ public class AjustesManager : MonoBehaviour
             sliderMusica.maxValue = 100f;
             sliderMusica.wholeNumbers = true;
             sliderMusica.interactable = true;
-            sliderMusica.direction =
-                Slider.Direction.LeftToRight;
+            sliderMusica.direction = Slider.Direction.LeftToRight;
 
-            sliderMusica.onValueChanged.AddListener(
-                CambiarVolumenMusica
-            );
+            sliderMusica.onValueChanged.AddListener(CambiarVolumenMusica);
         }
 
         // Slider de sonidos
@@ -134,17 +140,15 @@ public class AjustesManager : MonoBehaviour
             sliderSonidos.maxValue = 100f;
             sliderSonidos.wholeNumbers = true;
             sliderSonidos.interactable = true;
-            sliderSonidos.direction =
-                Slider.Direction.LeftToRight;
+            sliderSonidos.direction = Slider.Direction.LeftToRight;
 
-            sliderSonidos.onValueChanged.AddListener(
-                CambiarVolumenSonidos
-            );
+            sliderSonidos.onValueChanged.AddListener(CambiarVolumenSonidos);
         }
 
-        // Pie de pagina
+        // Pies de pagina
 
         PrepararPiePagina();
+        PrepararPiePaginaSobreNosotros();
     }
 
     private void Start()
@@ -203,24 +207,16 @@ public class AjustesManager : MonoBehaviour
             btnCerrar.onClick.RemoveListener(CerrarAjustes);
 
         if (btnSobreNosotros != null)
-            btnSobreNosotros.onClick.RemoveListener(
-                AbrirSobreNosotros
-            );
+            btnSobreNosotros.onClick.RemoveListener(AbrirSobreNosotros);
 
         if (btnCerrarSobreNosotros != null)
-            btnCerrarSobreNosotros.onClick.RemoveListener(
-                CerrarSobreNosotros
-            );
+            btnCerrarSobreNosotros.onClick.RemoveListener(CerrarSobreNosotros);
 
         if (sliderMusica != null)
-            sliderMusica.onValueChanged.RemoveListener(
-                CambiarVolumenMusica
-            );
+            sliderMusica.onValueChanged.RemoveListener(CambiarVolumenMusica);
 
         if (sliderSonidos != null)
-            sliderSonidos.onValueChanged.RemoveListener(
-                CambiarVolumenSonidos
-            );
+            sliderSonidos.onValueChanged.RemoveListener(CambiarVolumenSonidos);
     }
 
     // ========================================
@@ -362,7 +358,7 @@ public class AjustesManager : MonoBehaviour
     }
 
     // ========================================
-    // PIE DE PAGINA
+    // PIE DE PAGINA AJUSTES
     // ========================================
 
     private void PrepararPiePagina()
@@ -385,9 +381,7 @@ public class AjustesManager : MonoBehaviour
             return;
 
         Transform existente =
-            txtPiePagina.transform.Find(
-                "Corazon_PiePagina"
-            );
+            txtPiePagina.transform.Find("Corazon_PiePagina");
 
         if (existente != null)
         {
@@ -420,9 +414,7 @@ public class AjustesManager : MonoBehaviour
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         rect.pivot = new Vector2(0.5f, 0.5f);
 
-        rect.anchoredPosition =
-            new Vector2(-60f, 0f);
-
+        rect.anchoredPosition = new Vector2(-60f, 0f);
         rect.sizeDelta = new Vector2(30f, 30f);
         rect.localScale = Vector3.one;
 
@@ -434,14 +426,82 @@ public class AjustesManager : MonoBehaviour
     }
 
     // ========================================
+    // PIE DE PAGINA SOBRE NOSOTROS
+    // ========================================
+
+    private void PrepararPiePaginaSobreNosotros()
+    {
+        if (txtPiePaginaSobreNosotros == null)
+            return;
+
+        txtPiePaginaSobreNosotros.text =
+            "Hecho con     para exploradores";
+
+        txtPiePaginaSobreNosotros.alignment =
+            TextAlignmentOptions.Center;
+
+        CrearCorazonPiePaginaSobreNosotros();
+    }
+
+    private void CrearCorazonPiePaginaSobreNosotros()
+    {
+        if (txtPiePaginaSobreNosotros == null)
+            return;
+
+        Transform existente =
+            txtPiePaginaSobreNosotros.transform.Find(
+                "Corazon_PiePagina_SobreNosotros"
+            );
+
+        if (existente != null)
+        {
+            corazonPiePaginaSobreNosotros = existente.gameObject;
+
+            CorazonDibujado corazonExistente =
+                corazonPiePaginaSobreNosotros.GetComponent<CorazonDibujado>();
+
+            if (corazonExistente != null)
+                corazonExistente.color = colorCorazonSobreNosotros;
+
+            return;
+        }
+
+        corazonPiePaginaSobreNosotros = new GameObject(
+            "Corazon_PiePagina_SobreNosotros",
+            typeof(RectTransform),
+            typeof(CanvasRenderer)
+        );
+
+        corazonPiePaginaSobreNosotros.transform.SetParent(
+            txtPiePaginaSobreNosotros.transform,
+            false
+        );
+
+        RectTransform rect =
+            corazonPiePaginaSobreNosotros.GetComponent<RectTransform>();
+
+        rect.anchorMin = new Vector2(0.5f, 0.5f);
+        rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+
+        rect.anchoredPosition = new Vector2(-95f, 0f);
+        rect.sizeDelta = new Vector2(30f, 30f);
+        rect.localScale = Vector3.one;
+
+        CorazonDibujado corazon =
+            corazonPiePaginaSobreNosotros.AddComponent<CorazonDibujado>();
+
+        corazon.color = colorCorazonSobreNosotros;
+        corazon.raycastTarget = false;
+    }
+
+    // ========================================
     // CORAZON DIBUJADO POR CODIGO
     // ========================================
 
     private class CorazonDibujado : MaskableGraphic
     {
-        protected override void OnPopulateMesh(
-            VertexHelper vh
-        )
+        protected override void OnPopulateMesh(VertexHelper vh)
         {
             vh.Clear();
 
@@ -458,13 +518,10 @@ public class AjustesManager : MonoBehaviour
 
             for (int i = 0; i <= puntos; i++)
             {
-                float t =
-                    i * Mathf.PI * 2f / puntos;
+                float t = i * Mathf.PI * 2f / puntos;
 
                 float x =
-                    16f * Mathf.Pow(
-                        Mathf.Sin(t), 3f
-                    );
+                    16f * Mathf.Pow(Mathf.Sin(t), 3f);
 
                 float y =
                     13f * Mathf.Cos(t)
@@ -483,11 +540,7 @@ public class AjustesManager : MonoBehaviour
 
             for (int i = 1; i <= puntos; i++)
             {
-                vh.AddTriangle(
-                    0,
-                    i,
-                    i + 1
-                );
+                vh.AddTriangle(0, i, i + 1);
             }
         }
     }

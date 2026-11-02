@@ -4,78 +4,48 @@ using UnityEngine.SceneManagement;
 
 public class NavegacionEscenas : MonoBehaviour
 {
-    // =========================
-    // MODO DE JUEGO
-    // =========================
-
     // false = Jugar normalmente
     // true = Repasar sin guardar estrellas
     public static bool EsModoRepaso = false;
 
-    // =========================
     // MENÚ PRINCIPAL
-    // =========================
 
     public void IrAMenuPrincipal()
     {
-        // Al volver al menú, salimos del modo Repasar.
         EsModoRepaso = false;
-
         SceneManager.LoadScene("MenuPrincipal");
     }
-
-    // =========================
-    // BOTÓN JUGAR
-    // =========================
 
     public void IrAJugar()
     {
         EsModoRepaso = false;
-
         SceneManager.LoadScene("PensamientoComputacional");
     }
-
-    // =========================
-    // BOTÓN REPASAR
-    // =========================
 
     public void IrARepasar()
     {
         EsModoRepaso = true;
-
         SceneManager.LoadScene("PensamientoComputacional");
     }
 
-    // =========================
-    // PERFIL DEL JUGADOR
-    // =========================
+    // PERFIL Y LOGROS
 
     public void IrAPerfilJugador()
     {
         SceneManager.LoadScene("PerfilJugador");
     }
 
-    // =========================
-    // LOGROS
-    // =========================
-
     public void IrALogros()
     {
         SceneManager.LoadScene("Logros");
     }
-
-    // =========================
-    // PENSAMIENTO COMPUTACIONAL
-    // =========================
 
     public void IrAPensamientoComputacional()
     {
         SceneManager.LoadScene("PensamientoComputacional");
     }
 
-    // =========================
     // ALGORITMOS
-    // =========================
 
     public void IrAAlgoritmos()
     {
@@ -97,9 +67,7 @@ public class NavegacionEscenas : MonoBehaviour
         SceneManager.LoadScene("Mision3_Algoritmos");
     }
 
-    // =========================
     // SECUENCIAS
-    // =========================
 
     public void IrASecuencias()
     {
@@ -121,9 +89,7 @@ public class NavegacionEscenas : MonoBehaviour
         SceneManager.LoadScene("Mision3_Secuencias");
     }
 
-    // =========================
     // PATRONES
-    // =========================
 
     public void IrAPatrones()
     {
@@ -145,9 +111,7 @@ public class NavegacionEscenas : MonoBehaviour
         SceneManager.LoadScene("Mision3_Patrones");
     }
 
-    // =========================
     // DETECTAR ERRORES
-    // =========================
 
     public void IrADetectarErrores()
     {
@@ -169,9 +133,7 @@ public class NavegacionEscenas : MonoBehaviour
         SceneManager.LoadScene("Mision3_DetectarErrores");
     }
 
-    // =========================
     // PROGRAMACIÓN
-    // =========================
 
     public void IrAProgramacion()
     {
@@ -193,9 +155,29 @@ public class NavegacionEscenas : MonoBehaviour
         SceneManager.LoadScene("Mision3_Programacion");
     }
 
-    // =========================
-    // BOTÓN SALIR DEL JUEGO
-    // =========================
+    // DESCOMPOSICIÓN
+
+    public void IrADescomposicion()
+    {
+        SceneManager.LoadScene("Descomposicion");
+    }
+
+    public void IrAMision1Descomposicion()
+    {
+        SceneManager.LoadScene("Mision1_Descomposicion");
+    }
+
+    public void IrAMision2Descomposicion()
+    {
+        SceneManager.LoadScene("Mision2_Descomposicion");
+    }
+
+    public void IrAMision3Descomposicion()
+    {
+        SceneManager.LoadScene("Mision3_Descomposicion");
+    }
+
+    // SALIR DEL JUEGO
 
     public void SalirDelJuego()
     {

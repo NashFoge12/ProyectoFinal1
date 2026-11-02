@@ -955,8 +955,7 @@ public class JuegoOrdenarAlgoritmo : MonoBehaviour
         DetenerPreguntaTemporal();
 
         MostrarMensaje(
-            "¡MISIÓN COMPLETADA!\n" +
-            "¡Excelente! Completaste los 3 algoritmos."
+            "¡MISIÓN COMPLETADA!" 
         );
 
         txtProgreso.text = "";

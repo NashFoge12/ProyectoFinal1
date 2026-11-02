@@ -162,7 +162,7 @@ TextureImporter:
         width: 639
         height: 210
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -184,7 +184,7 @@ TextureImporter:
         width: 1265
         height: 203
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -193,6 +193,28 @@ TextureImporter:
       bones: []
       spriteID: a687eb7f447d9c34ea5a346eabcba895
       internalID: 1006355450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Palabras y marcos de fieltro_4
+      rect:
+        serializedVersion: 2
+        x: 1028
+        y: 120
+        width: 470
+        height: 235
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad5ab04c8ada86942ae33ae8d1a59521
+      internalID: -298442611
       vertices: []
       indices: 
       edges: []
@@ -215,6 +237,7 @@ TextureImporter:
       Palabras y marcos de fieltro_1: 1469142858
       Palabras y marcos de fieltro_2: 426988939
       Palabras y marcos de fieltro_3: 1006355450
+      Palabras y marcos de fieltro_4: -298442611
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

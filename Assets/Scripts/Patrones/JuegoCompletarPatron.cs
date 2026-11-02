@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -31,6 +30,17 @@ public class JuegoCompletarPatron : MonoBehaviour
     public Sprite fondoDulceria;
     public Sprite fondoCielo;
     public Sprite fondoFiguras;
+
+    // =====================================================
+    // FONDO DEL PANEL PREGUNTA
+    // =====================================================
+
+    [Header("FONDO DEL PANEL PREGUNTA")]
+    public Image imagenPanelPregunta;
+
+    public Sprite fondoPanelDulceria;
+    public Sprite fondoPanelCielo;
+    public Sprite fondoPanelFiguras;
 
     // =====================================================
     // TITULOS
@@ -151,6 +161,7 @@ public class JuegoCompletarPatron : MonoBehaviour
     {
         public string pregunta;
         public Sprite fondo;
+        public Sprite fondoPanelPregunta;
         public Sprite titulo;
         public Sprite interrogacion;
         public Sprite[] elementos;
@@ -385,6 +396,7 @@ public class JuegoCompletarPatron : MonoBehaviour
                 "¿Qué dulce falta en el patrón?",
 
             fondo = fondoDulceria,
+            fondoPanelPregunta = fondoPanelDulceria,
             titulo = tituloDulceria,
             interrogacion = interrogacionDulceria,
 
@@ -404,6 +416,7 @@ public class JuegoCompletarPatron : MonoBehaviour
                 "¿Qué figura falta en el cielo?",
 
             fondo = fondoCielo,
+            fondoPanelPregunta = fondoPanelCielo,
             titulo = tituloCielo,
             interrogacion = interrogacionCielo,
 
@@ -423,6 +436,7 @@ public class JuegoCompletarPatron : MonoBehaviour
                 "¡Completa los dos espacios del patrón!",
 
             fondo = fondoFiguras,
+            fondoPanelPregunta = fondoPanelFiguras,
             titulo = tituloFiguras,
             interrogacion = interrogacionFiguras,
 
@@ -594,6 +608,15 @@ public class JuegoCompletarPatron : MonoBehaviour
             ejercicio.fondo != null)
         {
             imagenFondo.sprite = ejercicio.fondo;
+        }
+
+        // ACTUALIZAR FONDO DEL PANEL PREGUNTA
+
+        if (imagenPanelPregunta != null &&
+            ejercicio.fondoPanelPregunta != null)
+        {
+            imagenPanelPregunta.sprite =
+                ejercicio.fondoPanelPregunta;
         }
 
         if (imagenTitulo != null &&

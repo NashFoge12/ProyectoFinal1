@@ -31,34 +31,44 @@ public class PerfilJugadorManager : MonoBehaviour
     [Header("Estadisticas")]
     public TMP_Text txtXP;
     public TMP_Text txtMisiones;
-    public int totalMisiones = 12;
+    public int totalMisiones = 15;
+
+    [Header("Experiencia")]
+    public int xpPorEstrella = 10;
 
     private const string KEY_NOMBRE = "Perfil_Nombre";
     private const string KEY_TIPO = "Perfil_TipoVisual";
     private const string KEY_AVATAR = "Perfil_Avatar";
-    private const string KEY_XP = "Perfil_XP";
-    private const string KEY_MISIONES = "Perfil_MisionesCompletadas";
     private const string ARCHIVO_FOTO = "avatar_personalizado.png";
 
-    // 0 = foto personal; 1 = avatar predisenado.
-    // Por defecto, se muestra la foto con su marco.
     private int tipoVisual = 0;
     private int avatarActual = 2;
 
     private Sprite spriteFotoPersonal;
+    private Texture2D texturaFotoPersonal;
     private bool fotoCargada = false;
+
+    // Estas categorías corresponden a las 15 misiones.
+    private readonly string[] categorias =
+    {
+        "Algoritmos",
+        "Secuencias",
+        "Patrones",
+        "Descomposicion",
+        "DetectarErrores"
+    };
 
     private string RutaFoto =>
         Path.Combine(Application.persistentDataPath, ARCHIVO_FOTO);
 
     private void Awake()
     {
+        ConfigurarCampoNombre();
         ConectarBotones();
     }
 
     private void Start()
     {
-        // Texto fijo del pie.
         if (txtPie != null)
             txtPie.text = "¡Sigue explorando y aprendiendo!";
 
@@ -66,14 +76,36 @@ public class PerfilJugadorManager : MonoBehaviour
         ActualizarEstadisticas();
     }
 
+    private void OnEnable()
+    {
+        if (Application.isPlaying)
+            ActualizarEstadisticas();
+    }
+
     private void OnDestroy()
     {
-        if (spriteFotoPersonal != null)
-            Destroy(spriteFotoPersonal);
+        LiberarFotoActual();
     }
 
     // ------------------------------------------------
-    // CONECTAR BOTONES
+    // CAMPO DE NOMBRE
+    // ------------------------------------------------
+
+    private void ConfigurarCampoNombre()
+    {
+        if (inputNombre == null)
+        {
+            Debug.LogError("No se asignó Input_Nombre.");
+            return;
+        }
+
+        inputNombre.interactable = true;
+        inputNombre.readOnly = false;
+        inputNombre.enabled = true;
+    }
+
+    // ------------------------------------------------
+    // BOTONES
     // ------------------------------------------------
 
     private void ConectarBotones()
@@ -87,22 +119,17 @@ public class PerfilJugadorManager : MonoBehaviour
                 if (botonesAvatares[i] != null)
                 {
                     botonesAvatares[i].onClick.AddListener(
-                        () => SeleccionarAvatar(indice));
+                        () => SeleccionarAvatar(indice)
+                    );
                 }
             }
         }
 
         if (btnSubirFoto != null)
-        {
-            btnSubirFoto.onClick.RemoveListener(AbrirGaleria);
             btnSubirFoto.onClick.AddListener(AbrirGaleria);
-        }
 
         if (btnGuardarPerfil != null)
-        {
-            btnGuardarPerfil.onClick.RemoveListener(GuardarPerfil);
             btnGuardarPerfil.onClick.AddListener(GuardarPerfil);
-        }
     }
 
     // ------------------------------------------------
@@ -116,7 +143,7 @@ public class PerfilJugadorManager : MonoBehaviour
             indice >= spritesAvatares.Length ||
             spritesAvatares[indice] == null)
         {
-            MostrarMensaje("No se encontro la imagen del avatar.");
+            MostrarMensaje("No se encontró la imagen del avatar.");
             return;
         }
 
@@ -125,8 +152,7 @@ public class PerfilJugadorManager : MonoBehaviour
 
         ActualizarVisual();
 
-        // Guardar la seleccion inmediatamente.
-        PlayerPrefs.SetInt(KEY_TIPO, 1);
+        PlayerPrefs.SetInt(KEY_TIPO, tipoVisual);
         PlayerPrefs.SetInt(KEY_AVATAR, avatarActual);
         PlayerPrefs.Save();
 
@@ -143,7 +169,10 @@ public class PerfilJugadorManager : MonoBehaviour
             (ruta) =>
             {
                 if (string.IsNullOrEmpty(ruta))
+                {
+                    Debug.Log("Selección de fotografía cancelada.");
                     return;
+                }
 
                 CargarFotoDesdeRuta(ruta);
             },
@@ -153,87 +182,182 @@ public class PerfilJugadorManager : MonoBehaviour
     }
 
     // ------------------------------------------------
-    // CARGAR FOTO PERSONAL
+    // CARGAR FOTO DESDE GALERIA
     // ------------------------------------------------
 
     public void CargarFotoDesdeRuta(string ruta)
     {
-        if (string.IsNullOrEmpty(ruta) || !File.Exists(ruta))
+        if (string.IsNullOrEmpty(ruta))
         {
-            MostrarMensaje("No se encontro la fotografia.");
+            MostrarMensaje("No se seleccionó ninguna fotografía.");
             return;
         }
 
+        Texture2D textura = null;
+
         try
         {
-            byte[] datos = File.ReadAllBytes(ruta);
+            textura = NativeGallery.LoadImageAtPath(
+                ruta,
+                -1,
+                false,
+                false,
+                false
+            );
 
-            if (CargarFotoDesdeBytes(datos))
+            // Segundo intento mediante lectura directa.
+            if (textura == null && File.Exists(ruta))
             {
-                try
-                {
-                    File.WriteAllBytes(RutaFoto, datos);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogWarning(
-                        "No se pudo guardar la copia de la foto: " +
-                        e.Message);
-                }
+                byte[] datosOriginales = File.ReadAllBytes(ruta);
 
-                tipoVisual = 0;
+                Texture2D alternativa = new Texture2D(
+                    2,
+                    2,
+                    TextureFormat.RGBA32,
+                    false
+                );
 
-                PlayerPrefs.SetInt(KEY_TIPO, 0);
-                PlayerPrefs.Save();
-
-                ActualizarVisual();
-                MostrarMensaje("¡Fotografia actualizada!");
+                if (alternativa.LoadImage(datosOriginales))
+                    textura = alternativa;
+                else
+                    Destroy(alternativa);
             }
+
+            if (textura == null)
+            {
+                MostrarMensaje("No se pudo abrir esta imagen. Prueba con JPG o PNG.");
+                Debug.LogWarning("No se pudo cargar: " + ruta);
+                return;
+            }
+
+            byte[] datosPNG = textura.EncodeToPNG();
+
+            if (datosPNG == null || datosPNG.Length == 0)
+            {
+                Destroy(textura);
+                MostrarMensaje("No se pudo convertir la fotografía.");
+                return;
+            }
+
+            File.WriteAllBytes(RutaFoto, datosPNG);
+
+            ReemplazarFoto(textura);
+            textura = null;
+
+            tipoVisual = 0;
+
+            PlayerPrefs.SetInt(KEY_TIPO, 0);
+            PlayerPrefs.Save();
+
+            ActualizarVisual();
+
+            MostrarMensaje("¡Fotografía guardada correctamente!");
         }
         catch (Exception e)
         {
-            Debug.LogError("Error al cargar la fotografia: " + e.Message);
-            MostrarMensaje("No se pudo cargar la fotografia.");
+            if (textura != null)
+                Destroy(textura);
+
+            Debug.LogError("Error al guardar fotografía: " + e);
+            MostrarMensaje("No se pudo guardar la fotografía.");
         }
     }
 
-    // Carga la imagen sin cambiar el avatar o modo guardado.
-    private bool CargarFotoDesdeBytes(byte[] datos)
+    // ------------------------------------------------
+    // REEMPLAZAR FOTO ACTUAL
+    // ------------------------------------------------
+
+    private void ReemplazarFoto(Texture2D textura)
     {
-        Texture2D textura = new Texture2D(
-            2, 2, TextureFormat.RGBA32, false);
+        LiberarFotoActual();
 
-        if (!textura.LoadImage(datos))
-        {
-            Destroy(textura);
-            return false;
-        }
+        texturaFotoPersonal = textura;
 
-        Sprite nuevoSprite = Sprite.Create(
-            textura,
-            new Rect(0, 0, textura.width, textura.height),
+        spriteFotoPersonal = Sprite.Create(
+            texturaFotoPersonal,
+            new Rect(
+                0,
+                0,
+                texturaFotoPersonal.width,
+                texturaFotoPersonal.height
+            ),
             new Vector2(0.5f, 0.5f),
             100f
         );
 
-        if (spriteFotoPersonal != null)
-            Destroy(spriteFotoPersonal);
-
-        spriteFotoPersonal = nuevoSprite;
         fotoCargada = true;
-
-        return true;
     }
 
     // ------------------------------------------------
-    // ACTUALIZAR INTERFAZ
+    // LIBERAR FOTO ANTERIOR
+    // ------------------------------------------------
+
+    private void LiberarFotoActual()
+    {
+        if (imgFotoPersonal != null &&
+            imgFotoPersonal.sprite == spriteFotoPersonal)
+        {
+            imgFotoPersonal.sprite = null;
+        }
+
+        if (spriteFotoPersonal != null)
+        {
+            Destroy(spriteFotoPersonal);
+            spriteFotoPersonal = null;
+        }
+
+        if (texturaFotoPersonal != null)
+        {
+            Destroy(texturaFotoPersonal);
+            texturaFotoPersonal = null;
+        }
+
+        fotoCargada = false;
+    }
+
+    // ------------------------------------------------
+    // RECUPERAR FOTO GUARDADA
+    // ------------------------------------------------
+
+    private void CargarFotoGuardada()
+    {
+        if (!File.Exists(RutaFoto))
+            return;
+
+        try
+        {
+            byte[] datos = File.ReadAllBytes(RutaFoto);
+
+            Texture2D textura = new Texture2D(
+                2,
+                2,
+                TextureFormat.RGBA32,
+                false
+            );
+
+            if (!textura.LoadImage(datos))
+            {
+                Destroy(textura);
+                Debug.LogWarning("No se pudo recuperar la fotografía.");
+                return;
+            }
+
+            ReemplazarFoto(textura);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error al recuperar foto: " + e.Message);
+        }
+    }
+
+    // ------------------------------------------------
+    // ACTUALIZAR VISUAL
     // ------------------------------------------------
 
     private void ActualizarVisual()
     {
         bool mostrarFoto = (tipoVisual == 0);
 
-        // FOTO PERSONAL
         if (imgFotoPersonal != null)
         {
             imgFotoPersonal.gameObject.SetActive(mostrarFoto);
@@ -244,12 +368,13 @@ public class PerfilJugadorManager : MonoBehaviour
                 spriteFotoPersonal != null)
             {
                 imgFotoPersonal.sprite = spriteFotoPersonal;
+
+                // Se conserva la apariencia anterior.
                 imgFotoPersonal.preserveAspect = false;
                 imgFotoPersonal.color = Color.white;
             }
         }
 
-        // MARCO: visible con la foto, oculto con los avatares.
         if (imgMarcoFoto != null)
         {
             imgMarcoFoto.gameObject.SetActive(mostrarFoto);
@@ -257,7 +382,6 @@ public class PerfilJugadorManager : MonoBehaviour
             imgMarcoFoto.raycastTarget = false;
         }
 
-        // AVATAR PREDEFINIDO
         if (imgAvatarSeleccionado != null)
         {
             imgAvatarSeleccionado.gameObject.SetActive(!mostrarFoto);
@@ -278,8 +402,6 @@ public class PerfilJugadorManager : MonoBehaviour
             }
         }
 
-        // Orden de dibujo para la foto y el marco.
-        // Se aplica cuando ambos comparten el mismo padre.
         if (mostrarFoto &&
             imgFotoPersonal != null &&
             imgMarcoFoto != null &&
@@ -292,7 +414,7 @@ public class PerfilJugadorManager : MonoBehaviour
     }
 
     // ------------------------------------------------
-    // CARGAR PERFIL GUARDADO
+    // CARGAR PERFIL
     // ------------------------------------------------
 
     public void CargarPerfil()
@@ -300,34 +422,25 @@ public class PerfilJugadorManager : MonoBehaviour
         string nombre = PlayerPrefs.GetString(KEY_NOMBRE, "");
 
         if (inputNombre != null)
+        {
             inputNombre.text = nombre;
+            inputNombre.interactable = true;
+            inputNombre.readOnly = false;
+        }
 
         if (txtNombreJugador != null)
         {
             txtNombreJugador.text =
-                string.IsNullOrEmpty(nombre) ? "Jugador" : nombre;
+                string.IsNullOrWhiteSpace(nombre)
+                ? "Jugador"
+                : nombre;
         }
 
-        // Leer la seleccion guardada ANTES de cargar la foto.
         tipoVisual = PlayerPrefs.GetInt(KEY_TIPO, 0);
         avatarActual = PlayerPrefs.GetInt(KEY_AVATAR, 2);
 
-        // Recuperar la foto sin modificar tipoVisual.
-        if (File.Exists(RutaFoto))
-        {
-            try
-            {
-                byte[] datos = File.ReadAllBytes(RutaFoto);
-                CargarFotoDesdeBytes(datos);
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning(
-                    "No se pudo recuperar la foto: " + e.Message);
-            }
-        }
+        CargarFotoGuardada();
 
-        // Validar el avatar guardado.
         if (tipoVisual == 1)
         {
             if (spritesAvatares == null ||
@@ -335,29 +448,37 @@ public class PerfilJugadorManager : MonoBehaviour
                 avatarActual >= spritesAvatares.Length ||
                 spritesAvatares[avatarActual] == null)
             {
-                tipoVisual = 0;
-                PlayerPrefs.SetInt(KEY_TIPO, 0);
-                PlayerPrefs.Save();
+                tipoVisual = fotoCargada ? 0 : 1;
             }
         }
+
+        if (tipoVisual == 0 && !fotoCargada)
+            tipoVisual = 1;
 
         ActualizarVisual();
     }
 
     // ------------------------------------------------
-    // BOTON GUARDAR
+    // GUARDAR PERFIL
     // ------------------------------------------------
 
     public void GuardarPerfil()
     {
-        string nombre = inputNombre != null
-            ? inputNombre.text.Trim()
-            : "";
+        if (inputNombre == null)
+        {
+            MostrarMensaje("No se encontró el campo del nombre.");
+            return;
+        }
 
-        if (string.IsNullOrEmpty(nombre))
-            nombre = "Jugador";
+        string nombre = inputNombre.text.Trim();
 
-        // Guardar todos los datos del perfil.
+        if (string.IsNullOrWhiteSpace(nombre))
+        {
+            MostrarMensaje("Escribe tu nombre antes de guardar.");
+            inputNombre.ActivateInputField();
+            return;
+        }
+
         PlayerPrefs.SetString(KEY_NOMBRE, nombre);
         PlayerPrefs.SetInt(KEY_TIPO, tipoVisual);
         PlayerPrefs.SetInt(KEY_AVATAR, avatarActual);
@@ -366,45 +487,90 @@ public class PerfilJugadorManager : MonoBehaviour
         if (txtNombreJugador != null)
             txtNombreJugador.text = nombre;
 
-        // Confirmar en consola y en pantalla.
-        Debug.Log(
-            "Perfil guardado. Nombre: " + nombre +
-            ", tipo visual: " + tipoVisual +
-            ", avatar: " + avatarActual);
-
         MostrarMensaje("¡Perfil guardado correctamente!");
+
+        inputNombre.DeactivateInputField();
     }
 
     // ------------------------------------------------
-    // ESTADISTICAS
+    // EXPERIENCIA Y MISIONES
     // ------------------------------------------------
 
     public void ActualizarEstadisticas()
     {
-        int xp = PlayerPrefs.GetInt(KEY_XP, 0);
-        int misiones = PlayerPrefs.GetInt(KEY_MISIONES, 0);
+        int totalEstrellas = ContarEstrellasObtenidas();
+
+        // Cada estrella equivale a 10 XP.
+        int experiencia = totalEstrellas * xpPorEstrella;
 
         if (txtXP != null)
-            txtXP.text = Mathf.Max(0, xp) + " XP";
+        {
+            txtXP.text = experiencia + " XP";
+        }
+        else
+        {
+            Debug.LogWarning("No se asignó Txt_XP en el Inspector.");
+        }
+
+        int misionesCompletadas = ContarMisionesCompletadas();
 
         if (txtMisiones != null)
         {
             txtMisiones.text =
-                Mathf.Clamp(misiones, 0, totalMisiones) +
-                " / " + totalMisiones;
+                misionesCompletadas + " / " + totalMisiones;
         }
+        else
+        {
+            Debug.LogWarning("No se asignó Txt_Misiones en el Inspector.");
+        }
+
+        Debug.Log(
+            "Perfil actualizado: " +
+            totalEstrellas + " estrellas | " +
+            experiencia + " XP | " +
+            misionesCompletadas + " / " + totalMisiones + " misiones"
+        );
     }
 
-    public void EstablecerEstadisticas(int xp, int misiones)
+    // Suma las estrellas guardadas en todas las misiones.
+    private int ContarEstrellasObtenidas()
     {
-        PlayerPrefs.SetInt(KEY_XP, Mathf.Max(0, xp));
+        int total = 0;
 
-        PlayerPrefs.SetInt(
-            KEY_MISIONES,
-            Mathf.Clamp(misiones, 0, totalMisiones));
+        foreach (string categoria in categorias)
+        {
+            for (int mision = 1; mision <= 3; mision++)
+            {
+                total += ProgresoEstrellas.ObtenerEstrellas(
+                    categoria,
+                    mision
+                );
+            }
+        }
 
-        PlayerPrefs.Save();
-        ActualizarEstadisticas();
+        return total;
+    }
+
+    // Una misión cuenta como completada cuando tiene 3 estrellas.
+    private int ContarMisionesCompletadas()
+    {
+        int total = 0;
+
+        foreach (string categoria in categorias)
+        {
+            for (int mision = 1; mision <= 3; mision++)
+            {
+                int estrellas = ProgresoEstrellas.ObtenerEstrellas(
+                    categoria,
+                    mision
+                );
+
+                if (estrellas >= 3)
+                    total++;
+            }
+        }
+
+        return Mathf.Clamp(total, 0, totalMisiones);
     }
 
     // ------------------------------------------------

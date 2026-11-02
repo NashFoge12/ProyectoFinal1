@@ -915,8 +915,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 130}
-  m_SizeDelta: {x: 940, y: 210}
+  m_AnchoredPosition: {x: 0, y: 89}
+  m_SizeDelta: {x: 940, y: 250}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &680024991
 MonoBehaviour:
@@ -1502,7 +1502,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -120}
-  m_SizeDelta: {x: 596, y: 270}
+  m_SizeDelta: {x: 820, y: 350}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1055743891
 MonoBehaviour:
@@ -2627,7 +2627,7 @@ MonoBehaviour:
   separacionMisiones: 240
   posicionXEstrellas: 35
   posicionYEstrellas: -35
-  incluirDescomposicion: 0
+  incluirDescomposicion: 1
 --- !u!1 &1793974975
 GameObject:
   m_ObjectHideFlags: 0

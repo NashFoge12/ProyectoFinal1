@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,7 +7,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 // Mundo Pujllay - Detectar errores - Mision 3: Paso sobrante
-// Guardar como JuegoPasoSobrante.cs
+// Archivo: JuegoPasoSobrante.cs
+
 public class JuegoPasoSobrante : MonoBehaviour
 {
     // =========================================================
@@ -26,14 +28,23 @@ public class JuegoPasoSobrante : MonoBehaviour
     public Sprite tituloBanda, tituloOceano, tituloParque;
 
     // =========================================================
+    // 02A. FONDO DEL PANEL PREGUNTA
+    // =========================================================
+    [Header("02A - FONDO DEL PANEL PREGUNTA")]
+    public Image imagenPanelPregunta;
+    public Sprite fondoPanelBanda;
+    public Sprite fondoPanelOceano;
+    public Sprite fondoPanelParque;
+
+    // =========================================================
     // 03. CUATRO TARJETAS Y ZONA DE DESCARTE
     // =========================================================
     [Header("03 - TARJETAS Y DESCARTE")]
-    [Tooltip("Asignar Tarjeta_1, Tarjeta_2, Tarjeta_3, Tarjeta_4 (Button)")]
     public Button[] tarjetas = new Button[4];
-    [Tooltip("Image del area azul de descarte. Puede tener un Button en el mismo objeto.")]
+
+    [Tooltip("Imagen del tacho de descarte. Se conserva su color original.")]
     public Image zonaDescarte;
-    [Tooltip("Texto opcional dentro del area de descarte")]
+
     public TMP_Text textoDescarte;
 
     // =========================================================
@@ -43,7 +54,7 @@ public class JuegoPasoSobrante : MonoBehaviour
     public Sprite bandaAfinarInstrumentos;
     public Sprite bandaPrepararBateria;
     public Sprite bandaProbarMicrofonos;
-    public Sprite bandaLavarAutomovil; // Sobrante
+    public Sprite bandaLavarAutomovil;
 
     // =========================================================
     // 05. EJERCICIO 2: EXPLORAR EL OCEANO
@@ -52,7 +63,7 @@ public class JuegoPasoSobrante : MonoBehaviour
     public Sprite oceanoRevisarOxigeno;
     public Sprite oceanoPrepararCamara;
     public Sprite oceanoRevisarTraje;
-    public Sprite oceanoHornearPastel; // Sobrante
+    public Sprite oceanoHornearPastel;
 
     // =========================================================
     // 06. EJERCICIO 3: PARQUE DE DIVERSIONES
@@ -61,7 +72,7 @@ public class JuegoPasoSobrante : MonoBehaviour
     public Sprite parquePrepararTerreno;
     public Sprite parqueMontarAtracciones;
     public Sprite parqueRevisarSeguridad;
-    public Sprite parquePescarEnRio; // Sobrante
+    public Sprite parquePescarEnRio;
 
     // =========================================================
     // 07. BOTONES
@@ -78,9 +89,11 @@ public class JuegoPasoSobrante : MonoBehaviour
     [Min(10f)] public float tamanoCirculo = 28f;
     [Min(0f)] public float separacionCirculos = 38f;
     public float posicionVerticalCirculos = -20f;
+
     public Color colorActivo = new Color(1f, .78f, .24f, 1f);
     public Color colorPendiente = new Color(.78f, .76f, .72f, 1f);
     public Color colorBorde = new Color(.48f, .30f, .65f, 1f);
+
     [Range(0f, 12f)] public float grosorBorde = 3f;
     public Color colorNumero = Color.white;
 
@@ -92,288 +105,633 @@ public class JuegoPasoSobrante : MonoBehaviour
     public Color colorSeleccionado = new Color(.73f, .89f, 1f, 1f);
     public Color colorCorrecto = new Color(.68f, 1f, .73f, 1f);
     public Color colorError = new Color(1f, .76f, .76f, 1f);
+
     [Header("10 - VARIACIONES")]
     public bool mezclarTarjetas = true;
 
+    // =========================================================
+    // DATOS DE LOS EJERCICIOS
+    // =========================================================
     private class Ejercicio
     {
         public string pregunta;
         public Sprite fondo, titulo;
+        public Sprite fondoPanelPregunta;
         public Sprite[] pasos;
         public int sobranteOriginal;
     }
 
     private readonly List<Ejercicio> ejercicios = new List<Ejercicio>();
+
     private readonly int[] indicesTarjetas = new int[4];
+
     private Image[] circulos;
     private Sprite circuloSprite;
+
     private int ejercicioActual;
     private int tarjetaSeleccionada = -1;
     private int tarjetaDescartada = -1;
+
     private bool completado;
     private Coroutine rutinaPregunta;
 
+    // =========================================================
+    // INICIO
+    // =========================================================
     void Start()
     {
-        if (!Validar()) { enabled = false; return; }
+        if (!Validar())
+        {
+            enabled = false;
+            return;
+        }
+
         CrearEjercicios();
+
+        // Mezcla los pasos incorrectos al iniciar una partida.
+        MezclarRespuestasIncorrectas();
+
         PrepararInteracciones();
         CrearIndicadorProgreso();
         CargarEjercicio();
     }
 
+    // =========================================================
+    // VALIDAR REFERENCIAS
+    // =========================================================
     bool Validar()
     {
-        if (txtPregunta == null || zonaDescarte == null || btnComprobar == null || btnSiguiente == null || panelProgreso == null)
+        if (txtPregunta == null ||
+            zonaDescarte == null ||
+            btnComprobar == null ||
+            btnSiguiente == null ||
+            panelProgreso == null)
         {
-            Debug.LogError("JuegoPasoSobrante: asigna Txt_Pregunta, Zona_Descarte, botones y Panel_Progreso.");
+            Debug.LogError("JuegoPasoSobrante: faltan referencias en el Inspector.");
             return false;
         }
+
         if (tarjetas == null || tarjetas.Length != 4)
         {
-            Debug.LogError("JuegoPasoSobrante: asigna exactamente 4 tarjetas Button.");
+            Debug.LogError("JuegoPasoSobrante: asigna exactamente 4 tarjetas.");
             return false;
         }
+
         foreach (Button tarjeta in tarjetas)
         {
-            if (tarjeta == null) { Debug.LogError("JuegoPasoSobrante: falta una tarjeta."); return false; }
+            if (tarjeta == null || tarjeta.image == null)
+            {
+                Debug.LogError("JuegoPasoSobrante: revisa las tarjetas y sus imágenes.");
+                return false;
+            }
         }
+
         return true;
     }
 
+    // =========================================================
+    // CREAR EJERCICIOS
+    // =========================================================
     void CrearEjercicios()
     {
         ejercicios.Clear();
-        ejercicios.Add(new Ejercicio {
+
+        ejercicios.Add(new Ejercicio
+        {
             pregunta = "¿Qué paso sobra al organizar una banda musical?",
-            fondo = fondoBanda, titulo = tituloBanda,
-            pasos = new Sprite[] { bandaAfinarInstrumentos, bandaPrepararBateria, bandaProbarMicrofonos, bandaLavarAutomovil },
+
+            fondo = fondoBanda,
+            titulo = tituloBanda,
+            fondoPanelPregunta = fondoPanelBanda,
+
+            pasos = new Sprite[]
+            {
+                bandaAfinarInstrumentos,
+                bandaPrepararBateria,
+                bandaProbarMicrofonos,
+                bandaLavarAutomovil
+            },
+
             sobranteOriginal = 3
         });
-        ejercicios.Add(new Ejercicio {
+
+        ejercicios.Add(new Ejercicio
+        {
             pregunta = "¿Qué paso no pertenece a la exploración del océano?",
-            fondo = fondoOceano, titulo = tituloOceano,
-            pasos = new Sprite[] { oceanoRevisarOxigeno, oceanoPrepararCamara, oceanoRevisarTraje, oceanoHornearPastel },
+
+            fondo = fondoOceano,
+            titulo = tituloOceano,
+            fondoPanelPregunta = fondoPanelOceano,
+
+            pasos = new Sprite[]
+            {
+                oceanoRevisarOxigeno,
+                oceanoPrepararCamara,
+                oceanoRevisarTraje,
+                oceanoHornearPastel
+            },
+
             sobranteOriginal = 3
         });
-        ejercicios.Add(new Ejercicio {
+
+        ejercicios.Add(new Ejercicio
+        {
             pregunta = "¿Qué paso sobra al construir el parque de diversiones?",
-            fondo = fondoParque, titulo = tituloParque,
-            pasos = new Sprite[] { parquePrepararTerreno, parqueMontarAtracciones, parqueRevisarSeguridad, parquePescarEnRio },
+
+            fondo = fondoParque,
+            titulo = tituloParque,
+            fondoPanelPregunta = fondoPanelParque,
+
+            pasos = new Sprite[]
+            {
+                parquePrepararTerreno,
+                parqueMontarAtracciones,
+                parqueRevisarSeguridad,
+                parquePescarEnRio
+            },
+
             sobranteOriginal = 3
         });
     }
 
+    // =========================================================
+    // MEZCLAR RESPUESTAS INCORRECTAS ENTRE EJERCICIOS
+    // =========================================================
+    void MezclarRespuestasIncorrectas()
+    {
+        // Guardamos las tres tarjetas incorrectas.
+        List<Sprite> respuestasIncorrectas = new List<Sprite>
+        {
+            bandaLavarAutomovil,
+            oceanoHornearPastel,
+            parquePescarEnRio
+        };
+
+        // Mezclamos las tres respuestas.
+        for (int i = respuestasIncorrectas.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+
+            Sprite temporal = respuestasIncorrectas[i];
+            respuestasIncorrectas[i] = respuestasIncorrectas[j];
+            respuestasIncorrectas[j] = temporal;
+        }
+
+        // Asignamos una respuesta incorrecta diferente
+        // a cada ejercicio.
+        for (int i = 0; i < ejercicios.Count; i++)
+        {
+            ejercicios[i].pasos[3] = respuestasIncorrectas[i];
+        }
+    }
+
+    // =========================================================
+    // PREPARAR INTERACCIONES
+    // =========================================================
     void PrepararInteracciones()
     {
         for (int i = 0; i < tarjetas.Length; i++)
         {
             int indice = i;
-            tarjetas[i].onClick.AddListener(() => SeleccionarTarjeta(indice));
+
+            tarjetas[i].onClick.AddListener(
+                () => SeleccionarTarjeta(indice)
+            );
+
             tarjetas[i].transition = Selectable.Transition.None;
-            ArrastrarTarjetaSobrante drag = tarjetas[i].GetComponent<ArrastrarTarjetaSobrante>();
-            if (drag == null) drag = tarjetas[i].gameObject.AddComponent<ArrastrarTarjetaSobrante>();
+
+            ArrastrarTarjetaSobrante drag =
+                tarjetas[i].GetComponent<ArrastrarTarjetaSobrante>();
+
+            if (drag == null)
+            {
+                drag = tarjetas[i].gameObject
+                    .AddComponent<ArrastrarTarjetaSobrante>();
+            }
+
             drag.Configurar(this, indice);
         }
+
+        // El tacho conserva su imagen y su color del Inspector.
         zonaDescarte.raycastTarget = true;
-        SoltarPasoSobrante drop = zonaDescarte.GetComponent<SoltarPasoSobrante>();
-        if (drop == null) drop = zonaDescarte.gameObject.AddComponent<SoltarPasoSobrante>();
+
+        // Añadimos el detector de soltar si todavía no existe.
+        SoltarPasoSobrante drop =
+            zonaDescarte.GetComponent<SoltarPasoSobrante>();
+
+        if (drop == null)
+        {
+            drop = zonaDescarte.gameObject
+                .AddComponent<SoltarPasoSobrante>();
+        }
+
         drop.Configurar(this);
+
+        // Solo utilizamos un Button si ya existe en el tacho.
+        // No creamos otro ni modificamos su apariencia.
         Button botonZona = zonaDescarte.GetComponent<Button>();
-        if (botonZona == null) botonZona = zonaDescarte.gameObject.AddComponent<Button>();
-        botonZona.transition = Selectable.Transition.None;
-        botonZona.onClick.AddListener(DescartarSeleccionada);
+
+        if (botonZona != null)
+        {
+            botonZona.transition = Selectable.Transition.None;
+            botonZona.onClick.AddListener(DescartarSeleccionada);
+        }
+
         btnComprobar.onClick.AddListener(Comprobar);
         btnSiguiente.onClick.AddListener(SiguienteEjercicio);
     }
 
+    // =========================================================
+    // CARGAR EJERCICIO
+    // =========================================================
     void CargarEjercicio()
     {
         DetenerPregunta();
+
         completado = false;
         tarjetaSeleccionada = -1;
         tarjetaDescartada = -1;
+
         Ejercicio e = ejercicios[ejercicioActual];
-        if (imagenFondo != null && e.fondo != null) imagenFondo.sprite = e.fondo;
-        if (imagenTitulo != null && e.titulo != null) imagenTitulo.sprite = e.titulo;
-        for (int i = 0; i < 4; i++) indicesTarjetas[i] = i;
+
+        if (imagenFondo != null && e.fondo != null)
+            imagenFondo.sprite = e.fondo;
+
+        if (imagenTitulo != null && e.titulo != null)
+            imagenTitulo.sprite = e.titulo;
+
+        // Cambiar el fondo del Panel_Pregunta según el ejercicio.
+        if (imagenPanelPregunta != null && e.fondoPanelPregunta != null)
+            imagenPanelPregunta.sprite = e.fondoPanelPregunta;
+
+        for (int i = 0; i < 4; i++)
+            indicesTarjetas[i] = i;
+
+        // Mezclar posiciones de las tarjetas.
         if (mezclarTarjetas)
         {
             for (int i = 3; i > 0; i--)
             {
                 int j = Random.Range(0, i + 1);
-                int tmp = indicesTarjetas[i]; indicesTarjetas[i] = indicesTarjetas[j]; indicesTarjetas[j] = tmp;
+
+                int temporal = indicesTarjetas[i];
+                indicesTarjetas[i] = indicesTarjetas[j];
+                indicesTarjetas[j] = temporal;
             }
         }
+
         for (int i = 0; i < 4; i++)
         {
             tarjetas[i].gameObject.SetActive(true);
             tarjetas[i].interactable = true;
+
             tarjetas[i].image.sprite = e.pasos[indicesTarjetas[i]];
             tarjetas[i].image.color = colorNormal;
             tarjetas[i].image.preserveAspect = false;
         }
-        zonaDescarte.color = new Color(.72f, .86f, 1f, 1f);
-        if (textoDescarte != null) textoDescarte.text = "ARRASTRA AQUÍ EL PASO SOBRANTE";
+
+        // IMPORTANTE:
+        // Ya no cambiamos el color del tacho.
+        // Se mantiene el color original configurado en Unity.
+
+        if (textoDescarte != null)
+            textoDescarte.text = "ARRASTRA AQUÍ EL PASO SOBRANTE";
+
         btnComprobar.gameObject.SetActive(true);
         btnComprobar.interactable = true;
+
         btnSiguiente.gameObject.SetActive(false);
+
         ActualizarIndicadorProgreso();
-        rutinaPregunta = StartCoroutine(MostrarPreguntaTemporal(e.pregunta));
+
+        rutinaPregunta = StartCoroutine(
+            MostrarPreguntaTemporal(e.pregunta)
+        );
     }
 
+    // =========================================================
+    // MOSTRAR PREGUNTA
+    // =========================================================
     IEnumerator MostrarPreguntaTemporal(string pregunta)
     {
         txtPregunta.text = pregunta;
+
         yield return new WaitForSeconds(tiempoPregunta);
-        txtPregunta.text = "¡Encuentra el paso que sobra y llévalo al descarte!";
+
+        txtPregunta.text =
+            "¡Encuentra el paso que sobra y llévalo al descarte!";
+
         rutinaPregunta = null;
     }
 
     void DetenerPregunta()
     {
-        if (rutinaPregunta != null) { StopCoroutine(rutinaPregunta); rutinaPregunta = null; }
+        if (rutinaPregunta != null)
+        {
+            StopCoroutine(rutinaPregunta);
+            rutinaPregunta = null;
+        }
     }
 
+    // =========================================================
+    // SELECCIONAR TARJETA
+    // =========================================================
     public void SeleccionarTarjeta(int indice)
     {
-        if (completado || indice < 0 || indice >= tarjetas.Length) return;
+        if (completado || indice < 0 || indice >= tarjetas.Length)
+            return;
+
         DetenerPregunta();
+
         tarjetaSeleccionada = indice;
-        // Permite recuperar la tarjeta que se habia descartado.
         tarjetaDescartada = -1;
+
         ActualizarColoresTarjetas();
-        txtPregunta.text = "¡Ahora toca la zona de descarte o arrastra la tarjeta!";
+
+        txtPregunta.text =
+            "¡Ahora arrastra la tarjeta al tacho!";
     }
 
+    // =========================================================
+    // DESCARTAR TARJETA SELECCIONADA
+    // =========================================================
     public void DescartarSeleccionada()
     {
-        if (completado || tarjetaSeleccionada < 0) return;
+        if (completado || tarjetaSeleccionada < 0)
+            return;
+
         DescartarTarjeta(tarjetaSeleccionada);
     }
 
+    // =========================================================
+    // DESCARTAR TARJETA MEDIANTE ARRASTRE
+    // =========================================================
     public void DescartarTarjeta(int indice)
     {
-        if (completado || indice < 0 || indice >= tarjetas.Length) return;
+        if (completado || indice < 0 || indice >= tarjetas.Length)
+            return;
+
         DetenerPregunta();
+
         tarjetaDescartada = indice;
         tarjetaSeleccionada = indice;
+
         ActualizarColoresTarjetas();
-        if (textoDescarte != null) textoDescarte.text = "TARJETA ELEGIDA ✓";
-        txtPregunta.text = "¡Bien! Presiona COMPROBAR para revisar tu respuesta.";
+
+        if (textoDescarte != null)
+            textoDescarte.text = "TARJETA ELEGIDA ✓";
+
+        txtPregunta.text =
+            "¡Bien! Presiona COMPROBAR para revisar tu respuesta.";
     }
 
+    // =========================================================
+    // ACTUALIZAR COLORES DE TARJETAS
+    // =========================================================
     void ActualizarColoresTarjetas()
     {
         for (int i = 0; i < tarjetas.Length; i++)
-            tarjetas[i].image.color = i == tarjetaSeleccionada ? colorSeleccionado : colorNormal;
+        {
+            tarjetas[i].image.color =
+                i == tarjetaSeleccionada
+                ? colorSeleccionado
+                : colorNormal;
+        }
     }
 
+    // =========================================================
+    // COMPROBAR RESPUESTA
+    // =========================================================
     void Comprobar()
     {
-        if (completado) return;
+        if (completado)
+            return;
+
         DetenerPregunta();
+
         if (tarjetaDescartada < 0)
         {
-            txtPregunta.text = "¡Primero lleva una tarjeta a la zona de descarte!";
+            txtPregunta.text =
+                "¡Primero lleva una tarjeta al tacho!";
+
             return;
         }
-        if (indicesTarjetas[tarjetaDescartada] == ejercicios[ejercicioActual].sobranteOriginal)
+
+        if (indicesTarjetas[tarjetaDescartada] ==
+            ejercicios[ejercicioActual].sobranteOriginal)
         {
             completado = true;
-            ProgresoEstrellas.GuardarEjercicio("DetectarErrores", 3, ejercicioActual + 1);
+
+            ProgresoEstrellas.GuardarEjercicio(
+                "DetectarErrores",
+                3,
+                ejercicioActual + 1
+            );
+
             tarjetas[tarjetaDescartada].image.color = colorCorrecto;
-            foreach (Button tarjeta in tarjetas) tarjeta.interactable = false;
-            if (textoDescarte != null) textoDescarte.text = "¡PASO SOBRANTE ENCONTRADO!";
-            txtPregunta.text = "¡Excelente! ¡Encontraste el paso sobrante!";
+
+            foreach (Button tarjeta in tarjetas)
+                tarjeta.interactable = false;
+
+            if (textoDescarte != null)
+                textoDescarte.text = "¡PASO SOBRANTE ENCONTRADO!";
+
+            txtPregunta.text =
+                "¡Excelente! ¡Encontraste el paso sobrante!";
+
             btnComprobar.gameObject.SetActive(false);
             btnSiguiente.gameObject.SetActive(true);
         }
         else
         {
             tarjetas[tarjetaDescartada].image.color = colorError;
+
             tarjetaDescartada = -1;
             tarjetaSeleccionada = -1;
-            if (textoDescarte != null) textoDescarte.text = "ARRASTRA AQUÍ EL PASO SOBRANTE";
-            txtPregunta.text = "¡Casi! Observa las tarjetas y vuelve a intentarlo.";
+
+            if (textoDescarte != null)
+                textoDescarte.text = "ARRASTRA AQUÍ EL PASO SOBRANTE";
+
+            txtPregunta.text =
+                "¡Casi! Observa las tarjetas y vuelve a intentarlo.";
+
+            ActualizarColoresTarjetas();
         }
     }
 
+    // =========================================================
+    // SIGUIENTE EJERCICIO
+    // =========================================================
     void SiguienteEjercicio()
     {
-        if (!completado) return;
-        ejercicioActual++;
-        if (ejercicioActual < ejercicios.Count) CargarEjercicio();
-        else FinalizarMision();
-    }
+        if (!completado)
+            return;
 
-    void FinalizarMision()
-    {
-        DetenerPregunta();
-        txtPregunta.text = "¡MISIÓN COMPLETADA!";
-        foreach (Button tarjeta in tarjetas) tarjeta.gameObject.SetActive(false);
-        zonaDescarte.gameObject.SetActive(false);
-        btnComprobar.gameObject.SetActive(false);
-        btnSiguiente.gameObject.SetActive(false);
-        if (circulos != null) foreach (Image c in circulos) if (c != null) c.transform.parent.gameObject.SetActive(false);
+        ejercicioActual++;
+
+        if (ejercicioActual < ejercicios.Count)
+        {
+            CargarEjercicio();
+        }
+        else
+        {
+            FinalizarMision();
+        }
     }
 
     // =========================================================
-    // 11. CREAR CIRCULOS CON BORDES CONFIGURABLES
+    // FINALIZAR MISIÓN
+    // =========================================================
+    void FinalizarMision()
+    {
+        DetenerPregunta();
+
+        txtPregunta.text = "¡MISIÓN COMPLETADA!";
+
+        foreach (Button tarjeta in tarjetas)
+            tarjeta.gameObject.SetActive(false);
+
+        zonaDescarte.gameObject.SetActive(false);
+
+        btnComprobar.gameObject.SetActive(false);
+        btnSiguiente.gameObject.SetActive(false);
+
+        if (circulos != null)
+        {
+            foreach (Image c in circulos)
+            {
+                if (c != null)
+                    c.transform.parent.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    // =========================================================
+    // CREAR SPRITE CIRCULAR
     // =========================================================
     Sprite CrearSpriteCircular()
     {
         const int n = 128;
-        Texture2D t = new Texture2D(n, n, TextureFormat.RGBA32, false);
+
+        Texture2D t = new Texture2D(
+            n, n, TextureFormat.RGBA32, false
+        );
+
         t.filterMode = FilterMode.Bilinear;
+
         float centro = (n - 1) / 2f;
         float radio = centro - 1f;
+
         for (int y = 0; y < n; y++)
+        {
             for (int x = 0; x < n; x++)
             {
-                float d = Vector2.Distance(new Vector2(x, y), new Vector2(centro, centro));
-                t.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.Clamp01(radio - d + .5f)));
+                float d = Vector2.Distance(
+                    new Vector2(x, y),
+                    new Vector2(centro, centro)
+                );
+
+                t.SetPixel(
+                    x,
+                    y,
+                    new Color(
+                        1f, 1f, 1f,
+                        Mathf.Clamp01(radio - d + .5f)
+                    )
+                );
             }
+        }
+
         t.Apply();
-        return Sprite.Create(t, new Rect(0, 0, n, n), new Vector2(.5f, .5f), 100f);
+
+        return Sprite.Create(
+            t,
+            new Rect(0, 0, n, n),
+            new Vector2(.5f, .5f),
+            100f
+        );
     }
 
+    // =========================================================
+    // CREAR INDICADOR DE PROGRESO
+    // =========================================================
     void CrearIndicadorProgreso()
     {
         circuloSprite = CrearSpriteCircular();
+
         circulos = new Image[ejercicios.Count];
+
         for (int i = 0; i < ejercicios.Count; i++)
         {
-            GameObject bordeObj = new GameObject("Circulo_Progreso_" + (i + 1), typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            GameObject bordeObj = new GameObject(
+                "Circulo_Progreso_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
             bordeObj.transform.SetParent(panelProgreso, false);
+
             RectTransform r = bordeObj.GetComponent<RectTransform>();
+
             r.anchorMin = r.anchorMax = new Vector2(.5f, .5f);
             r.pivot = new Vector2(.5f, .5f);
+
             r.sizeDelta = Vector2.one * tamanoCirculo;
-            r.anchoredPosition = new Vector2((i - (ejercicios.Count - 1) / 2f) * separacionCirculos, posicionVerticalCirculos);
+
+            r.anchoredPosition = new Vector2(
+                (i - (ejercicios.Count - 1) / 2f) * separacionCirculos,
+                posicionVerticalCirculos
+            );
+
             Image borde = bordeObj.GetComponent<Image>();
+
             borde.sprite = circuloSprite;
             borde.color = colorBorde;
             borde.raycastTarget = false;
 
-            GameObject rellenoObj = new GameObject("Relleno", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            GameObject rellenoObj = new GameObject(
+                "Relleno",
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(Image)
+            );
+
             rellenoObj.transform.SetParent(bordeObj.transform, false);
+
             RectTransform rr = rellenoObj.GetComponent<RectTransform>();
+
             rr.anchorMin = Vector2.zero;
             rr.anchorMax = Vector2.one;
+
             rr.offsetMin = new Vector2(grosorBorde, grosorBorde);
             rr.offsetMax = new Vector2(-grosorBorde, -grosorBorde);
+
             Image relleno = rellenoObj.GetComponent<Image>();
+
             relleno.sprite = circuloSprite;
             relleno.raycastTarget = false;
+
             circulos[i] = relleno;
 
-            GameObject numObj = new GameObject("Numero_" + (i + 1), typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+            GameObject numObj = new GameObject(
+                "Numero_" + (i + 1),
+                typeof(RectTransform),
+                typeof(CanvasRenderer),
+                typeof(TextMeshProUGUI)
+            );
+
             numObj.transform.SetParent(bordeObj.transform, false);
+
             RectTransform nr = numObj.GetComponent<RectTransform>();
-            nr.anchorMin = Vector2.zero; nr.anchorMax = Vector2.one;
+
+            nr.anchorMin = Vector2.zero;
+            nr.anchorMax = Vector2.one;
             nr.offsetMin = nr.offsetMax = Vector2.zero;
-            TextMeshProUGUI num = numObj.GetComponent<TextMeshProUGUI>();
+
+            TextMeshProUGUI num =
+                numObj.GetComponent<TextMeshProUGUI>();
+
             num.text = (i + 1).ToString();
             num.fontSize = tamanoCirculo * .5f;
             num.fontStyle = FontStyles.Bold;
@@ -383,25 +741,51 @@ public class JuegoPasoSobrante : MonoBehaviour
         }
     }
 
+    // =========================================================
+    // ACTUALIZAR INDICADOR DE PROGRESO
+    // =========================================================
     void ActualizarIndicadorProgreso()
     {
-        if (circulos == null) return;
+        if (circulos == null)
+            return;
+
         for (int i = 0; i < circulos.Length; i++)
-            if (circulos[i] != null) circulos[i].color = i <= ejercicioActual ? colorActivo : colorPendiente;
+        {
+            if (circulos[i] != null)
+            {
+                circulos[i].color =
+                    i <= ejercicioActual
+                    ? colorActivo
+                    : colorPendiente;
+            }
+        }
     }
 
-    void OnDisable() { DetenerPregunta(); }
+    void OnDisable()
+    {
+        DetenerPregunta();
+    }
 }
 
-// Arrastre: el jugador puede llevar una tarjeta al area de descarte.
-public class ArrastrarTarjetaSobrante : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+// =============================================================
+// ARRASTRE DE TARJETAS
+// =============================================================
+public class ArrastrarTarjetaSobrante :
+    MonoBehaviour,
+    IBeginDragHandler,
+    IDragHandler,
+    IEndDragHandler
 {
     private JuegoPasoSobrante juego;
     private int indice;
+
     private GameObject fantasma;
     private Canvas canvas;
 
-    public void Configurar(JuegoPasoSobrante controlador, int indiceTarjeta)
+    public void Configurar(
+        JuegoPasoSobrante controlador,
+        int indiceTarjeta
+    )
     {
         juego = controlador;
         indice = indiceTarjeta;
@@ -409,50 +793,101 @@ public class ArrastrarTarjetaSobrante : MonoBehaviour, IBeginDragHandler, IDragH
 
     public void OnBeginDrag(PointerEventData e)
     {
-        if (juego == null || !GetComponent<Button>().interactable) return;
+        if (juego == null ||
+            !GetComponent<Button>().interactable)
+            return;
+
         canvas = GetComponentInParent<Canvas>();
-        if (canvas == null) return;
-        fantasma = new GameObject("Tarjeta_Arrastrada", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+
+        if (canvas == null)
+            return;
+
+        fantasma = new GameObject(
+            "Tarjeta_Arrastrada",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image)
+        );
+
         fantasma.transform.SetParent(canvas.transform, false);
         fantasma.transform.SetAsLastSibling();
+
         Image imagen = fantasma.GetComponent<Image>();
+
         imagen.sprite = GetComponent<Image>().sprite;
         imagen.color = Color.white;
         imagen.raycastTarget = false;
-        fantasma.GetComponent<RectTransform>().sizeDelta = ((RectTransform)transform).rect.size;
+
+        fantasma.GetComponent<RectTransform>().sizeDelta =
+            ((RectTransform)transform).rect.size;
+
         Mover(e);
     }
 
-    public void OnDrag(PointerEventData e) { Mover(e); }
+    public void OnDrag(PointerEventData e)
+    {
+        Mover(e);
+    }
 
     void Mover(PointerEventData e)
     {
-        if (fantasma == null || canvas == null) return;
+        if (fantasma == null || canvas == null)
+            return;
+
         RectTransform cr = canvas.transform as RectTransform;
-        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : e.pressEventCamera;
+
+        Camera cam = canvas.renderMode == RenderMode.ScreenSpaceOverlay
+            ? null
+            : e.pressEventCamera;
+
         Vector2 local;
-        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(cr, e.position, cam, out local))
-            fantasma.GetComponent<RectTransform>().anchoredPosition = local;
+
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            cr, e.position, cam, out local))
+        {
+            fantasma.GetComponent<RectTransform>()
+                .anchoredPosition = local;
+        }
     }
 
     public void OnEndDrag(PointerEventData e)
     {
-        if (fantasma != null) Destroy(fantasma);
+        if (fantasma != null)
+            Destroy(fantasma);
+
         fantasma = null;
     }
 
-    public void Descartar() { if (juego != null) juego.DescartarTarjeta(indice); }
+    public void Descartar()
+    {
+        if (juego != null)
+            juego.DescartarTarjeta(indice);
+    }
 }
 
-// Soltar una tarjeta encima de la zona de descarte.
-public class SoltarPasoSobrante : MonoBehaviour, IDropHandler
+// =============================================================
+// SOLTAR TARJETA EN EL TACHO
+// =============================================================
+public class SoltarPasoSobrante :
+    MonoBehaviour,
+    IDropHandler
 {
     private JuegoPasoSobrante juego;
-    public void Configurar(JuegoPasoSobrante controlador) { juego = controlador; }
+
+    public void Configurar(JuegoPasoSobrante controlador)
+    {
+        juego = controlador;
+    }
+
     public void OnDrop(PointerEventData e)
     {
-        if (juego == null || e.pointerDrag == null) return;
-        ArrastrarTarjetaSobrante tarjeta = e.pointerDrag.GetComponent<ArrastrarTarjetaSobrante>();
-        if (tarjeta != null) tarjeta.Descartar();
+        if (juego == null || e.pointerDrag == null)
+            return;
+
+        ArrastrarTarjetaSobrante tarjeta =
+            e.pointerDrag.GetComponent<ArrastrarTarjetaSobrante>();
+
+        if (tarjeta != null)
+            tarjeta.Descartar();
     }
 }
